@@ -177,7 +177,9 @@
       "ImportExplanation": "Tournament ID (e.g. 10230) or URL (e.g. 'single_elim' for challonge.com/single_elim). If assigned to a subdomain, URL format must be :subdomain-:tournament_url (e.g. 'test-mytourney' for test.challonge.com/mytourney)",
       "ImportUrl": "Challonge URL",
       "ImportTeams": "Import Teams?",
-      "ImportError": "Error importing season. Please ensure the Challonge URL is correct."
+      "ImportError": "Error importing season. Please ensure the Challonge URL is correct.",
+      "teams": "Teams Present",
+      "teamsHint": "Select all Teams present in season"
     },
     "Matches": {
       "YourMatches": "Your matches",
@@ -544,7 +546,9 @@
       "ImportExplanation": "Tournament ID (e.g. 10230) ou URL (e.g. 'single_elim' for challonge.com/single_elim). Si assigné à un sous-domaine, le format de l'URL doit être :sousdomaine-:tournament_url (e.g. 'test-mytourney' pour test.challonge.com/mytourney)",
       "ImportUrl": "URL Challonge",
       "ImportTeams": "Importer les équipes ?",
-      "ImportError": "Erreur durant l'import de la saison. Assurez-vous que l'URL Challonge est correcte."
+      "ImportError": "Erreur durant l'import de la saison. Assurez-vous que l'URL Challonge est correcte.",
+      "teams": "Equipe présente",
+      "teamsHint": "Selectionner les équipes de la saisons"
     },
     "Matches": {
       "YourMatches": "Vos matchs",

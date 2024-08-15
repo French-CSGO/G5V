@@ -440,6 +440,20 @@
                     />
                   </v-col>
                 </v-row>
+                <v-row class="pt-6">
+                  <v-col cols="12">
+                    <v-combobox
+                      v-model="newSeason.teams"
+                      :items="allTeams"
+                      :label="$t('Seasons.teams')"
+                      ref="Teams"
+                      :hint="$t('Seasons.teamsHint')"
+                      multiple
+                      chips
+                      deletable-chips
+                    />
+                  </v-col>
+                </v-row>
               </v-container>
             </v-card-text>
           </v-form>
@@ -477,8 +491,10 @@ export default {
       newSeason: {
         name: "",
         dates: [],
-        cvars: []
+        cvars: [],
+        teams: []
       },
+      allTeams: [],
       seasonDefaults: {
         min_players_to_ready: 5,
         min_spectators_to_ready: 0,
@@ -511,6 +527,7 @@ export default {
   },
   mounted() {
     this.GetSeasons();
+    this.GetTeams();
   },
   watch: {
     newDialog(val) {
@@ -526,7 +543,8 @@ export default {
                 .slice(0, 19)
                 .replace("T", " ")
             ],
-            cvars: []
+            cvars: [],
+            teams: []
           };
           this.seasonDefaults = {
             min_players_to_ready: 5,
@@ -577,6 +595,14 @@ export default {
       }
       return;
     },
+    async GetTeams() {
+      let res = await this.GetAllTeams();
+      if (typeof res == "string") res = [];
+      res.forEach(team => {
+        this.allTeams.push(team.name);
+      });
+    },
+
     deleteSelectedSeason(item) {
       if (item != null) {
         this.removeIndex = this.seasons.indexOf(item);
@@ -647,7 +673,8 @@ export default {
                 this.newSeason.dates[1] == undefined
                   ? null
                   : this.newSeason.dates[1],
-              season_cvar: newCvar
+              season_cvar: newCvar,
+              season_teams: this.newSeason.teams
             }
           ];
           serverRes = await this.InsertSeason(serverObj);
@@ -661,7 +688,8 @@ export default {
                 this.newSeason.dates[1] == undefined
                   ? null
                   : this.newSeason.dates[1],
-              season_cvar: newCvar
+              season_cvar: newCvar,
+              season_teams: this.newSeason.teams
             }
           ];
           serverRes = await this.UpdateSeasonInfo(updateObj);
@@ -685,7 +713,8 @@ export default {
                 .slice(0, 19)
                 .replace("T", " ")
             ],
-            cvars: []
+            cvars: [],
+            teams: []
           };
           this.seasonDefaults = {
             min_players_to_ready: 5,
@@ -711,6 +740,9 @@ export default {
       if (item.end_date != null)
         dateArray.push(new Date(item.end_date).toISOString().substr(0, 10));
       let seasonCvars = await this.GetSeasonCVARs(item.id);
+      let teamData = await this.GetSeasonTeams(item.id);
+      console.log(seasonCvars);
+      console.log(teamData);
       let tmpArr = [];
       // If our cvars are empty, make an empty object instead to allow future saving.
       if (typeof seasonCvars == "string") seasonCvars = {};
@@ -745,11 +777,13 @@ export default {
           } else this.seasonDefaults[obj] = seasonCvars[obj];
         }
       }
+
       this.newSeason = {
         id: item.id,
         dates: dateArray,
         cvars: seasonCvars == null ? seasonCvars : tmpArr,
-        name: item.name
+        name: item.name,
+        teams: this.newSeason.teams
       };
       this.newDialog = true;
     },

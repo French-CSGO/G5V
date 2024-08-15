@@ -723,6 +723,25 @@ export default {
       }
       return message;
     },
+    async GetSeasonTeams(seasonid) {
+      let res;
+      let message;
+      let teams = [];
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/teams`
+        );
+        message = res.data.teams;
+        if (typeof message == "string") message = [];
+        message.forEach(team => {
+          teams.push(team.name);
+        });
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     async DeleteSeason(seasonData) {
       let res;
       let message;

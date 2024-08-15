@@ -733,14 +733,16 @@ export default {
             "/api"}/seasons/${seasonid}/teams`
         );
         message = res.data.teams;
+
         if (typeof message == "string") message = [];
         message.forEach(team => {
           teams.push(team.name);
         });
+        return teams;
       } catch (error) {
         message = error.response.data.message;
+        return message;
       }
-      return message;
     },
     async DeleteSeason(seasonData) {
       let res;

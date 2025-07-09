@@ -58,34 +58,38 @@
 
         <v-window-item :value="3">
           <div class="pa-4 text-center">
-            <v-select
-              v-model="newMatchData.team1_id"
+            <v-combobox
+              v-model="newMatchData.team1"
               :items="teams"
               item-text="name"
               item-value="id"
               :rules="[
                 v => !!v || $t('CreateMatch.TeamRequired'),
                 () =>
-                  newMatchData.team1_id != newMatchData.team2_id ||
+                  newMatchData.team1.id != newMatchData.team2.id ||
                   $t('CreateMatch.TeamCannotBeEqual')
               ]"
               :label="$t('CreateMatch.FormTeam1')"
               required
+              solo
+              clearable
               ref="teamOne"
             />
-            <v-select
-              v-model="newMatchData.team2_id"
+            <v-combobox
+              v-model="newMatchData.team2"
               :items="teams"
               item-text="name"
               item-value="id"
               :rules="[
                 v => !!v || $t('CreateMatch.TeamRequired'),
                 () =>
-                  newMatchData.team2_id != newMatchData.team1_id ||
+                  newMatchData.team2.id != newMatchData.team1.id ||
                   $t('CreateMatch.TeamCannotBeEqual')
               ]"
               :label="$t('CreateMatch.FormTeam2')"
               required
+              solo
+              clearable
               ref="teamTwo"
             />
             <v-divider />
@@ -553,8 +557,8 @@ export default {
         let matchInsertObj = [
           {
             server_id: this.selectedServer,
-            team1_id: this.newMatchData.team1_id,
-            team2_id: this.newMatchData.team2_id,
+            team1_id: this.newMatchData.team1.id,
+            team2_id: this.newMatchData.team2.id,
             season_id: this.selectedSeason == -1 ? null : this.selectedSeason,
             start_time: new Date()
               .toISOString()

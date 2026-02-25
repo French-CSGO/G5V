@@ -48,6 +48,13 @@
         {{ item.team2_string }}
       </div>
     </template>
+
+    <template v-slot:item.ip_string="{ item }">
+      <div>
+          {{item.display_name}}
+      </div>
+    </template>
+    
     <template v-slot:top>
       <div v-if="isMyMatches && isThereCancelledMatches">
         <v-toolbar flat>

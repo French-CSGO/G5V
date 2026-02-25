@@ -107,7 +107,7 @@
             serverInfo.port
         "
       >
-        {{ $t("Match.Connect") }}
+        {{ $t("Match.Connect") }} {{serverInfo.display_name}}
       </v-btn>
       <div v-if="serverInfo.gotv_port != null">
         <v-btn
@@ -183,7 +183,8 @@ export default {
       serverInfo: {
         ip_string: "",
         port: 0,
-        gotv_port: 0
+        gotv_port: 0,
+        display_name: ""
       },
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
       imageLoaded: true
@@ -261,6 +262,7 @@ export default {
           this.serverInfo.ip_string = serveRes.ip_string;
           this.serverInfo.port = serveRes.port;
           this.serverInfo.gotv_port = serveRes.gotv_port;
+          this.serverInfo.display_name = serverRes.display_name
         }
       } catch (err) {
         console.log(`Error on match helper. The error is ${err.toString()}`);

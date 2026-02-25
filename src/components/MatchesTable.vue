@@ -142,19 +142,19 @@ export default {
           (match.cancelled == 0 || match.cancelled == null) &&
           match.start_time != null
         ) {
-          matchString = `Live, ${team1Score}:${team2Score} vs ${match.team2_string}`;
+          matchString = `Live, ${team1Score}:${team2Score} - ${match.team1_string} vs ${match.team2_string}`;
         } else if (team1Score < team2Score) {
-          matchString = `Lost, ${team1Score}:${team2Score} vs ${match.team2_string}`;
+          matchString = `Lost, ${team1Score}:${team2Score} - ${match.team1_string} vs ${match.team2_string}`;
         } else if (team1Score > team2Score) {
-          matchString = `Won, ${team1Score}:${team2Score} vs ${match.team2_string}`;
+          matchString = `Won, ${team1Score}:${team2Score} - ${match.team1_string} vs ${match.team2_string}`;
         } else if (match.cancelled == 1) {
           matchString = "Cancelled";
         } else if (team1Score == team2Score && match.forfeit != 1) {
-          matchString = `Tied, ${team1Score}:${team2Score} vs ${match.team2_string}`;
+          matchString = `Tied, ${team1Score}:${team2Score} - ${match.team1_string} vs ${match.team2_string}`;
         } else if (match.winner == match.team1_id) {
-          matchString = `Forfeit win vs ${match.team2_string}`;
+          matchString = `Forfeit - ${match.team1_string} win vs ${match.team2_string}`;
         } else if (match.winner == match.team2_id) {
-          matchString = `Forfeit loss vs ${match.team2_string}`;
+          matchString = `Forfeit - ${match.team1_string} loss vs ${match.team2_string}`;
         }
         match.match_status = matchbo + matchString;
         if (match.cancelled == 1) this.isThereCancelledMatches = true;

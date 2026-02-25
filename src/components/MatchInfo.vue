@@ -262,7 +262,7 @@ export default {
           this.serverInfo.ip_string = serveRes.ip_string;
           this.serverInfo.port = serveRes.port;
           this.serverInfo.gotv_port = serveRes.gotv_port;
-          this.serverInfo.display_name = serverRes.display_name
+          this.serverInfo.display_name = serveRes.display_name
         }
       } catch (err) {
         console.log(`Error on match helper. The error is ${err.toString()}`);

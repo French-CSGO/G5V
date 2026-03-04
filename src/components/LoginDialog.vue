@@ -158,7 +158,6 @@ export default {
     async userRegister() {
       if (this.$refs.loginForm.validate()) {
         if (!this.userInfo.steam_id) {
-          console.log("Failed successfully");
           this.response = "Invalid Steam 64 ID. Please enter a Steam ID.";
           this.responseSheet = true;
           this.userLoading = false;

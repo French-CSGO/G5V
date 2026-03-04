@@ -31,7 +31,7 @@
             <v-btn :to="`/leaderboard/${seasonData.id}`">
               {{ $t("misc.PLeader") }}
             </v-btn>
-            <v-btn :to="`/leaderboard/teams/${seasonData.id}`">
+            <v-btn :to="`/leaderboard/${seasonData.id}/teams`">
               {{ $t("Leaderboard.TTitle") }}
             </v-btn>
           </v-card-title>

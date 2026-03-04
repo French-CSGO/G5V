@@ -193,6 +193,24 @@ const routes = [
       import(
         /* webpackChunkName: "Leaderboards" */ "../views/TeamLeaderboard.vue"
       )
+  },
+  {
+    path: "/stats",
+    name: "GlobalStats",
+    component: () =>
+      import(/* webpackChunkName: "Stats" */ "../views/GlobalStats.vue")
+  },
+  {
+    path: "/stats/player/:steam_id",
+    name: "PlayerStats",
+    component: () =>
+      import(/* webpackChunkName: "Stats" */ "../views/PlayerStats.vue")
+  },
+  {
+    path: "/stats/player/:steam_id/maps",
+    name: "PlayerMapStats",
+    component: () =>
+      import(/* webpackChunkName: "Stats" */ "../views/PlayerMapStats.vue")
   }
 ];
 

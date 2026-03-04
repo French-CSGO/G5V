@@ -902,7 +902,19 @@ export default {
       } catch (error) {
         message = error.response.data.message;
       }
-      console.log(message);
+      return message;
+    },
+    async GetUserExtraStats(steamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstatsextra/${steamid}`
+        );
+        message = res.data.extrastats;
+      } catch (error) {
+        message = error.response.data.message;
+      }
       return message;
     },
     // END PLAYER STATS

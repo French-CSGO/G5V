@@ -358,7 +358,16 @@
       "PLeader": "Player Leaderboard",
       "TWins": "Total Wins",
       "LessThan": "Date two must be greater than or equal to date one.",
-      "Import": "Import"
+      "Import": "Import",
+      "Add": "Add"
+    },
+    "Season": {
+      "TeamsTitle": "Teams in this season",
+      "AddTeam": "Add team",
+      "NoTeams": "No teams assigned to this season yet.",
+      "SelectTeams": "Select teams to add",
+      "RemoveTeamTitle": "Remove team",
+      "RemoveTeamConfirm": "Remove {name} from this season?"
     },
     "Footer": {
       "company": "Phlex Plexico",
@@ -725,7 +734,16 @@
       "PLeader": "Classement des joueurs",
       "TWins": "Total de victoires",
       "LessThan": "La date 2 doit être supérieur ou égale à la date 1.",
-      "Import": "Importer"
+      "Import": "Importer",
+      "Add": "Ajouter"
+    },
+    "Season": {
+      "TeamsTitle": "Équipes de cette saison",
+      "AddTeam": "Ajouter une équipe",
+      "NoTeams": "Aucune équipe assignée à cette saison.",
+      "SelectTeams": "Sélectionner des équipes",
+      "RemoveTeamTitle": "Retirer l'équipe",
+      "RemoveTeamConfirm": "Retirer {name} de cette saison ?"
     },
     "Footer": {
       "company": "Phlex Plexico",
@@ -1086,7 +1104,16 @@
       "PLeader": "プレイヤーリーダーボード",
       "TWins": "合計勝利数",
       "LessThan": "日付2は日付1以上でなければなりません。",
-      "Import": "輸入"
+      "Import": "輸入",
+      "Add": "追加"
+    },
+    "Season": {
+      "TeamsTitle": "このシーズンのチーム",
+      "AddTeam": "チームを追加",
+      "NoTeams": "このシーズンにチームがありません。",
+      "SelectTeams": "追加するチームを選択",
+      "RemoveTeamTitle": "チームを削除",
+      "RemoveTeamConfirm": "{name}をこのシーズンから削除しますか？"
     },
     "Footer": {
       "company": "Phlex Plexico",

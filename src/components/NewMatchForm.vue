@@ -372,6 +372,7 @@ export default {
     step: 1,
     servers: [],
     teams: [],
+    allTeams: [],
     seasons: [],
     selectedServer: -1,
     selectedSeasonObject: {},
@@ -414,13 +415,21 @@ export default {
     }
   },
   watch: {
-    selectedSeason(val) {
+    async selectedSeason(val) {
       let arrIndex = this.seasons
         .map(obj => {
           return obj.id;
         })
         .indexOf(val);
       this.selectedSeasonObject = this.seasons[arrIndex];
+      if (val && val !== -1) {
+        let seasonTeams = await this.GetSeasonTeams(val);
+        this.teams = Array.isArray(seasonTeams) && seasonTeams.length > 0
+          ? seasonTeams
+          : this.allTeams;
+      } else {
+        this.teams = this.allTeams;
+      }
     },
     step(val) {
       if (val == 3) {
@@ -492,18 +501,19 @@ export default {
       });
     }
     //if (this.IsAnyAdmin(this.user)) this.teams = await this.GetAllTeams();
-    if (this.IsAnyAdmin(this.user)) this.teams = await this.GetPublicTeams();
+    if (this.IsAnyAdmin(this.user)) this.allTeams = await this.GetPublicTeams();
     else {
       let tmpPublicTeams = await this.GetAllTeams();
-      this.teams = await this.GetMyTeams();
+      this.allTeams = await this.GetMyTeams();
       tmpPublicTeams.forEach(async team => {
-        if (typeof this.teams === "string") this.teams = [];
-        if (team.public_team == 1) this.teams.push(team);
+        if (typeof this.allTeams === "string") this.allTeams = [];
+        if (team.public_team == 1) this.allTeams.push(team);
       });
     }
-    this.teams.sort((a, b) => {
+    this.allTeams.sort((a, b) => {
       return a.user_id - this.user.id || a.public_team - b.public_team;
     });
+    this.teams = this.allTeams;
     this.seasons = await this.GetMyAvailableSeasons();
     if (typeof this.seasons == "string") this.seasons = [];
     this.MapList = await this.GetUserEnabledMapList(this.user.id);

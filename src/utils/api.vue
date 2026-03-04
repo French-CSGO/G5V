@@ -795,6 +795,46 @@ export default {
       }
       return message;
     },
+    async GetSeasonTeams(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams`
+        );
+        message = res.data.teams;
+      } catch (error) {
+        message = [];
+      }
+      return message;
+    },
+    async AddTeamsToSeason(seasonid, teamIds) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams`,
+          { team_ids: teamIds }
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async RemoveTeamFromSeason(seasonid, teamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams/${teamid}`
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
     // END SEASON CALLS
     // BEGIN PLAYER STATS
     async GetUserPlayerStats(steamid) {

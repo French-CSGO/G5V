@@ -107,7 +107,7 @@
             serverInfo.port
         "
       >
-        {{ $t("Match.Connect") }} {{serverInfo.display_name}}
+        {{ $t("Match.Connect") }} {{ serverInfo.display_name }}
       </v-btn>
       <div v-if="serverInfo.gotv_port != null">
         <v-btn
@@ -196,12 +196,10 @@ export default {
   methods: {
     async checkIfMatchLive() {
       let matchRes = await this.GetMatchData(this.match_id);
-      if (matchRes.end_time == null) 
-      {
+      if (matchRes.end_time == null) {
         //await this.getStreamedMatchInfo();
         await this.getMatchInfo();
-      }
-      else await this.getMatchInfo();
+      } else await this.getMatchInfo();
     },
     async getStreamedMatchInfo() {
       try {
@@ -210,11 +208,8 @@ export default {
         await sseClient.on("matches", async message => {
           try {
             await this.retrieveMatchInfoHelper(message);
-          } catch (error) {
-            console.error(
-              "Error retrieving information from matches event stream. ",
-              error
-            );
+          } catch {
+            // ignored
           }
         });
         return;
@@ -226,8 +221,8 @@ export default {
       try {
         let matchRes = await this.GetMatchData(this.match_id);
         await this.retrieveMatchInfoHelper(matchRes);
-      } catch (error) {
-        console.log(error);
+      } catch {
+        // ignored
       }
     },
     async retrieveMatchInfoHelper(serverResponse) {
@@ -262,10 +257,10 @@ export default {
           this.serverInfo.ip_string = serveRes.ip_string;
           this.serverInfo.port = serveRes.port;
           this.serverInfo.gotv_port = serveRes.gotv_port;
-          this.serverInfo.display_name = serveRes.display_name
+          this.serverInfo.display_name = serveRes.display_name;
         }
-      } catch (err) {
-        console.log(`Error on match helper. The error is ${err.toString()}`);
+      } catch {
+        // ignored
       }
     },
     imgUrlAlt(event) {

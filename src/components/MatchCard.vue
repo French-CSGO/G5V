@@ -79,8 +79,8 @@ export default {
             return a.id - b.id;
           });
         }
-      } catch (error) {
-        console.log(error);
+      } catch {
+        // ignored
       } finally {
         this.isLoading = false;
       }

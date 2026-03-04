@@ -154,6 +154,29 @@
       "RefreshData": "Stats will refresh in {sec} seconds.",
       "RefreshForce": "Force Refresh"
     },
+    "GlobalStats": {
+      "Title": "Global Player Statistics",
+      "GlobalStats": "Global Statistics",
+      "MultiKills": "Multi-Kills",
+      "Clutches": "Clutches",
+      "OtherStats": "Other Statistics",
+      "Maps": "Maps Played",
+      "Rounds": "Rounds Played",
+      "ProfilePage": "Profile Page",
+      "FirstKillCT": "First Kill (CT)",
+      "FirstKillT": "First Kill (T)",
+      "FirstDeathCT": "First Death (CT)",
+      "FirstDeathT": "First Death (T)",
+      "WeaponStats": "Weapon Stats",
+      "MapStats": "Map Stats",
+      "Map": "Map",
+      "Weapon": "Weapon",
+      "HSKills": "HS Kills",
+      "BlindKills": "Blind Kills",
+      "SmokeKills": "Smoke Kills",
+      "NoScope": "No Scope",
+      "RecentMatches": "Recent Matches"
+    },
     "Seasons": {
       "Title": "Seasons/Tournaments",
       "New": "New Season",
@@ -359,7 +382,8 @@
       "TWins": "Total Wins",
       "LessThan": "Date two must be greater than or equal to date one.",
       "Import": "Import",
-      "Add": "Add"
+      "Add": "Add",
+      "Search": "Search"
     },
     "Season": {
       "TeamsTitle": "Teams in this season",
@@ -529,6 +553,29 @@
       "MVP": "MVPs",
       "RefreshData": "Les statistiques vont être mises à jour dans {sec} secondes.",
       "RefreshForce": "Forcer la mise à jour"
+    },
+    "GlobalStats": {
+      "Title": "Statistiques globales des joueurs",
+      "GlobalStats": "Statistiques globales",
+      "MultiKills": "Multi-Kills",
+      "Clutches": "Clutches",
+      "OtherStats": "Autres statistiques",
+      "Maps": "Cartes jouées",
+      "Rounds": "Rounds joués",
+      "ProfilePage": "Page de profil",
+      "FirstKillCT": "Premier kill (CT)",
+      "FirstKillT": "Premier kill (T)",
+      "FirstDeathCT": "Première mort (CT)",
+      "FirstDeathT": "Première mort (T)",
+      "WeaponStats": "Stats par armes",
+      "MapStats": "Stats par carte",
+      "Map": "Carte",
+      "Weapon": "Arme",
+      "HSKills": "Kills HS",
+      "BlindKills": "Kills à l'aveugle",
+      "SmokeKills": "Kills dans la fumée",
+      "NoScope": "No Scope",
+      "RecentMatches": "Matchs récents"
     },
     "Seasons": {
       "Title": "Saisons/Tournois",
@@ -735,7 +782,8 @@
       "TWins": "Total de victoires",
       "LessThan": "La date 2 doit être supérieur ou égale à la date 1.",
       "Import": "Importer",
-      "Add": "Ajouter"
+      "Add": "Ajouter",
+      "Search": "Rechercher"
     },
     "Season": {
       "TeamsTitle": "Équipes de cette saison",
@@ -901,6 +949,29 @@
       "MVP": "M V P",
       "RefreshData": "統計情報は{sec}秒後に更新されます。",
       "RefreshForce": "強制リフレッシュ"
+    },
+    "GlobalStats": {
+      "Title": "グローバルプレイヤー統計",
+      "GlobalStats": "グローバル統計",
+      "MultiKills": "マルチキル",
+      "Clutches": "クラッチ",
+      "OtherStats": "その他の統計",
+      "Maps": "マップ数",
+      "Rounds": "ラウンド数",
+      "ProfilePage": "プロフィールページ",
+      "FirstKillCT": "ファーストキル (CT)",
+      "FirstKillT": "ファーストキル (T)",
+      "FirstDeathCT": "ファーストデス (CT)",
+      "FirstDeathT": "ファーストデス (T)",
+      "WeaponStats": "武器統計",
+      "MapStats": "マップ統計",
+      "Map": "マップ",
+      "Weapon": "武器",
+      "HSKills": "HSキル",
+      "BlindKills": "ブラインドキル",
+      "SmokeKills": "スモークキル",
+      "NoScope": "ノースコープ",
+      "RecentMatches": "最近の試合"
     },
     "Seasons": {
       "Title": "シーズンズ/トーナメント",
@@ -1105,7 +1176,8 @@
       "TWins": "合計勝利数",
       "LessThan": "日付2は日付1以上でなければなりません。",
       "Import": "輸入",
-      "Add": "追加"
+      "Add": "追加",
+      "Search": "検索"
     },
     "Season": {
       "TeamsTitle": "このシーズンのチーム",

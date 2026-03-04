@@ -20,7 +20,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.name="{ item }">
-        <router-link :to="{ path: '/user/' + item.steamId }">
+        <router-link :to="{ path: '/stats/player/' + item.steamId }">
           {{ item.name }}
         </router-link>
       </template>

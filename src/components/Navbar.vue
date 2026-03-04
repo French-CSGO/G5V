@@ -104,7 +104,7 @@
             <v-list-item-title>{{ $t("Navbar.MySeasons") }}</v-list-item-title>
           </v-list-item>
 
-          <v-list-item :to="'/leaderboard'">
+          <v-list-item :to="'/stats'">
             <v-list-item-title>
               {{ $t("Navbar.PlayerLeader") }}
             </v-list-item-title>

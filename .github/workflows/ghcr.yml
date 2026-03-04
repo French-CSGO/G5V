@@ -32,6 +32,15 @@ jobs:
       - run: yarn install
       - run: yarn build
       - uses: docker/build-push-action@v3.2.0
+        if: github.ref != 'refs/heads/master'
+        with:
+          context: .
+          file: Dockerfile
+          platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
+          push: true
+          tags: |
+            ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:next
+      - uses: docker/build-push-action@v3.2.0
         with:
           context: .
           file: DockerfileLight

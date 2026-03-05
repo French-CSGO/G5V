@@ -41,6 +41,7 @@ jobs:
           tags: |
             ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:next
       - uses: docker/build-push-action@v3.2.0
+        if: github.ref == 'refs/heads/master'
         with:
           context: .
           file: DockerfileLight

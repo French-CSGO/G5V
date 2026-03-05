@@ -468,6 +468,7 @@ export default {
     toornamentMatchFormat(match) {
       const fmt = match.settings && match.settings.format;
       if (!fmt) return "";
+      if (fmt.type === "single_set") return "BO1";
       if (fmt.type === "best_of" && fmt.options && fmt.options.nb_match_sets) {
         return "BO" + fmt.options.nb_match_sets;
       }

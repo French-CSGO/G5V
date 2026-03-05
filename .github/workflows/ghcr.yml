@@ -6,7 +6,7 @@ on:
       - master
 jobs:
   push:
-    name: "g5v:latest"
+    name: Create build and push to GHCR
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false

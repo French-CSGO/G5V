@@ -369,10 +369,15 @@ export default {
       this.creating = true;
       try {
         const result = await this.CreateQueue(this.newQueueSize, this.newQueuePrivate);
+        this.createDialog = false;
+        if (result.matchId) {
+          this.showSnack("Match créé ! Redirection...", "success");
+          setTimeout(() => this.$router.push("/match/" + result.matchId), 2000);
+          return;
+        }
         this.myQueue = result.queue;
         this.queuePlayers = await this.GetQueuePlayers(result.queue.name);
         await this.connectSSE(result.queue.name);
-        this.createDialog = false;
         this.showSnack("Queue créée !", "success");
         await this.refreshQueues();
       } catch (err) {

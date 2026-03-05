@@ -35,7 +35,7 @@ jobs:
         if: github.ref != 'refs/heads/master'
         with:
           context: .
-          file: Dockerfile
+          file: DockerfileLight
           platforms: linux/amd64,linux/arm/v7,linux/arm64/v8
           push: true
           tags: |

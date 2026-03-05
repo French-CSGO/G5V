@@ -34,6 +34,13 @@
             <v-btn :to="`/leaderboard/${seasonData.id}/teams`">
               {{ $t("Leaderboard.TTitle") }}
             </v-btn>
+            <v-btn
+              v-if="isToornamentSeason"
+              :to="`/season/${seasonData.id}/toornament`"
+            >
+              <v-icon left>mdi-tournament</v-icon>
+              {{ $t("Toornament.MatchesTitle") }}
+            </v-btn>
           </v-card-title>
         </v-col>
 
@@ -211,6 +218,13 @@ export default {
     }
   },
   computed: {
+    isToornamentSeason() {
+      return (
+        this.seasonData.is_challonge &&
+        typeof this.seasonData.challonge_url === "string" &&
+        this.seasonData.challonge_url.startsWith("t:")
+      );
+    },
     isStarted() {
       if (
         this.seasonData.start_date >=

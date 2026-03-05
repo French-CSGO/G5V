@@ -835,6 +835,41 @@ export default {
       }
       return message;
     },
+    async GetToornamentMatches(seasonId, { team_id, status, stage_id } = {}) {
+      let params = new URLSearchParams();
+      if (team_id) params.append("team_id", team_id);
+      if (status) params.append("status", status);
+      if (stage_id) params.append("stage_id", stage_id);
+      const query = params.toString() ? "?" + params.toString() : "";
+      try {
+        const res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/matches${query}`
+        );
+        return res.data.matches || [];
+      } catch {
+        return [];
+      }
+    },
+    async GetToornamentStages(seasonId) {
+      try {
+        const res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/stages`
+        );
+        return res.data.stages || [];
+      } catch {
+        return [];
+      }
+    },
+    async GetToornamentMatchPrefill(seasonId, matchId) {
+      try {
+        const res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/matches/${matchId}/prefill`
+        );
+        return res.data;
+      } catch (error) {
+        return error.response?.data || null;
+      }
+    },
     // END SEASON CALLS
     // BEGIN PLAYER STATS
     async GetUserPlayerStats(steamid) {

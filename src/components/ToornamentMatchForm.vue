@@ -237,6 +237,7 @@ export default {
       this.isLoading = true;
 
       const cvars = Object.assign({}, ...this.formData.cvars.map(this.splitCvar));
+      const sc = this.prefill.season_cvars || {};
       const matchObj = [{
         server_id: this.selectedServer,
         team1_id: this.prefill.team1.id,
@@ -248,8 +249,9 @@ export default {
         match_cvars: Object.keys(cvars).length ? cvars : null,
         skip_veto: false,
         veto_first: "team1",
-        side_type: "standard",
-        veto_mappool: null
+        side_type: sc.side_type || "standard",
+        veto_mappool: sc.map_pool || null,
+        map_sides: sc.map_sides || null
       }];
 
       try {

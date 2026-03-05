@@ -37,8 +37,6 @@
             <v-btn
               v-if="isToornamentSeason"
               :to="`/season/${seasonData.id}/toornament`"
-              color="primary"
-              outlined
             >
               <v-icon left>mdi-tournament</v-icon>
               {{ $t("Toornament.MatchesTitle") }}

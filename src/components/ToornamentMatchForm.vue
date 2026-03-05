@@ -251,7 +251,11 @@ export default {
         veto_first: "team1",
         side_type: sc.side_type || "standard",
         veto_mappool: sc.map_pool || null,
-        map_sides: sc.map_sides || null
+        map_sides: sc.map_sides || null,
+        min_players_to_ready: sc.min_players_to_ready != null ? parseInt(sc.min_players_to_ready) : null,
+        min_spectators_to_ready: sc.min_spectators_to_ready != null ? parseInt(sc.min_spectators_to_ready) : null,
+        players_per_team: sc.players_per_team != null ? parseInt(sc.players_per_team) : null,
+        wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null
       }];
 
       try {

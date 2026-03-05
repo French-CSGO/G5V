@@ -230,11 +230,10 @@
         <v-card-text>
           <v-select
             v-model="newQueueSize"
-            :items="[10]"
-            label="Nombre de joueurs"
+            :items="queueSizeOptions"
+            label="Nombre de joueurs (par équipe × 2)"
             outlined
             dense
-            disabled
           />
           <v-switch
             v-model="newQueuePrivate"
@@ -278,7 +277,7 @@ export default {
       deleting: false,
       creating: false,
       createDialog: false,
-      newQueueSize: 10,
+      newQueueSize: 2,
       newQueuePrivate: false,
       createdMatchId: null,
       sseClient: null,
@@ -286,6 +285,17 @@ export default {
     };
   },
   computed: {
+    queueSizeOptions() {
+      const opts = [];
+      for (let i = 1; i <= 10; i++) {
+        let label;
+        if (i === 1) label = "1 joueur (test)";
+        else if (i % 2 === 0) label = `${i} joueurs (${i/2}v${i/2})`;
+        else label = `${i} joueurs`;
+        opts.push({ text: label, value: i });
+      }
+      return opts;
+    },
     publicQueues() {
       if (!this.myQueue) return this.queues;
       return this.queues.filter(q => q.name !== this.myQueue.name);

@@ -58,6 +58,10 @@
             <v-list-item-title>{{ $t("Navbar.AllMatches") }}</v-list-item-title>
           </v-list-item>
 
+          <v-list-item v-if="user.id != null" index="queue" :to="'/queue'">
+            <v-list-item-title>Queue 5v5</v-list-item-title>
+          </v-list-item>
+
           <v-list-item
             v-if="user.id != null"
             index="mymatches"

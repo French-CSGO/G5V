@@ -247,7 +247,7 @@ export default {
         max_maps: this.formData.maps_to_win,
         spectator_auths: this.formData.spectators.length ? this.formData.spectators : null,
         match_cvars: Object.keys(cvars).length ? cvars : null,
-        skip_veto: false,
+        skip_veto: sc.skip_veto != null ? !!parseInt(sc.skip_veto) : false,
         veto_first: "team1",
         side_type: sc.side_type || "standard",
         veto_mappool: sc.map_pool || null,

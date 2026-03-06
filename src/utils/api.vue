@@ -654,6 +654,16 @@ export default {
       }
       return message;
     },
+    async GetPterodactylServers() {
+      try {
+        const res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/pterodactyl-list`
+        );
+        return res.data.servers || [];
+      } catch (error) {
+        return error?.response?.data?.message || "Error fetching Pterodactyl servers";
+      }
+    },
     // END SERVER CALLS
     // BEGIN SEASON CALLS
     async GetAllSeasons() {

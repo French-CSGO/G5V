@@ -105,7 +105,7 @@
                       style="border-radius: 5px;"
                     />
                   </v-col>
-                  <v-col cols="12">
+                  <v-col cols="12" sm="10">
                     <v-text-field
                       v-model="serverInfo.pterodactyl_id"
                       :label="$t('ServerCreate.FormPterodactylId')"
@@ -113,6 +113,18 @@
                       persistent-hint
                       clearable
                     />
+                  </v-col>
+                  <v-col cols="12" sm="2" align-self="center">
+                    <v-btn
+                      small
+                      color="secondary"
+                      @click="openPterodactylPicker()"
+                      :loading="pteroLoading"
+                      :disabled="pteroLoading"
+                    >
+                      <v-icon left>mdi-link</v-icon>
+                      {{ $t('ServerCreate.PterodactylPick') }}
+                    </v-btn>
                   </v-col>
                 </v-row>
               </v-container>
@@ -159,6 +171,41 @@
         </div>
       </v-sheet>
     </v-bottom-sheet>
+
+    <v-dialog v-model="pteroDialog" max-width="600px">
+      <v-card>
+        <v-card-title>{{ $t('ServerCreate.PterodactylPickTitle') }}</v-card-title>
+        <v-card-text>
+          <v-alert v-if="pteroError" type="error" dense>{{ pteroError }}</v-alert>
+          <v-list v-else-if="pteroServers.length">
+            <v-list-item
+              v-for="s in pteroServers"
+              :key="s.identifier"
+              @click="selectPterodactylServer(s)"
+              link
+            >
+              <v-list-item-content>
+                <v-list-item-title>{{ s.name }}</v-list-item-title>
+                <v-list-item-subtitle>
+                  {{ s.identifier }}
+                  <v-chip x-small :color="s.status === 'running' ? 'green' : 'grey'" dark class="ml-1">
+                    {{ s.status }}
+                  </v-chip>
+                </v-list-item-subtitle>
+              </v-list-item-content>
+              <v-list-item-action>
+                <v-icon v-if="serverInfo.pterodactyl_id === s.identifier" color="primary">mdi-check-circle</v-icon>
+              </v-list-item-action>
+            </v-list-item>
+          </v-list>
+          <div v-else class="text-center py-4 grey--text">{{ $t('ServerCreate.PterodactylNoServers') }}</div>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="pteroDialog = false">{{ $t('misc.Close') }}</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -190,13 +237,34 @@ export default {
       response: "",
       responseSheet: false,
       serverLoading: false,
-      flags: []
+      flags: [],
+      pteroDialog: false,
+      pteroLoading: false,
+      pteroServers: [],
+      pteroError: ""
     };
   },
   created() {
     this.flags = this.GetFlags();
   },
   methods: {
+    async openPterodactylPicker() {
+      this.pteroError = "";
+      this.pteroServers = [];
+      this.pteroLoading = true;
+      const result = await this.GetPterodactylServers();
+      this.pteroLoading = false;
+      if (Array.isArray(result)) {
+        this.pteroServers = result;
+      } else {
+        this.pteroError = result;
+      }
+      this.pteroDialog = true;
+    },
+    selectPterodactylServer(server) {
+      this.serverInfo.pterodactyl_id = server.identifier;
+      this.pteroDialog = false;
+    },
     async saveServer() {
       let refreshGrid = true;
       if (this.$refs.serverForm.validate()) {

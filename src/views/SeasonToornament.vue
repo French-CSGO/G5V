@@ -192,7 +192,6 @@ export default {
     this.seasonTeams = await this.GetSeasonTeams(this.seasonId);
     if (!Array.isArray(this.seasonTeams)) this.seasonTeams = [];
     this.stages = await this.GetToornamentStages(this.seasonId);
-    console.log("[SeasonToornament] stages chargés=", JSON.stringify(this.stages));
     await this.loadMatches();
   },
   methods: {
@@ -213,21 +212,14 @@ export default {
       }
     },
     matchFormat(match) {
-      // match → stage → (tournament non chargé)
+      // match → stage.match_settings → stage.settings.match_settings
       let fmt = match.settings && match.settings.format;
-      console.log(`[matchFormat] match.id=${match.id} stage_id=${match.stage_id}`);
-      console.log(`[matchFormat] match.settings=`, JSON.stringify(match.settings));
 
       if (!fmt) {
         const stage = this.stages.find(s => s.id === match.stage_id);
-        console.log(`[matchFormat] stage trouvé (settings)=`, stage ? JSON.stringify(stage.settings) : "AUCUN");
-        console.log(`[matchFormat] stage trouvé (match_settings)=`, stage ? JSON.stringify(stage.match_settings) : "AUCUN");
-        // Toornament peut stocker le format dans settings.match_settings ou directement dans match_settings
-        fmt = (stage && stage.settings && stage.settings.match_settings && stage.settings.match_settings.format)
-           || (stage && stage.match_settings && stage.match_settings.format);
+        fmt = (stage && stage.match_settings && stage.match_settings.format)
+           || (stage && stage.settings && stage.settings.match_settings && stage.settings.match_settings.format);
       }
-
-      console.log(`[matchFormat] fmt final=`, JSON.stringify(fmt));
 
       if (!fmt) return "";
       if (fmt.type === "single_set") return "BO1";

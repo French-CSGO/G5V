@@ -112,7 +112,7 @@
         </template>
         <template v-slot:item.actions="{ item }">
           <v-btn
-            v-if="canCreate && item.opponents[0].local_team && item.opponents[1].local_team"
+            v-if="canCreate && item.status === 'pending' && item.opponents[0].local_team && item.opponents[1].local_team"
             x-small
             color="primary"
             @click="openCreate(item)"

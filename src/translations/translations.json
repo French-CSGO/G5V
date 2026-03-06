@@ -261,7 +261,9 @@
       "MessageeEditSuccess": "Successfully edited server.",
       "NewServerTitle": "New Server",
       "EditServerTitle": "Edit Server",
-      "PortRangeIncorrect": "Please input a port between 0 and 65536."
+      "PortRangeIncorrect": "Please input a port between 0 and 65536.",
+      "FormPterodactylId": "Pterodactyl Server ID",
+      "FormPterodactylIdHint": "Leave empty to disable Pterodactyl power management for this server"
     },
     "Team": {
       "Players": "Players",
@@ -695,7 +697,9 @@
       "MessageeEditSuccess": "Serveur modifié avec succés.",
       "NewServerTitle": "Nouveau Serveur",
       "EditServerTitle": "Modifier Serveur",
-      "PortRangeIncorrect": "veuillez entrer un port entre 0 et 65536."
+      "PortRangeIncorrect": "veuillez entrer un port entre 0 et 65536.",
+      "FormPterodactylId": "ID Serveur Pterodactyl",
+      "FormPterodactylIdHint": "Laisser vide pour désactiver la gestion Pterodactyl pour ce serveur"
     },
     "Team": {
       "Players": "Joueurs",
@@ -1125,7 +1129,9 @@
       "MessageeEditSuccess": "サーバーの編集に成功しました。",
       "NewServerTitle": "新サーバー",
       "EditServerTitle": "サーバーの編集",
-      "PortRangeIncorrect": "ポートは0～65536の間で入力してください。"
+      "PortRangeIncorrect": "ポートは0～65536の間で入力してください。",
+      "FormPterodactylId": "PterodactylサーバーID",
+      "FormPterodactylIdHint": "Pterodactylの電源管理を無効にするには空白のままにしてください"
     },
     "Team": {
       "Players": "プレイヤー",

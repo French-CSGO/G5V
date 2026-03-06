@@ -105,6 +105,15 @@
                       style="border-radius: 5px;"
                     />
                   </v-col>
+                  <v-col cols="12">
+                    <v-text-field
+                      v-model="serverInfo.pterodactyl_id"
+                      :label="$t('ServerCreate.FormPterodactylId')"
+                      :hint="$t('ServerCreate.FormPterodactylIdHint')"
+                      persistent-hint
+                      clearable
+                    />
+                  </v-col>
                 </v-row>
               </v-container>
             </v-card-text>
@@ -204,7 +213,8 @@ export default {
                 ? false
                 : this.serverInfo.public_server,
             flag: this.serverInfo.flag,
-            gotv_port: this.serverInfo.gotv_port
+            gotv_port: this.serverInfo.gotv_port,
+            pterodactyl_id: this.serverInfo.pterodactyl_id || null
           }
         ];
         if (this.serverInfo.id == null)

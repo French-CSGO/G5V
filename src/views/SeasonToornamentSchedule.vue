@@ -137,6 +137,7 @@ export default {
       user: { id: -1, admin: false, super_admin: false },
       seasonName: "",
       seasonUserId: -1,
+      stages: [],
       rounds: [],
       roundMatches: [],
       selectedStageId: null,
@@ -159,11 +160,7 @@ export default {
       );
     },
     stageOptions() {
-      const seen = new Map();
-      for (const r of this.rounds) {
-        if (!seen.has(r.stage_id)) seen.set(r.stage_id, r.stage_name);
-      }
-      return Array.from(seen.entries()).map(([value, text]) => ({ value, text }));
+      return this.stages.map(s => ({ value: s.id, text: s.name }));
     },
     filteredRounds() {
       const list = this.selectedStageId
@@ -188,7 +185,10 @@ export default {
       this.seasonName = season.name;
       this.seasonUserId = season.user_id;
     }
-    this.rounds = await this.GetToornamentRounds(this.seasonId);
+    [this.stages, this.rounds] = await Promise.all([
+      this.GetToornamentStages(this.seasonId),
+      this.GetToornamentRounds(this.seasonId)
+    ]);
   },
   methods: {
     async loadRoundMatches() {

@@ -870,6 +870,17 @@ export default {
         return [];
       }
     },
+    async ScheduleToornamentMatch(seasonId, matchId, scheduled_datetime) {
+      try {
+        const res = await this.axioCall.patch(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/matches/${matchId}/schedule`,
+          { scheduled_datetime }
+        );
+        return res.data;
+      } catch (error) {
+        return error.response?.data || null;
+      }
+    },
     async ScheduleToornamentRound(seasonId, roundId, scheduled_datetime) {
       try {
         const res = await this.axioCall.patch(

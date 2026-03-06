@@ -212,7 +212,14 @@ export default {
       }
     },
     matchFormat(match) {
-      const fmt = match.settings && match.settings.format;
+      // match → stage → (tournament non chargé)
+      let fmt = match.settings && match.settings.format;
+
+      if (!fmt) {
+        const stage = this.stages.find(s => s.id === match.stage_id);
+        fmt = stage && stage.settings && stage.settings.match_settings && stage.settings.match_settings.format;
+      }
+
       if (!fmt) return "";
       if (fmt.type === "single_set") return "BO1";
       if (fmt.type === "best_of" && fmt.options && fmt.options.nb_match_sets) {

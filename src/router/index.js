@@ -128,6 +128,12 @@ const routes = [
       import(/* webpackChunkName: "Season" */ "../views/Season.vue")
   },
   {
+    path: "/season/:id/toornament/schedule",
+    name: "SeasonToornamentSchedule",
+    component: () =>
+      import(/* webpackChunkName: "Season" */ "../views/SeasonToornamentSchedule.vue")
+  },
+  {
     path: "/season/:id/toornament",
     name: "SeasonToornament",
     component: () =>

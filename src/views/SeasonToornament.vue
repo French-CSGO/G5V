@@ -7,6 +7,10 @@
         </v-btn>
         {{ seasonName }} — {{ $t("Toornament.MatchesTitle") }}
         <v-spacer />
+        <v-btn v-if="canCreate" small :to="`/season/${seasonId}/toornament/schedule`" class="mr-2">
+          <v-icon left small>mdi-calendar-clock</v-icon>
+          {{ $t("Toornament.ScheduleTitle") }}
+        </v-btn>
         <v-chip small color="primary">Toornament</v-chip>
       </v-card-title>
 

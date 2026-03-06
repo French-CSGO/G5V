@@ -220,8 +220,11 @@ export default {
 
       if (!fmt) {
         const stage = this.stages.find(s => s.id === match.stage_id);
-        console.log(`[matchFormat] stage trouvé=`, stage ? JSON.stringify(stage.settings) : "AUCUN");
-        fmt = stage && stage.settings && stage.settings.match_settings && stage.settings.match_settings.format;
+        console.log(`[matchFormat] stage trouvé (settings)=`, stage ? JSON.stringify(stage.settings) : "AUCUN");
+        console.log(`[matchFormat] stage trouvé (match_settings)=`, stage ? JSON.stringify(stage.match_settings) : "AUCUN");
+        // Toornament peut stocker le format dans settings.match_settings ou directement dans match_settings
+        fmt = (stage && stage.settings && stage.settings.match_settings && stage.settings.match_settings.format)
+           || (stage && stage.match_settings && stage.match_settings.format);
       }
 
       console.log(`[matchFormat] fmt final=`, JSON.stringify(fmt));

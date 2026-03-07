@@ -163,6 +163,15 @@
                 <v-btn
                   v-if="isQueueOwner"
                   text
+                  :color="linkCopied ? 'success' : 'primary'"
+                  @click="copyInviteLink"
+                >
+                  <v-icon left>{{ linkCopied ? 'mdi-check' : 'mdi-link-variant' }}</v-icon>
+                  {{ linkCopied ? 'Lien copié !' : 'Copier le lien' }}
+                </v-btn>
+                <v-btn
+                  v-if="isQueueOwner"
+                  text
                   color="error"
                   @click="deleteCurrentQueue"
                   :loading="deleting"
@@ -341,6 +350,7 @@ export default {
       createdMatchId: null,
       serverStarting: false,
       sseClient: null,
+      linkCopied: false,
       snackbar: { show: false, text: "", color: "success" }
     };
   },
@@ -372,6 +382,10 @@ export default {
     this.user = await this.IsLoggedIn();
     if (this.user.id !== null) {
       await this.refreshQueues();
+      const joinSlug = this.$route.query.join;
+      if (joinSlug && !this.myQueue) {
+        await this.joinQueue(joinSlug);
+      }
     }
   },
   beforeDestroy() {
@@ -587,6 +601,20 @@ export default {
       const minutes = Math.floor(diff / 60000);
       if (minutes < 60) return `dans ${minutes}min`;
       return `dans ${Math.floor(minutes / 60)}h`;
+    },
+
+    copyInviteLink() {
+      if (!this.myQueue) return;
+      const url =
+        window.location.origin +
+        "/queue?join=" +
+        this.myQueue.name;
+      navigator.clipboard.writeText(url).then(() => {
+        this.linkCopied = true;
+        setTimeout(() => {
+          this.linkCopied = false;
+        }, 2500);
+      });
     },
 
     showSnack(text, color = "success") {

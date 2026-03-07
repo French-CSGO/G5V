@@ -315,6 +315,10 @@
       </v-form>
     </v-window>
     <v-divider></v-divider>
+    <v-alert v-if="isLoading" type="info" text dense class="ma-3 mb-0">
+      <v-progress-circular indeterminate size="14" width="2" class="mr-2" />
+      {{ $t("Toornament.ServerStarting") }}
+    </v-alert>
     <v-card-actions>
       <v-btn :disabled="step === 1" text @click="checkValidation(false)">
         {{ $t("misc.Back") }}
@@ -417,10 +421,10 @@ export default {
   watch: {
     async selectedSeason(val) {
       let arrIndex = this.seasons
-        .map(obj => {
-          return obj.id;
-        })
-        .indexOf(val);
+          .map(obj => {
+            return obj.id;
+          })
+          .indexOf(val);
       this.selectedSeasonObject = this.seasons[arrIndex];
       if (val && val !== -1) {
         let seasonTeams = await this.GetSeasonTeams(val);
@@ -610,7 +614,6 @@ export default {
     GoToMatch() {
       this.responseSheet = !this.responseSheet;
       this.response = "";
-      console.log(this.newMatchId);
       if (this.newMatchId != null)
         this.$router.push({ name: `Match`, params: { id: this.newMatchId } });
     }

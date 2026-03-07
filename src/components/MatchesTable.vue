@@ -54,7 +54,6 @@
         {{ item.display_name }}
       </div>
     </template>
-    
     <template v-slot:top>
       <div v-if="isMyMatches && isThereCancelledMatches">
         <v-toolbar flat>

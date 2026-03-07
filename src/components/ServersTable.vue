@@ -18,6 +18,7 @@
             color="secondary"
             @click="allServers = !allServers"
             v-if="user.id != null"
+            class="mr-2"
           >
             <div v-if="allServers">
               {{ $t("MyServers.ShowMyServers") }}
@@ -25,6 +26,15 @@
             <div v-else>
               {{ $t("MyServers.ShowPublicServers") }}
             </div>
+          </v-btn>
+          <v-btn
+            color="secondary"
+            to="/servers/pterodactyl-link"
+            v-if="IsAnyAdmin(user)"
+            class="mr-2"
+          >
+            <v-icon left>mdi-link</v-icon>
+            Pterodactyl
           </v-btn>
           <v-btn
             color="primary"

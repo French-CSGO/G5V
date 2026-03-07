@@ -149,6 +149,12 @@ const routes = [
       import(/* webpackChunkName: "Server" */ "../views/Servers.vue")
   },
   {
+    path: "/servers/pterodactyl-link",
+    name: "ServerPterodactylLink",
+    component: () =>
+      import(/* webpackChunkName: "Server" */ "../views/ServerPterodactylLink.vue")
+  },
+  {
     path: "/metrics",
     name: "Metrics",
     // route level code-splitting

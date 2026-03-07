@@ -438,7 +438,8 @@
       "StepDetails": "Spectators & CVARs",
       "SuggestedFormat": "Suggested by Toornament: BO{n}",
       "MatchInfo": "Match",
-      "CreateError": "Error creating match"
+      "CreateError": "Error creating match",
+      "ServerStarting": "Starting server, this may take a few minutes..."
     },
     "Footer": {
       "company": "Phlex Plexico",
@@ -885,7 +886,8 @@
       "StepDetails": "Spectateurs & CVARs",
       "SuggestedFormat": "Suggéré par Toornament : BO{n}",
       "MatchInfo": "Match",
-      "CreateError": "Erreur lors de la création du match"
+      "CreateError": "Erreur lors de la création du match",
+      "ServerStarting": "Démarrage du serveur en cours, cela peut prendre quelques minutes..."
     },
     "Footer": {
       "company": "Phlex Plexico",

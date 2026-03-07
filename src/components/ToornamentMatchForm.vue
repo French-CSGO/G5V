@@ -120,6 +120,10 @@
       </v-window>
 
       <v-divider />
+      <v-alert v-if="isLoading" type="info" text dense class="ma-3 mb-0">
+        <v-progress-circular indeterminate size="14" width="2" class="mr-2" />
+        {{ $t("Toornament.ServerStarting") }}
+      </v-alert>
       <v-card-actions>
         <v-btn text @click="close">{{ $t("misc.Cancel") }}</v-btn>
         <v-btn :disabled="step === 1" text @click="step--">{{ $t("misc.Back") }}</v-btn>

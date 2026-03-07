@@ -315,6 +315,10 @@
       </v-form>
     </v-window>
     <v-divider></v-divider>
+    <v-alert v-if="isLoading" type="info" text dense class="ma-3 mb-0">
+      <v-progress-circular indeterminate size="14" width="2" class="mr-2" />
+      {{ $t("Toornament.ServerStarting") }}
+    </v-alert>
     <v-card-actions>
       <v-btn :disabled="step === 1" text @click="checkValidation(false)">
         {{ $t("misc.Back") }}

@@ -30,7 +30,6 @@
             color="secondary"
             to="/servers/pterodactyl-link"
             v-if="IsAnyAdmin(user)"
-            class="mr-2"
           >
             <v-icon left>mdi-link</v-icon>
             Pterodactyl

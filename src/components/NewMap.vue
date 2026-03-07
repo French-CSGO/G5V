@@ -235,7 +235,7 @@ export default {
           });
         }
       } catch (error) {
-        console.log(error);
+        void error;
       }
       return;
     },
@@ -251,7 +251,7 @@ export default {
         ];
         await this.UpdateUserMap(updateMapData);
       } catch (error) {
-        console.log(error);
+        void error;
       }
     },
     async DeleteMapInfo(mapInfo) {
@@ -268,7 +268,7 @@ export default {
         this.selectedMap = {};
         this.deleteDialog = false;
       } catch (error) {
-        console.log(error);
+        void error;
       }
     },
     async InsertMapInfo(mapInfo) {
@@ -289,7 +289,7 @@ export default {
           enabled: true
         };
       } catch (error) {
-        console.log(error);
+        void error;
       }
     }
   }

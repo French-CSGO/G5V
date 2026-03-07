@@ -39,6 +39,16 @@
         </v-col>
       </v-row>
 
+      <!-- Server starting banner -->
+      <v-row v-if="serverStarting && !createdMatchId">
+        <v-col cols="12">
+          <v-alert type="info" prominent>
+            <v-progress-circular indeterminate size="20" width="3" class="mr-3" />
+            Démarrage du serveur en cours, cela peut prendre quelques minutes...
+          </v-alert>
+        </v-col>
+      </v-row>
+
       <!-- Match created banner -->
       <v-row v-if="createdMatchId">
         <v-col cols="12">
@@ -280,6 +290,7 @@ export default {
       newQueueSize: 2,
       newQueuePrivate: false,
       createdMatchId: null,
+      serverStarting: false,
       sseClient: null,
       snackbar: { show: false, text: "", color: "success" }
     };
@@ -342,6 +353,7 @@ export default {
 
     async joinQueue(slug) {
       this.joiningQueue = slug;
+      const startingTimer = setTimeout(() => { this.serverStarting = true; }, 3000);
       try {
         const result = await this.JoinQueue(slug);
         if (result.matchId) {
@@ -361,6 +373,8 @@ export default {
         const msg = err?.response?.data?.error || "Erreur lors de la jonction";
         this.showSnack(msg, "error");
       } finally {
+        clearTimeout(startingTimer);
+        this.serverStarting = false;
         this.joiningQueue = null;
       }
     },
@@ -454,7 +468,12 @@ export default {
           }
         });
 
+        this.sseClient.on("queueStarting", () => {
+          this.serverStarting = true;
+        });
+
         this.sseClient.on("queueFull", data => {
+          this.serverStarting = false;
           this.createdMatchId = data.matchId;
           this.myQueue = null;
           this.queuePlayers = [];

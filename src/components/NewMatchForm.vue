@@ -421,10 +421,10 @@ export default {
   watch: {
     async selectedSeason(val) {
       let arrIndex = this.seasons
-        .map(obj => {
-          return obj.id;
-        })
-        .indexOf(val);
+          .map(obj => {
+            return obj.id;
+          })
+          .indexOf(val);
       this.selectedSeasonObject = this.seasons[arrIndex];
       if (val && val !== -1) {
         let seasonTeams = await this.GetSeasonTeams(val);
@@ -614,7 +614,6 @@ export default {
     GoToMatch() {
       this.responseSheet = !this.responseSheet;
       this.response = "";
-      console.log(this.newMatchId);
       if (this.newMatchId != null)
         this.$router.push({ name: `Match`, params: { id: this.newMatchId } });
     }

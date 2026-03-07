@@ -15,27 +15,21 @@
           </div>
           <div
             class="text-subtitle-2 mapInfo"
-            v-if="
-              mapStats[index] != null && mapStats[index].start != null
-            "
+            v-if="mapStats[index] != null && mapStats[index].start != null"
             align="center"
           >
             {{ mapStats[index].start }}
           </div>
           <div
             class="text-subtitle-2 mapInfo"
-            v-if="
-              mapStats[index] != null && mapStats[index].end != null
-            "
+            v-if="mapStats[index] != null && mapStats[index].end != null"
             align="center"
           >
             {{ mapStats[index].end }}
           </div>
           <div
             class="text-subtitle-2 mapInfo"
-            v-if="
-              mapStats[index] != null && mapStats[index].demo != null
-            "
+            v-if="mapStats[index] != null && mapStats[index].demo != null"
             align="center"
           >
             <v-btn
@@ -48,9 +42,7 @@
           </div>
           <div
             class="text-subtitle-2 mapInfo"
-            v-if="
-              mapStats[index] != null && mapStats[index].end == null
-            "
+            v-if="mapStats[index] != null && mapStats[index].end == null"
             align="left"
           ></div>
         </v-container>
@@ -239,14 +231,13 @@ export default {
       // Template will contain v-rows/etc like on main Team page.
       let matchData = await this.GetMatchData(this.match_id);
       if (matchData.end_time == null) {
-           //this.GetMapStatsStream(matchData);
-           //this.GetMapPlayerStatsStream(matchData);
-           this.getMapString(matchData);
-           this.GetMapPlayerStats(matchData);
-      }
-      else {
-           this.getMapString(matchData);
-           this.GetMapPlayerStats(matchData);
+        //this.GetMapStatsStream(matchData);
+        //this.GetMapPlayerStatsStream(matchData);
+        this.getMapString(matchData);
+        this.GetMapPlayerStats(matchData);
+      } else {
+        this.getMapString(matchData);
+        this.GetMapPlayerStats(matchData);
       }
     },
     async retrieveStatsHelper(serverResponse, matchData) {

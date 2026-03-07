@@ -158,7 +158,10 @@ export default {
       try {
         let res;
         if (this.seasonId && this.teamId)
-          res = await this.GetSeasonTeamPlayerLeaderboard(this.seasonId, this.teamId);
+          res = await this.GetSeasonTeamPlayerLeaderboard(
+            this.seasonId,
+            this.teamId
+          );
         else if (this.seasonId)
           res = await this.GetSeasonPlayerLeaderboard(this.seasonId);
         else if (this.teamId)
@@ -173,7 +176,7 @@ export default {
           this.players.push(player);
         });
       } catch (error) {
-        console.log("Our error: " + error);
+        void error;
       } finally {
         this.isLoading = false;
       }

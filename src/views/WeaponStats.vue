@@ -19,7 +19,12 @@
           <v-icon left small>mdi-chart-line</v-icon>
           {{ $t("GlobalStats.GlobalStats") }}
         </v-btn>
-        <v-btn text small color="primary" :to="'/stats/player/' + steamId + '/weapons'">
+        <v-btn
+          text
+          small
+          color="primary"
+          :to="'/stats/player/' + steamId + '/weapons'"
+        >
           <v-icon left small>mdi-pistol</v-icon>
           {{ $t("GlobalStats.WeaponStats") }}
         </v-btn>
@@ -103,13 +108,21 @@ export default {
     },
     weaponStats() {
       const myKills = this.extraStats.filter(
-        e => e.attacker_steam_id === this.steamId && !e.suicide && !e.friendly_fire
+        e =>
+          e.attacker_steam_id === this.steamId && !e.suicide && !e.friendly_fire
       );
       const map = {};
       myKills.forEach(e => {
         const w = e.weapon || "unknown";
         if (!map[w]) {
-          map[w] = { weapon: w, kills: 0, hs: 0, blind: 0, smoke: 0, noscope: 0 };
+          map[w] = {
+            weapon: w,
+            kills: 0,
+            hs: 0,
+            blind: 0,
+            smoke: 0,
+            noscope: 0
+          };
         }
         map[w].kills++;
         if (e.headshot) map[w].hs++;
@@ -124,13 +137,34 @@ export default {
     },
     headers() {
       return [
-        { text: this.$t("GlobalStats.Weapon"), value: "weapon", sortable: true },
+        {
+          text: this.$t("GlobalStats.Weapon"),
+          value: "weapon",
+          sortable: true
+        },
         { text: this.$t("PlayerStats.Kills"), value: "kills", sortable: true },
-        { text: this.$t("PlayerStats.Headshot") + "%", value: "hsp", sortable: true, width: "180px" },
+        {
+          text: this.$t("PlayerStats.Headshot") + "%",
+          value: "hsp",
+          sortable: true,
+          width: "180px"
+        },
         { text: this.$t("GlobalStats.HSKills"), value: "hs", sortable: true },
-        { text: this.$t("GlobalStats.BlindKills"), value: "blind", sortable: true },
-        { text: this.$t("GlobalStats.SmokeKills"), value: "smoke", sortable: true },
-        { text: this.$t("GlobalStats.NoScope"), value: "noscope", sortable: true }
+        {
+          text: this.$t("GlobalStats.BlindKills"),
+          value: "blind",
+          sortable: true
+        },
+        {
+          text: this.$t("GlobalStats.SmokeKills"),
+          value: "smoke",
+          sortable: true
+        },
+        {
+          text: this.$t("GlobalStats.NoScope"),
+          value: "noscope",
+          sortable: true
+        }
       ];
     }
   },

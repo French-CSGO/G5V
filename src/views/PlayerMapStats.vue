@@ -19,7 +19,12 @@
           <v-icon left small>mdi-chart-line</v-icon>
           {{ $t("GlobalStats.GlobalStats") }}
         </v-btn>
-        <v-btn text small color="primary" :to="'/stats/player/' + steamId + '/maps'">
+        <v-btn
+          text
+          small
+          color="primary"
+          :to="'/stats/player/' + steamId + '/maps'"
+        >
           <v-icon left small>mdi-map</v-icon>
           {{ $t("GlobalStats.MapStats") }}
         </v-btn>
@@ -56,7 +61,10 @@
               </v-card-title>
               <v-card-text>
                 <div class="d-flex justify-space-between text-caption mb-1">
-                  <span>{{ stat.maps }} {{ $t("GlobalStats.Maps").toLowerCase() }}</span>
+                  <span
+                    >{{ stat.maps }}
+                    {{ $t("GlobalStats.Maps").toLowerCase() }}</span
+                  >
                   <span>K/D: {{ stat.kd }}</span>
                 </div>
                 <div class="d-flex justify-space-between text-caption mb-1">
@@ -65,7 +73,9 @@
                 </div>
                 <div class="d-flex justify-space-between text-caption mb-2">
                   <span>ADR: {{ stat.adr }}</span>
-                  <span>{{ $t("PlayerStats.Headshot") }}%: {{ stat.hsp }}%</span>
+                  <span
+                    >{{ $t("PlayerStats.Headshot") }}%: {{ stat.hsp }}%</span
+                  >
                 </div>
                 <div class="text-caption mb-1 font-weight-medium">
                   {{ $t("GlobalStats.Rounds") }}: {{ stat.rounds }}
@@ -87,7 +97,9 @@
         :items-per-page="15"
         class="elevation-0"
       >
-        <template v-slot:item.map_name="{ item }">{{ formatMapName(item.map_name) }}</template>
+        <template v-slot:item.map_name="{ item }">{{
+          formatMapName(item.map_name)
+        }}</template>
         <template v-slot:item.hsp="{ item }">{{ item.hsp }}%</template>
         <template v-slot:item.rating="{ item }">
           <strong>{{ item.rating }}</strong>
@@ -154,7 +166,11 @@ export default {
             rounds: 0,
             damage: 0,
             hs_kills: 0,
-            k1: 0, k2: 0, k3: 0, k4: 0, k5: 0,
+            k1: 0,
+            k2: 0,
+            k3: 0,
+            k4: 0,
+            k5: 0,
             ratings: []
           };
         }
@@ -173,7 +189,18 @@ export default {
         g.k5 += s.k5 || 0;
         if (s.roundsplayed > 0) {
           g.ratings.push(
-            parseFloat(this.GetRating(s.kills, s.roundsplayed, s.deaths, s.k1, s.k2, s.k3, s.k4, s.k5))
+            parseFloat(
+              this.GetRating(
+                s.kills,
+                s.roundsplayed,
+                s.deaths,
+                s.k1,
+                s.k2,
+                s.k3,
+                s.k4,
+                s.k5
+              )
+            )
           );
         }
       });
@@ -188,19 +215,40 @@ export default {
         kd: g.deaths > 0 ? (g.kills / g.deaths).toFixed(2) : g.kills.toFixed(2),
         hsp: g.kills > 0 ? Math.round((g.hs_kills / g.kills) * 100) : 0,
         adr: g.rounds > 0 ? (g.damage / g.rounds).toFixed(2) : "0.00",
-        rating: g.ratings.length > 0 ? (g.ratings.reduce((a, b) => a + b, 0) / g.ratings.length).toFixed(2) : "0.00"
+        rating:
+          g.ratings.length > 0
+            ? (g.ratings.reduce((a, b) => a + b, 0) / g.ratings.length).toFixed(
+                2
+              )
+            : "0.00"
       }));
     },
     headers() {
       return [
         { text: this.$t("GlobalStats.Map"), value: "map_name", sortable: true },
         { text: this.$t("GlobalStats.Maps"), value: "maps", sortable: true },
-        { text: this.$t("GlobalStats.Rounds"), value: "rounds", sortable: true },
+        {
+          text: this.$t("GlobalStats.Rounds"),
+          value: "rounds",
+          sortable: true
+        },
         { text: this.$t("PlayerStats.Kills"), value: "kills", sortable: true },
-        { text: this.$t("PlayerStats.Deaths"), value: "deaths", sortable: true },
-        { text: this.$t("PlayerStats.Assists"), value: "assists", sortable: true },
+        {
+          text: this.$t("PlayerStats.Deaths"),
+          value: "deaths",
+          sortable: true
+        },
+        {
+          text: this.$t("PlayerStats.Assists"),
+          value: "assists",
+          sortable: true
+        },
         { text: this.$t("PlayerStats.KDR"), value: "kd", sortable: false },
-        { text: this.$t("PlayerStats.Headshot") + "%", value: "hsp", sortable: true },
+        {
+          text: this.$t("PlayerStats.Headshot") + "%",
+          value: "hsp",
+          sortable: true
+        },
         { text: this.$t("PlayerStats.ADR"), value: "adr", sortable: false },
         { text: this.$t("PlayerStats.Rating"), value: "rating", sortable: true }
       ];

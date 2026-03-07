@@ -3,7 +3,12 @@
     <v-card>
       <v-card-title class="title font-weight-regular justify-space-between">
         <span>{{ currentTitle }}</span>
-        <v-avatar color="primary lighten-2" class="subheading white--text" size="24" v-text="step" />
+        <v-avatar
+          color="primary lighten-2"
+          class="subheading white--text"
+          size="24"
+          v-text="step"
+        />
       </v-card-title>
 
       <v-window v-model="step">
@@ -14,7 +19,11 @@
               <!-- Teams locked -->
               <v-col cols="6">
                 <v-text-field
-                  :value="prefill.team1 ? prefill.team1.name : $t('Toornament.TeamTBD')"
+                  :value="
+                    prefill.team1
+                      ? prefill.team1.name
+                      : $t('Toornament.TeamTBD')
+                  "
                   :label="$t('CreateMatch.FormTeam1')"
                   readonly
                   outlined
@@ -24,7 +33,11 @@
               </v-col>
               <v-col cols="6">
                 <v-text-field
-                  :value="prefill.team2 ? prefill.team2.name : $t('Toornament.TeamTBD')"
+                  :value="
+                    prefill.team2
+                      ? prefill.team2.name
+                      : $t('Toornament.TeamTBD')
+                  "
                   :label="$t('CreateMatch.FormTeam2')"
                   readonly
                   outlined
@@ -68,7 +81,11 @@
               <v-col cols="12">
                 <div class="text-subtitle-1 mb-2">
                   <strong>{{ $t("CreateMatch.FormSeriesType") }}</strong>
-                  <span class="ml-2 caption grey--text">({{ $t("Toornament.SuggestedFormat", { n: prefill.max_maps }) }})</span>
+                  <span class="ml-2 caption grey--text"
+                    >({{
+                      $t("Toornament.SuggestedFormat", { n: prefill.max_maps })
+                    }})</span
+                  >
                 </div>
                 <v-radio-group v-model="formData.maps_to_win" row>
                   <v-radio :label="$t('CreateMatch.BestOf') + 1" :value="1" />
@@ -81,9 +98,23 @@
               <!-- Match info (read only) -->
               <v-col cols="12">
                 <v-alert type="info" text dense>
-                  {{ $t("Toornament.MatchInfo") }} #{{ prefill.toornament_match ? prefill.toornament_match.number : "" }}
-                  <span v-if="prefill.toornament_match && prefill.toornament_match.scheduled_datetime">
-                    — {{ new Date(prefill.toornament_match.scheduled_datetime).toLocaleString() }}
+                  {{ $t("Toornament.MatchInfo") }} #{{
+                    prefill.toornament_match
+                      ? prefill.toornament_match.number
+                      : ""
+                  }}
+                  <span
+                    v-if="
+                      prefill.toornament_match &&
+                        prefill.toornament_match.scheduled_datetime
+                    "
+                  >
+                    —
+                    {{
+                      new Date(
+                        prefill.toornament_match.scheduled_datetime
+                      ).toLocaleString()
+                    }}
                   </span>
                 </v-alert>
               </v-col>
@@ -126,12 +157,20 @@
       </v-alert>
       <v-card-actions>
         <v-btn text @click="close">{{ $t("misc.Cancel") }}</v-btn>
-        <v-btn :disabled="step === 1" text @click="step--">{{ $t("misc.Back") }}</v-btn>
+        <v-btn :disabled="step === 1" text @click="step--">{{
+          $t("misc.Back")
+        }}</v-btn>
         <v-spacer />
         <v-btn v-if="step < 2" color="primary" depressed @click="step++">
           {{ $t("misc.Next") }}
         </v-btn>
-        <v-btn v-else color="primary" depressed :loading="isLoading" @click="createMatch">
+        <v-btn
+          v-else
+          color="primary"
+          depressed
+          :loading="isLoading"
+          @click="createMatch"
+        >
           {{ $t("misc.Create") }}
         </v-btn>
       </v-card-actions>
@@ -173,8 +212,12 @@ export default {
   },
   computed: {
     dialog: {
-      get() { return this.value; },
-      set(val) { this.$emit("input", val); }
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.$emit("input", val);
+      }
     },
     currentTitle() {
       return this.step === 1
@@ -202,15 +245,31 @@ export default {
     reset() {
       this.step = 1;
       this.isLoading = false;
-      if (this.prefill.max_maps) this.formData.maps_to_win = this.prefill.max_maps;
-      if (this.prefill.season_cvars) this.formData.cvars = this.buildCvarArray(this.prefill.season_cvars);
-      if (this.prefill.available_servers && this.prefill.available_servers.length > 0) {
+      if (this.prefill.max_maps)
+        this.formData.maps_to_win = this.prefill.max_maps;
+      if (this.prefill.season_cvars)
+        this.formData.cvars = this.buildCvarArray(this.prefill.season_cvars);
+      if (
+        this.prefill.available_servers &&
+        this.prefill.available_servers.length > 0
+      ) {
         this.selectedServer = this.prefill.available_servers[0].id;
       }
     },
     buildCvarArray(cvars) {
       if (!cvars || typeof cvars !== "object") return [];
-      const reserved = ["min_players_to_ready","min_spectators_to_ready","players_per_team","maps_to_win","wingman","skip_veto","map_pool","side_type","spectators","map_sides"];
+      const reserved = [
+        "min_players_to_ready",
+        "min_spectators_to_ready",
+        "players_per_team",
+        "maps_to_win",
+        "wingman",
+        "skip_veto",
+        "map_pool",
+        "side_type",
+        "spectators",
+        "map_sides"
+      ];
       return Object.entries(cvars)
         .filter(([k]) => !reserved.includes(k))
         .map(([k, v]) => `${k} ${v}`);
@@ -240,27 +299,49 @@ export default {
       }
       this.isLoading = true;
 
-      const cvars = Object.assign({}, ...this.formData.cvars.map(this.splitCvar));
+      const cvars = Object.assign(
+        {},
+        ...this.formData.cvars.map(this.splitCvar)
+      );
       const sc = this.prefill.season_cvars || {};
-      const matchObj = [{
-        server_id: this.selectedServer,
-        team1_id: this.prefill.team1.id,
-        team2_id: this.prefill.team2.id,
-        season_id: this.prefill.season_id,
-        start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
-        max_maps: this.formData.maps_to_win,
-        spectator_auths: this.formData.spectators.length ? this.formData.spectators : null,
-        match_cvars: Object.keys(cvars).length ? cvars : null,
-        skip_veto: sc.skip_veto != null ? !!parseInt(sc.skip_veto) : false,
-        veto_first: "team1",
-        side_type: sc.side_type || "standard",
-        veto_mappool: sc.map_pool || null,
-        map_sides: sc.map_sides ? sc.map_sides.trim().split(/\s+/).join(",") : null,
-        min_players_to_ready: sc.min_players_to_ready != null ? parseInt(sc.min_players_to_ready) : null,
-        min_spectators_to_ready: sc.min_spectators_to_ready != null ? parseInt(sc.min_spectators_to_ready) : null,
-        players_per_team: sc.players_per_team != null ? parseInt(sc.players_per_team) : null,
-        wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null
-      }];
+      const matchObj = [
+        {
+          server_id: this.selectedServer,
+          team1_id: this.prefill.team1.id,
+          team2_id: this.prefill.team2.id,
+          season_id: this.prefill.season_id,
+          start_time: new Date()
+            .toISOString()
+            .slice(0, 19)
+            .replace("T", " "),
+          max_maps: this.formData.maps_to_win,
+          spectator_auths: this.formData.spectators.length
+            ? this.formData.spectators
+            : null,
+          match_cvars: Object.keys(cvars).length ? cvars : null,
+          skip_veto: sc.skip_veto != null ? !!parseInt(sc.skip_veto) : false,
+          veto_first: "team1",
+          side_type: sc.side_type || "standard",
+          veto_mappool: sc.map_pool || null,
+          map_sides: sc.map_sides
+            ? sc.map_sides
+                .trim()
+                .split(/\s+/)
+                .join(",")
+            : null,
+          min_players_to_ready:
+            sc.min_players_to_ready != null
+              ? parseInt(sc.min_players_to_ready)
+              : null,
+          min_spectators_to_ready:
+            sc.min_spectators_to_ready != null
+              ? parseInt(sc.min_spectators_to_ready)
+              : null,
+          players_per_team:
+            sc.players_per_team != null ? parseInt(sc.players_per_team) : null,
+          wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null
+        }
+      ];
 
       try {
         const res = await this.InsertMatch(matchObj);
@@ -269,7 +350,8 @@ export default {
           this.close();
           this.$router.push({ name: "Match", params: { id: res.id } });
         } else {
-          this.snackbarMessage = res?.message || this.$t("Toornament.CreateError");
+          this.snackbarMessage =
+            res?.message || this.$t("Toornament.CreateError");
           this.snackbarColor = "error";
           this.snackbar = true;
         }

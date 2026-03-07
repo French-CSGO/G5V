@@ -50,11 +50,7 @@
             <v-card-title>
               {{ $t("Season.TeamsTitle") }}
               <v-spacer />
-              <v-btn
-                color="primary"
-                small
-                @click="showAddTeamDialog = true"
-              >
+              <v-btn color="primary" small @click="showAddTeamDialog = true">
                 <v-icon left>mdi-plus</v-icon>
                 {{ $t("Season.AddTeam") }}
               </v-btn>
@@ -63,29 +59,26 @@
               {{ $t("Season.NoTeams") }}
             </v-card-text>
             <v-list v-else>
-              <v-list-item
-                v-for="team in seasonTeams"
-                :key="team.id"
-              >
+              <v-list-item v-for="team in seasonTeams" :key="team.id">
                 <v-list-item-avatar>
                   <v-img
                     v-if="team.flag"
-                    :src="`https://www.countryflags.io/${team.flag}/flat/32.png`"
+                    :src="
+                      `https://www.countryflags.io/${team.flag}/flat/32.png`
+                    "
                     :alt="team.flag"
                   />
                   <v-icon v-else>mdi-account-group</v-icon>
                 </v-list-item-avatar>
                 <v-list-item-content>
                   <v-list-item-title>
-                    <router-link :to="{ path: '/teams/' + team.id }">{{ team.name }}</router-link>
+                    <router-link :to="{ path: '/teams/' + team.id }">{{
+                      team.name
+                    }}</router-link>
                   </v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-action>
-                  <v-btn
-                    icon
-                    color="error"
-                    @click="confirmRemoveTeam(team)"
-                  >
+                  <v-btn icon color="error" @click="confirmRemoveTeam(team)">
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </v-list-item-action>
@@ -119,7 +112,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="showAddTeamDialog = false">{{ $t("misc.Cancel") }}</v-btn>
+          <v-btn text @click="showAddTeamDialog = false">{{
+            $t("misc.Cancel")
+          }}</v-btn>
           <v-btn
             color="primary"
             :loading="isAddingTeams"
@@ -137,11 +132,17 @@
       <v-card>
         <v-card-title>{{ $t("Season.RemoveTeamTitle") }}</v-card-title>
         <v-card-text>
-          {{ $t("Season.RemoveTeamConfirm", { name: teamToRemove ? teamToRemove.name : '' }) }}
+          {{
+            $t("Season.RemoveTeamConfirm", {
+              name: teamToRemove ? teamToRemove.name : ""
+            })
+          }}
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="showRemoveDialog = false">{{ $t("misc.Cancel") }}</v-btn>
+          <v-btn text @click="showRemoveDialog = false">{{
+            $t("misc.Cancel")
+          }}</v-btn>
           <v-btn color="error" :loading="isRemovingTeam" @click="removeTeam">
             {{ $t("misc.Delete") }}
           </v-btn>
@@ -251,8 +252,7 @@ export default {
     canManageTeams() {
       return (
         this.user.id !== -1 &&
-        (this.user.id === this.seasonData.user_id ||
-          this.IsAnyAdmin(this.user))
+        (this.user.id === this.seasonData.user_id || this.IsAnyAdmin(this.user))
       );
     },
     availableTeamsToAdd() {
@@ -294,7 +294,8 @@ export default {
         await this.loadSeasonTeams();
       } else {
         this.snackbarColor = "error";
-        this.snackbarMessage = res && res.message ? res.message : "Error adding teams.";
+        this.snackbarMessage =
+          res && res.message ? res.message : "Error adding teams.";
       }
       this.snackbar = true;
     },
@@ -316,7 +317,8 @@ export default {
         await this.loadSeasonTeams();
       } else {
         this.snackbarColor = "error";
-        this.snackbarMessage = res && res.message ? res.message : "Error removing team.";
+        this.snackbarMessage =
+          res && res.message ? res.message : "Error removing team.";
       }
       this.teamToRemove = null;
       this.snackbar = true;

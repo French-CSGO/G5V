@@ -11,7 +11,8 @@ const routes = [
   {
     path: "/queue",
     name: "Queue",
-    component: () => import(/* webpackChunkName: "Queue" */ "../views/Queue.vue")
+    component: () =>
+      import(/* webpackChunkName: "Queue" */ "../views/Queue.vue")
   },
   {
     path: "/matches",
@@ -131,7 +132,9 @@ const routes = [
     path: "/season/:id/toornament/schedule",
     name: "SeasonToornamentSchedule",
     component: () =>
-      import(/* webpackChunkName: "Season" */ "../views/SeasonToornamentSchedule.vue")
+      import(
+        /* webpackChunkName: "Season" */ "../views/SeasonToornamentSchedule.vue"
+      )
   },
   {
     path: "/season/:id/toornament",
@@ -152,7 +155,9 @@ const routes = [
     path: "/servers/pterodactyl-link",
     name: "ServerPterodactylLink",
     component: () =>
-      import(/* webpackChunkName: "Server" */ "../views/ServerPterodactylLink.vue")
+      import(
+        /* webpackChunkName: "Server" */ "../views/ServerPterodactylLink.vue"
+      )
   },
   {
     path: "/metrics",
@@ -190,19 +195,25 @@ const routes = [
     path: "/leaderboard/:seasonid",
     name: "SeasonPlayerBoard",
     component: () =>
-      import(/* webpackChunkName: "Leaderboards" */ "../views/PlayerLeaderboard.vue")
+      import(
+        /* webpackChunkName: "Leaderboards" */ "../views/PlayerLeaderboard.vue"
+      )
   },
   {
     path: "/leaderboard/:seasonid/teams",
     name: "SeasonTeamBoard",
     component: () =>
-      import(/* webpackChunkName: "Leaderboards" */ "../views/TeamLeaderboard.vue")
+      import(
+        /* webpackChunkName: "Leaderboards" */ "../views/TeamLeaderboard.vue"
+      )
   },
   {
     path: "/leaderboard/:seasonid/:teamid",
     name: "TeamsSeasonPlayerBoard",
     component: () =>
-      import(/* webpackChunkName: "Leaderboards" */ "../views/PlayerLeaderboard.vue")
+      import(
+        /* webpackChunkName: "Leaderboards" */ "../views/PlayerLeaderboard.vue"
+      )
   },
   {
     path: "/stats",

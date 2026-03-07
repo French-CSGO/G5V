@@ -7,7 +7,12 @@
         </v-btn>
         {{ $t("ServerPteroLink.Title") }}
         <v-spacer />
-        <v-btn color="primary" :loading="saving" :disabled="saving || loading" @click="saveAll">
+        <v-btn
+          color="primary"
+          :loading="saving"
+          :disabled="saving || loading"
+          @click="saveAll"
+        >
           <v-icon left>mdi-content-save</v-icon>
           {{ $t("ServerPteroLink.SaveAll") }}
         </v-btn>
@@ -15,7 +20,9 @@
 
       <v-card-text>
         <v-alert v-if="error" type="error" dense>{{ error }}</v-alert>
-        <v-alert v-if="successMsg" type="success" dense>{{ successMsg }}</v-alert>
+        <v-alert v-if="successMsg" type="success" dense>{{
+          successMsg
+        }}</v-alert>
 
         <v-data-table
           :headers="headers"
@@ -38,14 +45,26 @@
             >
               <template v-slot:item="{ item: opt }">
                 <span>{{ opt.name }}</span>
-                <v-chip x-small :color="opt.status === 'running' ? 'green' : 'grey'" dark class="ml-2">
+                <v-chip
+                  x-small
+                  :color="opt.status === 'running' ? 'green' : 'grey'"
+                  dark
+                  class="ml-2"
+                >
                   {{ opt.status }}
                 </v-chip>
-                <span class="ml-2 caption grey--text">{{ opt.identifier }}</span>
+                <span class="ml-2 caption grey--text">{{
+                  opt.identifier
+                }}</span>
               </template>
               <template v-slot:selection="{ item: opt }">
                 <span>{{ opt.name }}</span>
-                <v-chip x-small :color="opt.status === 'running' ? 'green' : 'grey'" dark class="ml-2">
+                <v-chip
+                  x-small
+                  :color="opt.status === 'running' ? 'green' : 'grey'"
+                  dark
+                  class="ml-2"
+                >
                   {{ opt.status }}
                 </v-chip>
               </template>
@@ -75,7 +94,11 @@ export default {
       return [
         { text: this.$t("ServerPteroLink.ColServer"), value: "display_name" },
         { text: "IP", value: "ip_string" },
-        { text: this.$t("ServerPteroLink.ColPterodactyl"), value: "pterodactyl_id", sortable: false }
+        {
+          text: this.$t("ServerPteroLink.ColPterodactyl"),
+          value: "pterodactyl_id",
+          sortable: false
+        }
       ];
     },
     pteroOptions() {
@@ -105,10 +128,12 @@ export default {
 
       for (const server of this.servers) {
         try {
-          await this.UpdateServer([{
-            server_id: server.id,
-            pterodactyl_id: server.pterodactyl_id || null
-          }]);
+          await this.UpdateServer([
+            {
+              server_id: server.id,
+              pterodactyl_id: server.pterodactyl_id || null
+            }
+          ]);
           updated++;
         } catch {
           failed++;
@@ -117,9 +142,14 @@ export default {
 
       this.saving = false;
       if (failed === 0) {
-        this.successMsg = this.$t("ServerPteroLink.SaveSuccess", { n: updated });
+        this.successMsg = this.$t("ServerPteroLink.SaveSuccess", {
+          n: updated
+        });
       } else {
-        this.error = this.$t("ServerPteroLink.SavePartial", { updated, failed });
+        this.error = this.$t("ServerPteroLink.SavePartial", {
+          updated,
+          failed
+        });
       }
     }
   }

@@ -32,13 +32,17 @@
           </router-link>
         </template>
         <template v-slot:item.kd="{ item }">
-          {{ item.deaths > 0 ? (item.kills / item.deaths).toFixed(2) : item.kills.toFixed(2) }}
+          {{
+            item.deaths > 0
+              ? (item.kills / item.deaths).toFixed(2)
+              : item.kills.toFixed(2)
+          }}
         </template>
-        <template v-slot:item.hsp="{ item }">
-          {{ item.hsp }}%
-        </template>
+        <template v-slot:item.hsp="{ item }"> {{ item.hsp }}% </template>
         <template v-slot:item.adr="{ item }">
-          {{ item.trp > 0 ? (item.total_damage / item.trp).toFixed(2) : "0.00" }}
+          {{
+            item.trp > 0 ? (item.total_damage / item.trp).toFixed(2) : "0.00"
+          }}
         </template>
         <template v-slot:item.average_rating="{ item }">
           <strong>{{ item.average_rating }}</strong>

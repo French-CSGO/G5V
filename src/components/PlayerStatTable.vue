@@ -286,7 +286,7 @@ export default {
               // If we don't have a team ID, we must be pugging. Go based on
               // Team strings alone.
               teamNum = player.team_name == matchData.team1_string ? 1 : 2;
-              newName = 
+              newName =
                 player.team_name == matchData.team1_string
                   ? matchData.team1_string
                   : matchData.team2_string;
@@ -314,7 +314,7 @@ export default {
           await this.retrieveStatsHelper(message, matchData);
         });
       } catch (error) {
-        console.log("Our error: " + error);
+        void error;
       } finally {
         this.isLoading = false;
       }
@@ -325,7 +325,7 @@ export default {
         let res = await this.GetPlayerStats(this.match_id);
         await this.retrieveStatsHelper(res, matchData);
       } catch (error) {
-        console.log("Our error: " + error);
+        void error;
       } finally {
         this.isLoading = false;
       }
@@ -336,10 +336,10 @@ export default {
         let sseClient = await this.GetEventMapStats(this.match_id);
         await sseClient.connect();
         await sseClient.on("mapstats", async message => {
-          await this.retrieveMapStatsHelper(message,matchData);
+          await this.retrieveMapStatsHelper(message, matchData);
         });
       } catch (error) {
-        console.log("Our error: " + error);
+        void error;
       } finally {
         this.isLoading = false;
       }
@@ -350,7 +350,7 @@ export default {
         let res = await this.GetMapStats(this.match_id);
         await this.retrieveMapStatsHelper(res, matchData);
       } catch (error) {
-        console.log("Our error: " + error);
+        void error;
       } finally {
         this.isLoading = false;
       }
@@ -363,21 +363,37 @@ export default {
           this.$set(this.mapStats, index, {});
         }
 
-        this.$set(this.mapStats[index], 'score', "Score: " +
-          singleMapStat.team1_score +
-          " " +
-          this.GetScoreSymbol(
-            singleMapStat.team1_score,
+        this.$set(
+          this.mapStats[index],
+          "score",
+          "Score: " +
+            singleMapStat.team1_score +
+            " " +
+            this.GetScoreSymbol(
+              singleMapStat.team1_score,
+              singleMapStat.team2_score
+            ) +
+            " " +
             singleMapStat.team2_score
-          ) +
-          " " +
-          singleMapStat.team2_score);
-        this.$set(this.mapStats[index], 'start', "Map Start: " + new Date(singleMapStat.start_time).toLocaleString());
-        this.$set(this.mapStats[index], 'end', singleMapStat.end_time == null ?
-          null :
-          "Map End: " + new Date(singleMapStat.end_time).toLocaleString());
-        this.$set(this.mapStats[index], 'map', "Map: " + singleMapStat.map_name);
-        this.$set(this.mapStats[index], 'demo', singleMapStat.demoFile);
+        );
+        this.$set(
+          this.mapStats[index],
+          "start",
+          "Map Start: " + new Date(singleMapStat.start_time).toLocaleString()
+        );
+        this.$set(
+          this.mapStats[index],
+          "end",
+          singleMapStat.end_time == null
+            ? null
+            : "Map End: " + new Date(singleMapStat.end_time).toLocaleString()
+        );
+        this.$set(
+          this.mapStats[index],
+          "map",
+          "Map: " + singleMapStat.map_name
+        );
+        this.$set(this.mapStats[index], "demo", singleMapStat.demoFile);
       });
       if (matchData.end_time != null) this.isFinished = true;
     }

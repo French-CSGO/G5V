@@ -59,10 +59,14 @@
               lg="2"
             >
               <v-card outlined class="text-center pa-2">
-                <div class="text-caption text--secondary text-uppercase font-weight-bold">
+                <div
+                  class="text-caption text--secondary text-uppercase font-weight-bold"
+                >
                   {{ stat.label }}
                 </div>
-                <div class="text-h6 font-weight-bold mt-1">{{ stat.value }}</div>
+                <div class="text-h6 font-weight-bold mt-1">
+                  {{ stat.value }}
+                </div>
               </v-card>
             </v-col>
           </v-row>
@@ -94,7 +98,9 @@
                     <td class="text-center">{{ totalStat("k2") }}</td>
                     <td class="text-center">{{ totalStat("k3") }}</td>
                     <td class="text-center">{{ totalStat("k4") }}</td>
-                    <td class="text-center font-weight-bold primary--text">{{ totalStat("k5") }}</td>
+                    <td class="text-center font-weight-bold primary--text">
+                      {{ totalStat("k5") }}
+                    </td>
                   </tr>
                 </tbody>
               </template>
@@ -121,7 +127,9 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="text-center font-weight-bold">{{ totalStat("v1") }}</td>
+                    <td class="text-center font-weight-bold">
+                      {{ totalStat("v1") }}
+                    </td>
                     <td class="text-center">{{ totalStat("v2") }}</td>
                     <td class="text-center">{{ totalStat("v3") }}</td>
                     <td class="text-center">{{ totalStat("v4") }}</td>
@@ -144,39 +152,61 @@
           <template v-slot:default>
             <tbody>
               <tr>
-                <td class="font-weight-bold">{{ $t("PlayerStats.BombPlants") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("PlayerStats.BombPlants") }}
+                </td>
                 <td>{{ totalStat("bomb_plants") }}</td>
-                <td class="font-weight-bold">{{ $t("PlayerStats.BombDefuses") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("PlayerStats.BombDefuses") }}
+                </td>
                 <td>{{ totalStat("bomb_defuses") }}</td>
               </tr>
               <tr>
-                <td class="font-weight-bold">{{ $t("PlayerStats.KnifeKills") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("PlayerStats.KnifeKills") }}
+                </td>
                 <td>{{ totalStat("knife_kills") }}</td>
-                <td class="font-weight-bold">{{ $t("PlayerStats.UtilDamage") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("PlayerStats.UtilDamage") }}
+                </td>
                 <td>{{ totalStat("util_damage") }}</td>
               </tr>
               <tr>
-                <td class="font-weight-bold">{{ $t("PlayerStats.EnemyFlash") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("PlayerStats.EnemyFlash") }}
+                </td>
                 <td>{{ totalStat("enemies_flashed") }}</td>
-                <td class="font-weight-bold">{{ $t("PlayerStats.FlashbangAssists") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("PlayerStats.FlashbangAssists") }}
+                </td>
                 <td>{{ totalStat("flashbang_assists") }}</td>
               </tr>
               <tr>
-                <td class="font-weight-bold">{{ $t("PlayerStats.Suicides") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("PlayerStats.Suicides") }}
+                </td>
                 <td>{{ totalStat("suicides") }}</td>
                 <td class="font-weight-bold">{{ $t("PlayerStats.MVP") }}</td>
                 <td>{{ totalStat("mvp") }}</td>
               </tr>
               <tr>
-                <td class="font-weight-bold">{{ $t("PlayerStats.ContribScore") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("PlayerStats.ContribScore") }}
+                </td>
                 <td>{{ totalStat("contribution_score") }}</td>
-                <td class="font-weight-bold">{{ $t("GlobalStats.FirstKillCT") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("GlobalStats.FirstKillCT") }}
+                </td>
                 <td>{{ totalStat("firstkill_ct") }}</td>
               </tr>
               <tr>
-                <td class="font-weight-bold">{{ $t("GlobalStats.FirstKillT") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("GlobalStats.FirstKillT") }}
+                </td>
                 <td>{{ totalStat("firstkill_t") }}</td>
-                <td class="font-weight-bold">{{ $t("GlobalStats.FirstDeathCT") }}</td>
+                <td class="font-weight-bold">
+                  {{ $t("GlobalStats.FirstDeathCT") }}
+                </td>
                 <td>{{ totalStat("firstdeath_ct") }}</td>
               </tr>
             </tbody>
@@ -198,16 +228,30 @@
           class="elevation-0"
         >
           <template v-slot:item.match_id="{ item }">
-            <router-link :to="'/match/' + item.match_id">#{{ item.match_id }}</router-link>
+            <router-link :to="'/match/' + item.match_id"
+              >#{{ item.match_id }}</router-link
+            >
           </template>
           <template v-slot:item.kd="{ item }">
-            {{ item.deaths > 0 ? (item.kills / item.deaths).toFixed(2) : item.kills }}
+            {{
+              item.deaths > 0
+                ? (item.kills / item.deaths).toFixed(2)
+                : item.kills
+            }}
           </template>
           <template v-slot:item.hsp="{ item }">
-            {{ item.kills > 0 ? Math.round((item.headshot_kills / item.kills) * 100) : 0 }}%
+            {{
+              item.kills > 0
+                ? Math.round((item.headshot_kills / item.kills) * 100)
+                : 0
+            }}%
           </template>
           <template v-slot:item.adr="{ item }">
-            {{ item.roundsplayed > 0 ? (item.damage / item.roundsplayed).toFixed(1) : 0 }}
+            {{
+              item.roundsplayed > 0
+                ? (item.damage / item.roundsplayed).toFixed(1)
+                : 0
+            }}
           </template>
         </v-data-table>
       </v-card>
@@ -288,15 +332,33 @@ export default {
       return (this.totalDamage / this.totalRounds).toFixed(2);
     },
     avgKast() {
-      const kastVals = this.stats.filter(s => s.kast != null && s.roundsplayed > 0);
+      const kastVals = this.stats.filter(
+        s => s.kast != null && s.roundsplayed > 0
+      );
       if (kastVals.length === 0) return "N/A";
-      const avg = kastVals.reduce((sum, s) => sum + parseFloat(s.kast), 0) / kastVals.length;
+      const avg =
+        kastVals.reduce((sum, s) => sum + parseFloat(s.kast), 0) /
+        kastVals.length;
       return avg.toFixed(2) + "%";
     },
     avgRating() {
       if (this.stats.length === 0) return "0.00";
       const total = this.stats.reduce((sum, s) => {
-        return sum + parseFloat(this.GetRating(s.kills, s.roundsplayed, s.deaths, s.k1, s.k2, s.k3, s.k4, s.k5));
+        return (
+          sum +
+          parseFloat(
+            this.GetRating(
+              s.kills,
+              s.roundsplayed,
+              s.deaths,
+              s.k1,
+              s.k2,
+              s.k3,
+              s.k4,
+              s.k5
+            )
+          )
+        );
       }, 0);
       return (total / this.stats.length).toFixed(2);
     },
@@ -306,7 +368,10 @@ export default {
         { label: this.$t("GlobalStats.Rounds"), value: this.totalRounds },
         { label: this.$t("PlayerStats.Kills"), value: this.totalKills },
         { label: this.$t("PlayerStats.Deaths"), value: this.totalDeaths },
-        { label: this.$t("PlayerStats.Assists"), value: this.totalStat("assists") },
+        {
+          label: this.$t("PlayerStats.Assists"),
+          value: this.totalStat("assists")
+        },
         { label: this.$t("PlayerStats.KDR"), value: this.kd },
         { label: this.$t("PlayerStats.Headshot") + "%", value: this.hsp + "%" },
         { label: this.$t("PlayerStats.ADR"), value: this.adr },
@@ -326,7 +391,11 @@ export default {
         { text: this.$t("PlayerStats.Deaths"), value: "deaths" },
         { text: this.$t("PlayerStats.Assists"), value: "assists" },
         { text: this.$t("PlayerStats.KDR"), value: "kd", sortable: false },
-        { text: this.$t("PlayerStats.Headshot") + "%", value: "hsp", sortable: false },
+        {
+          text: this.$t("PlayerStats.Headshot") + "%",
+          value: "hsp",
+          sortable: false
+        },
         { text: this.$t("PlayerStats.ADR"), value: "adr", sortable: false }
       ];
     }

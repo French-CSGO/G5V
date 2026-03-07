@@ -7,7 +7,12 @@
         </v-btn>
         {{ seasonName }} — {{ $t("Toornament.MatchesTitle") }}
         <v-spacer />
-        <v-btn v-if="canCreate" small :to="`/season/${seasonId}/toornament/schedule`" class="mr-2">
+        <v-btn
+          v-if="canCreate"
+          small
+          :to="`/season/${seasonId}/toornament/schedule`"
+          class="mr-2"
+        >
           <v-icon left small>mdi-calendar-clock</v-icon>
           {{ $t("Toornament.ScheduleTitle") }}
         </v-btn>
@@ -79,8 +84,16 @@
           { text: '#', value: 'number', width: '60px' },
           { text: $t('Toornament.ColTeam1'), value: 'team1', sortable: false },
           { text: $t('Toornament.ColTeam2'), value: 'team2', sortable: false },
-          { text: $t('Toornament.ColFormat'), value: 'format', sortable: false },
-          { text: $t('Toornament.ColStatus'), value: 'status', sortable: false },
+          {
+            text: $t('Toornament.ColFormat'),
+            value: 'format',
+            sortable: false
+          },
+          {
+            text: $t('Toornament.ColStatus'),
+            value: 'status',
+            sortable: false
+          },
           { text: $t('Toornament.ColDate'), value: 'scheduled_datetime' },
           { text: '', value: 'actions', sortable: false, align: 'end' }
         ]"
@@ -106,17 +119,32 @@
         <template v-slot:item.status="{ item }">
           <v-chip
             x-small
-            :color="item.status === 'completed' ? 'success' : item.status === 'running' ? 'warning' : 'default'"
+            :color="
+              item.status === 'completed'
+                ? 'success'
+                : item.status === 'running'
+                ? 'warning'
+                : 'default'
+            "
           >
             {{ $t("Toornament.Status_" + item.status) }}
           </v-chip>
         </template>
         <template v-slot:item.scheduled_datetime="{ item }">
-          {{ item.scheduled_datetime ? new Date(item.scheduled_datetime).toLocaleString() : "—" }}
+          {{
+            item.scheduled_datetime
+              ? new Date(item.scheduled_datetime).toLocaleString()
+              : "—"
+          }}
         </template>
         <template v-slot:item.actions="{ item }">
           <v-btn
-            v-if="canCreate && item.status === 'pending' && item.opponents[0].local_team && item.opponents[1].local_team"
+            v-if="
+              canCreate &&
+                item.status === 'pending' &&
+                item.opponents[0].local_team &&
+                item.opponents[1].local_team
+            "
             x-small
             color="primary"
             @click="openCreate(item)"
@@ -126,7 +154,9 @@
           </v-btn>
           <v-tooltip v-else-if="canCreate" bottom>
             <template v-slot:activator="{ on, attrs }">
-              <v-icon small color="grey" v-bind="attrs" v-on="on">mdi-help-circle-outline</v-icon>
+              <v-icon small color="grey" v-bind="attrs" v-on="on"
+                >mdi-help-circle-outline</v-icon
+              >
             </template>
             <span>{{ $t("Toornament.TeamNotLinked") }}</span>
           </v-tooltip>
@@ -134,10 +164,7 @@
       </v-data-table>
     </v-card>
 
-    <ToornamentMatchForm
-      v-model="showForm"
-      :prefill="prefill"
-    />
+    <ToornamentMatchForm v-model="showForm" :prefill="prefill" />
   </v-container>
 </template>
 
@@ -175,10 +202,13 @@ export default {
     },
     filteredMatches() {
       if (!this.filterCreatable) return this.matches;
-      return this.matches.filter(m =>
-        m.status === "pending" &&
-        m.opponents[0] && m.opponents[0].local_team &&
-        m.opponents[1] && m.opponents[1].local_team
+      return this.matches.filter(
+        m =>
+          m.status === "pending" &&
+          m.opponents[0] &&
+          m.opponents[0].local_team &&
+          m.opponents[1] &&
+          m.opponents[1].local_team
       );
     }
   },
@@ -205,7 +235,10 @@ export default {
       this.loading = false;
     },
     async openCreate(match) {
-      const data = await this.GetToornamentMatchPrefill(this.seasonId, match.id);
+      const data = await this.GetToornamentMatchPrefill(
+        this.seasonId,
+        match.id
+      );
       if (data) {
         this.prefill = data;
         this.showForm = true;
@@ -217,8 +250,12 @@ export default {
 
       if (!fmt) {
         const stage = this.stages.find(s => s.id === match.stage_id);
-        fmt = (stage && stage.match_settings && stage.match_settings.format)
-           || (stage && stage.settings && stage.settings.match_settings && stage.settings.match_settings.format);
+        fmt =
+          (stage && stage.match_settings && stage.match_settings.format) ||
+          (stage &&
+            stage.settings &&
+            stage.settings.match_settings &&
+            stage.settings.match_settings.format);
       }
 
       if (!fmt) return "";
@@ -229,7 +266,9 @@ export default {
       return fmt.type;
     },
     opponentName(opp) {
-      return opp.participant ? opp.participant.name : this.$t("Toornament.TeamTBD");
+      return opp.participant
+        ? opp.participant.name
+        : this.$t("Toornament.TeamTBD");
     }
   }
 };

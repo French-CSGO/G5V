@@ -9,7 +9,8 @@
             Queue 5v5
           </v-card-title>
           <v-card-subtitle>
-            Rejoins une queue ou crée la tienne. Le match se lance automatiquement quand 10 joueurs sont prêts.
+            Rejoins une queue ou crée la tienne. Le match se lance
+            automatiquement quand 10 joueurs sont prêts.
           </v-card-subtitle>
         </v-card>
       </v-col>
@@ -28,7 +29,11 @@
       <!-- Actions bar -->
       <v-row class="mb-2">
         <v-col cols="12" class="d-flex align-center">
-          <v-btn color="primary" @click="createDialog = true" :disabled="!!myQueue">
+          <v-btn
+            color="primary"
+            @click="createDialog = true"
+            :disabled="!!myQueue"
+          >
             <v-icon left>mdi-plus</v-icon>
             Créer une queue
           </v-btn>
@@ -43,7 +48,12 @@
       <v-row v-if="serverStarting && !createdMatchId">
         <v-col cols="12">
           <v-alert type="info" prominent>
-            <v-progress-circular indeterminate size="20" width="3" class="mr-3" />
+            <v-progress-circular
+              indeterminate
+              size="20"
+              width="3"
+              class="mr-3"
+            />
             Démarrage du serveur en cours, cela peut prendre quelques minutes...
           </v-alert>
         </v-col>
@@ -79,7 +89,12 @@
                 <v-chip color="primary" class="ml-2">
                   {{ myQueue.currentPlayers }} / {{ myQueue.maxSize }}
                 </v-chip>
-                <v-chip v-if="myQueue.isPrivate" class="ml-2" color="grey" small>
+                <v-chip
+                  v-if="myQueue.isPrivate"
+                  class="ml-2"
+                  color="grey"
+                  small
+                >
                   <v-icon small left>mdi-lock</v-icon>Privée
                 </v-chip>
               </v-card-title>
@@ -109,7 +124,9 @@
                       <v-icon>mdi-account-circle</v-icon>
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>{{ player.nickname || player.steamId }}</v-list-item-title>
+                      <v-list-item-title>{{
+                        player.nickname || player.steamId
+                      }}</v-list-item-title>
                     </v-list-item-content>
                     <v-list-item-action v-if="player.hltvRating">
                       <v-chip x-small :color="ratingColor(player.hltvRating)">
@@ -119,17 +136,26 @@
                   </v-list-item>
                   <v-list-item v-for="i in emptySlots" :key="'empty-' + i">
                     <v-list-item-avatar size="28">
-                      <v-icon color="grey lighten-1">mdi-account-question</v-icon>
+                      <v-icon color="grey lighten-1"
+                        >mdi-account-question</v-icon
+                      >
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title class="grey--text">En attente...</v-list-item-title>
+                      <v-list-item-title class="grey--text"
+                        >En attente...</v-list-item-title
+                      >
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
               </v-card-text>
 
               <v-card-actions>
-                <v-btn text color="error" @click="leaveCurrentQueue" :loading="leaving">
+                <v-btn
+                  text
+                  color="error"
+                  @click="leaveCurrentQueue"
+                  :loading="leaving"
+                >
                   <v-icon left>mdi-exit-to-app</v-icon>
                   Quitter la queue
                 </v-btn>
@@ -182,12 +208,22 @@
           sm="6"
           md="4"
         >
-          <v-card outlined :class="{ 'primary lighten-5': myQueue && myQueue.name === queue.name }">
+          <v-card
+            outlined
+            :class="{
+              'primary lighten-5': myQueue && myQueue.name === queue.name
+            }"
+          >
             <v-card-title class="subtitle-1">
               <v-icon small left>mdi-gamepad-variant</v-icon>
               {{ queue.name }}
               <v-spacer />
-              <v-chip small :color="queue.currentPlayers >= queue.maxSize ? 'error' : 'success'">
+              <v-chip
+                small
+                :color="
+                  queue.currentPlayers >= queue.maxSize ? 'error' : 'success'
+                "
+              >
                 {{ queue.currentPlayers }}/{{ queue.maxSize }}
               </v-chip>
             </v-card-title>
@@ -195,7 +231,9 @@
             <v-card-text class="pt-0">
               <v-progress-linear
                 :value="(queue.currentPlayers / queue.maxSize) * 100"
-                :color="queue.currentPlayers >= queue.maxSize ? 'error' : 'primary'"
+                :color="
+                  queue.currentPlayers >= queue.maxSize ? 'error' : 'primary'
+                "
                 rounded
                 height="6"
               />
@@ -261,7 +299,12 @@
     </v-dialog>
 
     <!-- Snackbar -->
-    <v-snackbar v-model="snackbar.show" :color="snackbar.color" top :timeout="4000">
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      top
+      :timeout="4000"
+    >
       {{ snackbar.text }}
       <template v-slot:action="{ attrs }">
         <v-btn text v-bind="attrs" @click="snackbar.show = false">OK</v-btn>
@@ -276,7 +319,13 @@ export default {
   sse: { cleanup: true },
   data() {
     return {
-      user: { admin: false, steam_id: "", id: null, super_admin: false, name: "" },
+      user: {
+        admin: false,
+        steam_id: "",
+        id: null,
+        super_admin: false,
+        name: ""
+      },
       queues: [],
       myQueue: null,
       queuePlayers: [],
@@ -301,7 +350,7 @@ export default {
       for (let i = 1; i <= 10; i++) {
         let label;
         if (i === 1) label = "1 joueur (test)";
-        else if (i % 2 === 0) label = `${i} joueurs (${i/2}v${i/2})`;
+        else if (i % 2 === 0) label = `${i} joueurs (${i / 2}v${i / 2})`;
         else label = `${i} joueurs`;
         opts.push({ text: label, value: i });
       }
@@ -353,7 +402,9 @@ export default {
 
     async joinQueue(slug) {
       this.joiningQueue = slug;
-      const startingTimer = setTimeout(() => { this.serverStarting = true; }, 3000);
+      const startingTimer = setTimeout(() => {
+        this.serverStarting = true;
+      }, 3000);
       try {
         const result = await this.JoinQueue(slug);
         if (result.matchId) {
@@ -382,7 +433,10 @@ export default {
     async createQueue() {
       this.creating = true;
       try {
-        const result = await this.CreateQueue(this.newQueueSize, this.newQueuePrivate);
+        const result = await this.CreateQueue(
+          this.newQueueSize,
+          this.newQueuePrivate
+        );
         this.createDialog = false;
         if (result.matchId) {
           this.showSnack("Match créé ! Redirection...", "success");
@@ -448,23 +502,37 @@ export default {
 
         this.sseClient.on("playerJoined", data => {
           this.queuePlayers = [...(this.queuePlayers || [])];
-          if (data.player && !this.queuePlayers.find(p => p.steamId === data.player.steamId)) {
+          if (
+            data.player &&
+            !this.queuePlayers.find(p => p.steamId === data.player.steamId)
+          ) {
             this.queuePlayers.push(data.player);
           }
           if (this.myQueue) {
-            this.myQueue = { ...this.myQueue, currentPlayers: data.currentPlayers };
+            this.myQueue = {
+              ...this.myQueue,
+              currentPlayers: data.currentPlayers
+            };
           }
           // Update in main list too
           const idx = this.queues.findIndex(q => q.name === data.slug);
           if (idx !== -1) {
-            this.$set(this.queues, idx, { ...this.queues[idx], currentPlayers: data.currentPlayers });
+            this.$set(this.queues, idx, {
+              ...this.queues[idx],
+              currentPlayers: data.currentPlayers
+            });
           }
         });
 
         this.sseClient.on("playerLeft", data => {
-          this.queuePlayers = this.queuePlayers.filter(p => p.steamId !== data.steamId);
+          this.queuePlayers = this.queuePlayers.filter(
+            p => p.steamId !== data.steamId
+          );
           if (this.myQueue) {
-            this.myQueue = { ...this.myQueue, currentPlayers: data.currentPlayers };
+            this.myQueue = {
+              ...this.myQueue,
+              currentPlayers: data.currentPlayers
+            };
           }
         });
 
@@ -478,7 +546,10 @@ export default {
           this.myQueue = null;
           this.queuePlayers = [];
           this.disconnectSSE();
-          this.showSnack("Queue pleine ! Match créé, redirection...", "success");
+          this.showSnack(
+            "Queue pleine ! Match créé, redirection...",
+            "success"
+          );
           if (data.matchId) {
             setTimeout(() => {
               this.$router.push("/match/" + data.matchId);

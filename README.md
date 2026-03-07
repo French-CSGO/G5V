@@ -26,6 +26,10 @@ Get5Vue (G5V) is going to be a replacement for the get5-webpanel. _Currently_ th
 - Leaderboards
 - Individual User Stats
 - Challonge Integration
+- **Queue 5v5** — file d'attente configurable (1–10 joueurs), création automatique de match et redirection en temps réel via SSE
+- **Toornament** — page de matches par saison, création de match avec pré-remplissage depuis l'API Toornament, page de calendrier par stage/round
+- **Pterodactyl** — liaison des serveurs CS2 au panel Pterodactyl, liaison en masse depuis l'interface admin, message de démarrage serveur en temps réel
+- **Discord** — annonce de match et scoreboard live
 
 ## Issues?
 Please report any *match* issues to the [API](https://github.com/phlexplexico/G5API). Display issues, or loading data, please report them here. If it's something to do with the API, the issue will be transferred.

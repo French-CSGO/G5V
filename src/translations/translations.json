@@ -247,6 +247,14 @@
       "ShowPublicServers": "Show All Available Servers",
       "ShowMyServers": "Show My Servers"
     },
+    "ServerPteroLink": {
+      "Title": "Link Servers to Pterodactyl",
+      "SaveAll": "Save All",
+      "ColServer": "Server",
+      "ColPterodactyl": "Pterodactyl Server",
+      "SaveSuccess": "{n} server(s) updated successfully.",
+      "SavePartial": "{updated} updated, {failed} failed."
+    },
     "ServerCreate": {
       "InfoWillNotBeExposed": "Your server information will not be exposed to other users.",
       "Get5Help": "Make sure your server is online and has the latest version of get5 installed.<br>See <a href=\"http://splewis.github.io/get5/latest/installation/\">the installation guide</a> for help installing the get5. PLEASE ENSURE sv_logecho = 1 IS SET ON THE SERVER AND 'log on'",
@@ -686,6 +694,14 @@
       "ShowPublicServers": "Montrer tous les serveurs disponibles",
       "ShowMyServers": "Montrer mes serveurs"
     },
+    "ServerPteroLink": {
+      "Title": "Lier les serveurs à Pterodactyl",
+      "SaveAll": "Tout sauvegarder",
+      "ColServer": "Serveur",
+      "ColPterodactyl": "Serveur Pterodactyl",
+      "SaveSuccess": "{n} serveur(s) mis à jour avec succès.",
+      "SavePartial": "{updated} mis à jour, {failed} échoué(s)."
+    },
     "ServerCreate": {
       "InfoWillNotBeExposed": "Les informations de votre serveur ne seront pas exposées aux autres utilisateurs.",
       "Get5Help": "Assurez-vous que votre serveur est en ligne et que la dernière version de get5 est installée.<br>Voir <a href=\"http://splewis.github.io/get5/latest/installation/\">le guide d'installation</a> pour l'aide à l'installation de get5. VEUILLEZ VOUS ASSURER que sv_logecho = 1 EST FIXE SUR LE SERVEUR ET que 'log on' est installé.",
@@ -1120,6 +1136,14 @@
       "Flag": "場所は",
       "ShowPublicServers": "利用可能なサーバーをすべて表示",
       "ShowMyServers": "マイサーバーの表示"
+    },
+    "ServerPteroLink": {
+      "Title": "サーバーをPterodactylにリンク",
+      "SaveAll": "すべて保存",
+      "ColServer": "サーバー",
+      "ColPterodactyl": "Pterodactylサーバー",
+      "SaveSuccess": "{n}件のサーバーを更新しました。",
+      "SavePartial": "{updated}件更新、{failed}件失敗。"
     },
     "ServerCreate": {
       "InfoWillNotBeExposed": "あなたのサーバー情報は他のユーザーには公開されません。",

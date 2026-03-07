@@ -156,8 +156,6 @@ export default {
   methods: {
     async GetLeaderboard() {
       try {
-    console.log("Season ID: " + this.seasonId);
-    console.log("Team ID: " + this.teamId);
         let res;
         if (this.seasonId && this.teamId)
           res = await this.GetSeasonTeamPlayerLeaderboard(this.seasonId, this.teamId);

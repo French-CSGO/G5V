@@ -125,7 +125,6 @@ export default {
           }
         ];
         userResponse = await this.UpdateUserInfo(userObject);
-        console.log(userResponse);
         if (!userResponse.message.includes("successfully")) {
           this.response = userResponse.message;
           this.responseSheet = true;

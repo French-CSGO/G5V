@@ -421,16 +421,17 @@ export default {
   watch: {
     async selectedSeason(val) {
       let arrIndex = this.seasons
-          .map(obj => {
-            return obj.id;
-          })
-          .indexOf(val);
+        .map(obj => {
+          return obj.id;
+        })
+        .indexOf(val);
       this.selectedSeasonObject = this.seasons[arrIndex];
       if (val && val !== -1) {
         let seasonTeams = await this.GetSeasonTeams(val);
-        this.teams = Array.isArray(seasonTeams) && seasonTeams.length > 0
-          ? seasonTeams
-          : this.allTeams;
+        this.teams =
+          Array.isArray(seasonTeams) && seasonTeams.length > 0
+            ? seasonTeams
+            : this.allTeams;
       } else {
         this.teams = this.allTeams;
       }

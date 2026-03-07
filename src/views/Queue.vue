@@ -606,15 +606,34 @@ export default {
     copyInviteLink() {
       if (!this.myQueue) return;
       const url =
-        window.location.origin +
-        "/queue?join=" +
-        this.myQueue.name;
-      navigator.clipboard.writeText(url).then(() => {
+        window.location.origin + "/queue?join=" + this.myQueue.name;
+      const done = () => {
         this.linkCopied = true;
         setTimeout(() => {
           this.linkCopied = false;
         }, 2500);
-      });
+      };
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(done).catch(() => {
+          this.fallbackCopy(url);
+          done();
+        });
+      } else {
+        this.fallbackCopy(url);
+        done();
+      }
+    },
+
+    fallbackCopy(text) {
+      const el = document.createElement("textarea");
+      el.value = text;
+      el.style.position = "fixed";
+      el.style.opacity = "0";
+      document.body.appendChild(el);
+      el.focus();
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
     },
 
     showSnack(text, color = "success") {

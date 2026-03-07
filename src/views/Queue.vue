@@ -559,7 +559,7 @@ export default {
 
         await this.sseClient.connect();
       } catch (err) {
-        console.error("SSE queue error:", err);
+        void err;
       }
     },
 
@@ -568,7 +568,7 @@ export default {
         try {
           this.sseClient.disconnect();
         } catch (e) {
-          console.debug("SSE disconnect:", e);
+          void e;
         }
         this.sseClient = null;
       }

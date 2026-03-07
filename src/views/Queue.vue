@@ -6,11 +6,10 @@
         <v-card flat color="transparent">
           <v-card-title class="text-h4">
             <v-icon large class="mr-3">mdi-account-group</v-icon>
-            5v5 Queue
+            {{ $t("Queue.title") }}
           </v-card-title>
           <v-card-subtitle>
-            Join a queue or create your own. The match starts automatically
-            when enough players are ready.
+            {{ $t("Queue.subtitle") }}
           </v-card-subtitle>
         </v-card>
       </v-col>
@@ -20,7 +19,7 @@
     <v-row v-if="user.id === null">
       <v-col cols="12">
         <v-alert type="warning" outlined>
-          You must be logged in via Steam to use the queue.
+          {{ $t("Queue.mustLogin") }}
         </v-alert>
       </v-col>
     </v-row>
@@ -35,7 +34,7 @@
             :disabled="!!myQueue"
           >
             <v-icon left>mdi-plus</v-icon>
-            Create a queue
+            {{ $t("Queue.createBtn") }}
           </v-btn>
           <v-spacer />
           <v-btn icon @click="refreshQueues" :loading="loading">
@@ -54,7 +53,7 @@
               width="3"
               class="mr-3"
             />
-            Server is starting, this may take a few minutes...
+            {{ $t("Queue.serverStarting") }}
           </v-alert>
         </v-col>
       </v-row>
@@ -65,11 +64,11 @@
           <v-alert type="success" prominent>
             <v-row align="center">
               <v-col class="grow">
-                Match created! ID #{{ createdMatchId }}
+                {{ $t("Queue.matchCreated") }}{{ createdMatchId }}
               </v-col>
               <v-col class="shrink">
                 <v-btn :to="'/match/' + createdMatchId" color="white" outlined>
-                  View match
+                  {{ $t("Queue.viewMatch") }}
                 </v-btn>
               </v-col>
             </v-row>
@@ -84,7 +83,7 @@
             <v-card outlined color="primary lighten-5">
               <v-card-title>
                 <v-icon left>mdi-timer-sand</v-icon>
-                My queue: {{ myQueue.name }}
+                {{ $t("Queue.myQueue") }} {{ myQueue.name }}
                 <v-spacer />
                 <v-chip color="primary" class="ml-2">
                   {{ myQueue.currentPlayers }} / {{ myQueue.maxSize }}
@@ -95,7 +94,7 @@
                   color="grey"
                   small
                 >
-                  <v-icon small left>mdi-lock</v-icon>Private
+                  <v-icon small left>mdi-lock</v-icon>{{ $t("Queue.private") }}
                 </v-chip>
               </v-card-title>
 
@@ -115,7 +114,7 @@
 
                 <!-- Players list -->
                 <v-list dense>
-                  <v-subheader>Players ({{ queuePlayers.length }})</v-subheader>
+                  <v-subheader>{{ $t("Queue.players") }} ({{ queuePlayers.length }})</v-subheader>
                   <v-list-item
                     v-for="player in queuePlayers"
                     :key="player.steamId"
@@ -142,7 +141,7 @@
                     </v-list-item-avatar>
                     <v-list-item-content>
                       <v-list-item-title class="grey--text"
-                        >Waiting...</v-list-item-title
+                        >{{ $t("Queue.waiting") }}</v-list-item-title
                       >
                     </v-list-item-content>
                   </v-list-item>
@@ -157,7 +156,7 @@
                   :loading="leaving"
                 >
                   <v-icon left>mdi-exit-to-app</v-icon>
-                  Leave queue
+                  {{ $t("Queue.leaveQueue") }}
                 </v-btn>
                 <v-spacer />
                 <v-btn
@@ -167,7 +166,7 @@
                   @click="copyInviteLink"
                 >
                   <v-icon left>{{ linkCopied ? 'mdi-check' : 'mdi-link-variant' }}</v-icon>
-                  {{ linkCopied ? 'Link copied!' : 'Copy link' }}
+                  {{ linkCopied ? $t("Queue.linkCopied") : $t("Queue.copyLink") }}
                 </v-btn>
                 <v-btn
                   v-if="isQueueOwner"
@@ -177,7 +176,7 @@
                   :loading="deleting"
                 >
                   <v-icon left>mdi-delete</v-icon>
-                  Delete
+                  {{ $t("Queue.delete") }}
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -189,7 +188,7 @@
       <v-row>
         <v-col cols="12">
           <v-card-title class="pl-0 pt-4">
-            Available queues
+            {{ $t("Queue.available") }}
             <v-chip class="ml-2" small>{{ publicQueues.length }}</v-chip>
           </v-card-title>
         </v-col>
@@ -204,7 +203,7 @@
       <v-row v-else-if="publicQueues.length === 0 && !myQueue">
         <v-col cols="12">
           <v-alert type="info" outlined>
-            No queues available. Create one!
+            {{ $t("Queue.noQueues") }}
           </v-alert>
         </v-col>
       </v-row>
@@ -247,7 +246,7 @@
                 height="6"
               />
               <div class="caption mt-1 grey--text">
-                Expires {{ formatExpiry(queue.expiresAt) }}
+                {{ $t("Queue.expires") }} {{ formatExpiry(queue.expiresAt) }}
               </div>
             </v-card-text>
 
@@ -261,7 +260,7 @@
                 :loading="joiningQueue === queue.name"
               >
                 <v-icon small left>mdi-account-plus</v-icon>
-                Join
+                {{ $t("Queue.join") }}
               </v-btn>
               <v-btn
                 v-else-if="myQueue.name === queue.name"
@@ -271,9 +270,9 @@
                 @click="leaveCurrentQueue"
                 :loading="leaving"
               >
-                Leave
+                {{ $t("Queue.leave") }}
               </v-btn>
-              <span v-else class="caption grey--text">Already in queue</span>
+              <span v-else class="caption grey--text">{{ $t("Queue.alreadyIn") }}</span>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -283,25 +282,25 @@
     <!-- Create Queue Dialog -->
     <v-dialog v-model="createDialog" max-width="420">
       <v-card>
-        <v-card-title>Create a queue</v-card-title>
+        <v-card-title>{{ $t("Queue.dialogTitle") }}</v-card-title>
         <v-card-text>
           <v-select
             v-model="newQueueSize"
             :items="queueSizeOptions"
-            label="Number of players (per team × 2)"
+            :label="$t('Queue.playerCount')"
             outlined
             dense
           />
           <v-switch
             v-model="newQueuePrivate"
-            label="Private queue (accessible only via invite link)"
+            :label="$t('Queue.privateSwitch')"
           />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="createDialog = false">Cancel</v-btn>
+          <v-btn text @click="createDialog = false">{{ $t("Queue.cancel") }}</v-btn>
           <v-btn color="primary" @click="createQueue" :loading="creating">
-            Create
+            {{ $t("Queue.create") }}
           </v-btn>
         </v-card-actions>
       </v-card>
@@ -359,9 +358,9 @@ export default {
       const opts = [];
       for (let i = 1; i <= 10; i++) {
         let label;
-        if (i === 1) label = "1 player (test)";
-        else if (i % 2 === 0) label = `${i} players (${i / 2}v${i / 2})`;
-        else label = `${i} players`;
+        if (i === 1) label = this.$t("Queue.playerTest");
+        else if (i % 2 === 0) label = this.$t("Queue.players2", { n: i, h: i / 2 });
+        else label = this.$t("Queue.playersN", { n: i });
         opts.push({ text: label, value: i });
       }
       return opts;
@@ -408,7 +407,7 @@ export default {
           }
         }
       } catch (err) {
-        this.showSnack("Error loading queues", "error");
+        this.showSnack(this.$t("Queue.errorLoad"), "error");
       } finally {
         this.loading = false;
       }
@@ -425,17 +424,17 @@ export default {
           this.createdMatchId = result.matchId;
           this.myQueue = null;
           this.queuePlayers = [];
-          this.showSnack("Match created! Redirecting...", "success");
+          this.showSnack(this.$t("Queue.matchCreatedRedir"), "success");
           setTimeout(() => this.$router.push("/match/" + result.matchId), 2000);
         } else {
           this.myQueue = await this.GetQueue(slug);
           this.queuePlayers = await this.GetQueuePlayers(slug);
           await this.connectSSE(slug);
-          this.showSnack("You joined the queue!", "success");
+          this.showSnack(this.$t("Queue.joinedQueue"), "success");
         }
         await this.refreshQueues();
       } catch (err) {
-        const msg = err?.response?.data?.error || "Error joining queue";
+        const msg = err?.response?.data?.error || this.$t("Queue.errorJoin");
         this.showSnack(msg, "error");
       } finally {
         clearTimeout(startingTimer);
@@ -453,17 +452,17 @@ export default {
         );
         this.createDialog = false;
         if (result.matchId) {
-          this.showSnack("Match created! Redirecting...", "success");
+          this.showSnack(this.$t("Queue.matchCreatedRedir"), "success");
           setTimeout(() => this.$router.push("/match/" + result.matchId), 2000);
           return;
         }
         this.myQueue = result.queue;
         this.queuePlayers = await this.GetQueuePlayers(result.queue.name);
         await this.connectSSE(result.queue.name);
-        this.showSnack("Queue created!", "success");
+        this.showSnack(this.$t("Queue.queueCreated"), "success");
         await this.refreshQueues();
       } catch (err) {
-        const msg = err?.response?.data?.error || "Error creating queue";
+        const msg = err?.response?.data?.error || this.$t("Queue.errorCreate");
         this.showSnack(msg, "error");
       } finally {
         this.creating = false;
@@ -478,10 +477,10 @@ export default {
         this.disconnectSSE();
         this.myQueue = null;
         this.queuePlayers = [];
-        this.showSnack("You left the queue.", "info");
+        this.showSnack(this.$t("Queue.leftQueue"), "info");
         await this.refreshQueues();
       } catch (err) {
-        this.showSnack("Error leaving queue", "error");
+        this.showSnack(this.$t("Queue.errorLeave"), "error");
       } finally {
         this.leaving = false;
       }
@@ -495,10 +494,10 @@ export default {
         this.disconnectSSE();
         this.myQueue = null;
         this.queuePlayers = [];
-        this.showSnack("Queue deleted.", "info");
+        this.showSnack(this.$t("Queue.queueDeleted"), "info");
         await this.refreshQueues();
       } catch (err) {
-        this.showSnack("Error deleting queue", "error");
+        this.showSnack(this.$t("Queue.errorDelete"), "error");
       } finally {
         this.deleting = false;
       }
@@ -560,10 +559,7 @@ export default {
           this.myQueue = null;
           this.queuePlayers = [];
           this.disconnectSSE();
-          this.showSnack(
-            "Queue full! Match created, redirecting...",
-            "success"
-          );
+          this.showSnack(this.$t("Queue.queueFull"), "success");
           if (data.matchId) {
             setTimeout(() => {
               this.$router.push("/match/" + data.matchId);
@@ -597,10 +593,10 @@ export default {
 
     formatExpiry(timestamp) {
       const diff = timestamp - Date.now();
-      if (diff <= 0) return "expired";
+      if (diff <= 0) return this.$t("Queue.expired");
       const minutes = Math.floor(diff / 60000);
-      if (minutes < 60) return `in ${minutes}min`;
-      return `in ${Math.floor(minutes / 60)}h`;
+      if (minutes < 60) return this.$t("Queue.timeIn", { n: minutes });
+      return this.$t("Queue.timeInH", { n: Math.floor(minutes / 60) });
     },
 
     copyInviteLink() {

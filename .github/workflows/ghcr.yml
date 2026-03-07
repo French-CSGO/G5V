@@ -17,12 +17,14 @@ jobs:
         uses: ASzc/change-string-case-action@v5
         with:
           string: ${{ github.repository_owner }}
-      - uses: actions/checkout@v2.5.0
+      - uses: actions/checkout@v3.3.0
       - uses: docker/login-action@v2.1.0
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
           password: ${{ secrets.TOKEN }}
+      - id: getversion
+        uses: Saionaro/extract-package-version@v1.2.1
       - uses: actions/setup-node@v3.5.1
         with:
           node-version: 16
@@ -48,6 +50,6 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
-            ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:latest
+            ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:latest,ghcr.io/${{ steps.string.outputs.lowercase }}/g5v:${{ steps.getversion.outputs.version }}
           cache-from: type=gha
           cache-to: type=gha,mode=max

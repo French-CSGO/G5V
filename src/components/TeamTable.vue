@@ -568,7 +568,7 @@ export default {
           this.teamInfo.owner_id == this.user.id
         );
       } catch (err) {
-        console.log(err);
+        void err;
       } finally {
         this.isLoading = false;
       }

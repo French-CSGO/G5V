@@ -128,7 +128,7 @@ export default {
           .on("vetosidedata", this.handleLiveSideInfo)
           .connect();
       } catch (err) {
-        console.error(`Error on SSE ${err}`);
+        void err;
       }
     },
     async handleVetoInfo(liveVetoInfo) {
@@ -173,7 +173,7 @@ export default {
         let vetoRes = await this.GetVetoesOfMatch(this.match_id);
         if (typeof vetoRes != "string") this.vetoInfo = vetoRes;
       } catch (error) {
-        console.log(error);
+        void error;
       }
     },
     expandAll: function() {

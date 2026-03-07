@@ -74,7 +74,7 @@ export default {
         if (typeof res == "string") return;
         this.teams = res;
       } catch (error) {
-        console.log("Our error: " + error);
+        void error;
       } finally {
         this.isLoading = false;
       }

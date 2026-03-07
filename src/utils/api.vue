@@ -385,9 +385,7 @@ export default {
             withCredentials: true,
             polyfill: true
           })
-          .on("error", err =>
-            console.error("Failed to parse or lost connection:", err)
-          );
+          .on("error", err => void err);
       } catch (error) {
         retVal = error.response.data.message;
       }
@@ -975,9 +973,7 @@ export default {
           withCredentials: true,
           polyfill: true
         })
-        .on("error", err =>
-          console.error("Failed to parse or lost connection:", err)
-        );
+        .on("error", err => void err);
     },
     async GetPlayerStatRecentMatches(steamid) {
       let res;
@@ -1058,9 +1054,7 @@ export default {
           withCredentials: true,
           polyfill: true
         })
-        .on("error", err =>
-          console.error("Failed to parse or lost connection:", err)
-        );
+        .on("error", err => void err);
     },
     // END MAP STATS
     // BEGIN MATCH ADMIN CALLS
@@ -1309,9 +1303,7 @@ export default {
             withCredentials: true,
             polyfill: true
           })
-          .on("error", err =>
-            console.error("Failed to parse or lost connection:", err)
-          );
+          .on("error", err => void err);
       } catch (error) {
         combinedVetoInfo = error.response.data.message;
       }
@@ -1633,7 +1625,7 @@ export default {
 
         return rating.toFixed(2);
       } catch (err) {
-        console.log("HELPER GetRating Failed -- " + err);
+        void err;
         return 0;
       }
     },
@@ -1705,7 +1697,7 @@ export default {
           withCredentials: true,
           polyfill: true
         })
-        .on("error", err => console.error("Queue SSE error:", err));
+        .on("error", err => void err);
     }
     // END QUEUE CALLS
   }

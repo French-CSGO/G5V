@@ -571,7 +571,7 @@ export default {
           this.seasons.push(season);
         });
       } catch (error) {
-        console.log(error);
+        void error;
       } finally {
         this.isLoading = false;
       }

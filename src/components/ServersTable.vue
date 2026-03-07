@@ -304,7 +304,7 @@ export default {
           this.servers.push(season);
         });
       } catch (error) {
-        console.log(error);
+        void error;
       } finally {
         this.isLoading = false;
       }

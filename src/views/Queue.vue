@@ -184,6 +184,131 @@
         </v-row>
       </template>
 
+      <!-- Manual team assignment panel (owner only, queue full) -->
+      <template v-if="myQueue && myQueue.manualTeams && isQueueOwner && queueReadyForTeams">
+        <v-row class="mt-2">
+          <v-col cols="12">
+            <v-card outlined color="orange lighten-5">
+              <v-card-title>
+                <v-icon left color="orange darken-2">mdi-account-switch</v-icon>
+                {{ $t("Queue.teamAssignTitle") }}
+              </v-card-title>
+              <v-card-subtitle>{{ $t("Queue.teamAssignSubtitle") }}</v-card-subtitle>
+              <v-card-text>
+                <v-row>
+                  <!-- Team 1 -->
+                  <v-col cols="12" sm="6">
+                    <v-card outlined>
+                      <v-card-title class="subtitle-2 blue--text">
+                        <v-icon small left color="blue">mdi-alpha-t-circle</v-icon>
+                        {{ $t("Queue.team1") }}
+                        <v-chip x-small class="ml-2" color="blue" dark>{{ manualTeam1.length }}</v-chip>
+                      </v-card-title>
+                      <v-list dense>
+                        <v-list-item v-for="player in manualTeam1" :key="player.steamId">
+                          <v-list-item-avatar size="24">
+                            <v-icon small>mdi-account</v-icon>
+                          </v-list-item-avatar>
+                          <v-list-item-content>
+                            <v-list-item-title>{{ player.nickname || player.steamId }}</v-list-item-title>
+                          </v-list-item-content>
+                          <v-list-item-action>
+                            <v-btn icon x-small color="orange" @click="moveToUnassigned(player, 1)">
+                              <v-icon x-small>mdi-arrow-right</v-icon>
+                            </v-btn>
+                          </v-list-item-action>
+                        </v-list-item>
+                        <v-list-item v-if="manualTeam1.length === 0">
+                          <v-list-item-content class="grey--text caption">{{ $t("Queue.teamEmpty") }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card>
+                  </v-col>
+                  <!-- Team 2 -->
+                  <v-col cols="12" sm="6">
+                    <v-card outlined>
+                      <v-card-title class="subtitle-2 red--text">
+                        <v-icon small left color="red">mdi-alpha-t-circle</v-icon>
+                        {{ $t("Queue.team2") }}
+                        <v-chip x-small class="ml-2" color="red" dark>{{ manualTeam2.length }}</v-chip>
+                      </v-card-title>
+                      <v-list dense>
+                        <v-list-item v-for="player in manualTeam2" :key="player.steamId">
+                          <v-list-item-avatar size="24">
+                            <v-icon small>mdi-account</v-icon>
+                          </v-list-item-avatar>
+                          <v-list-item-content>
+                            <v-list-item-title>{{ player.nickname || player.steamId }}</v-list-item-title>
+                          </v-list-item-content>
+                          <v-list-item-action>
+                            <v-btn icon x-small color="orange" @click="moveToUnassigned(player, 2)">
+                              <v-icon x-small>mdi-arrow-left</v-icon>
+                            </v-btn>
+                          </v-list-item-action>
+                        </v-list-item>
+                        <v-list-item v-if="manualTeam2.length === 0">
+                          <v-list-item-content class="grey--text caption">{{ $t("Queue.teamEmpty") }}</v-list-item-content>
+                        </v-list-item>
+                      </v-list>
+                    </v-card>
+                  </v-col>
+                </v-row>
+                <!-- Unassigned players -->
+                <v-row v-if="manualUnassigned.length > 0" class="mt-2">
+                  <v-col cols="12">
+                    <div class="caption grey--text mb-1">{{ $t("Queue.unassigned") }}</div>
+                    <v-chip-group>
+                      <v-chip
+                        v-for="player in manualUnassigned"
+                        :key="player.steamId"
+                        @click="assignPlayerDialog(player)"
+                        small
+                        outlined
+                      >
+                        <v-icon small left>mdi-account-plus</v-icon>
+                        {{ player.nickname || player.steamId }}
+                      </v-chip>
+                    </v-chip-group>
+                  </v-col>
+                </v-row>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn text small @click="autoBalance">
+                  <v-icon left small>mdi-shuffle-variant</v-icon>
+                  {{ $t("Queue.autoBalance") }}
+                </v-btn>
+                <v-spacer />
+                <v-btn
+                  color="success"
+                  :disabled="!teamsValid || starting"
+                  :loading="starting"
+                  @click="startManualMatch"
+                >
+                  <v-icon left>mdi-play</v-icon>
+                  {{ $t("Queue.startMatch") }}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-col>
+        </v-row>
+      </template>
+
+      <!-- Assign player to team dialog -->
+      <v-dialog v-model="assignDialog" max-width="300">
+        <v-card v-if="assigningPlayer">
+          <v-card-title class="subtitle-1">{{ $t("Queue.assignTitle") }}</v-card-title>
+          <v-card-subtitle>{{ assigningPlayer.nickname || assigningPlayer.steamId }}</v-card-subtitle>
+          <v-card-actions class="justify-center pb-4">
+            <v-btn color="blue" dark @click="assignToTeam(assigningPlayer, 1)">
+              {{ $t("Queue.team1") }}
+            </v-btn>
+            <v-btn color="red" dark @click="assignToTeam(assigningPlayer, 2)">
+              {{ $t("Queue.team2") }}
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+
       <!-- Available queues -->
       <v-row>
         <v-col cols="12">
@@ -295,6 +420,10 @@
             v-model="newQueuePrivate"
             :label="$t('Queue.privateSwitch')"
           />
+          <v-switch
+            v-model="newQueueManual"
+            :label="$t('Queue.manualTeamsSwitch')"
+          />
         </v-card-text>
         <v-card-actions>
           <v-spacer />
@@ -343,14 +472,21 @@ export default {
       leaving: false,
       deleting: false,
       creating: false,
+      starting: false,
       createDialog: false,
       newQueueSize: 2,
       newQueuePrivate: false,
+      newQueueManual: false,
       createdMatchId: null,
       serverStarting: false,
       sseClient: null,
       linkCopied: false,
-      snackbar: { show: false, text: "", color: "success" }
+      snackbar: { show: false, text: "", color: "success" },
+      queueReadyForTeams: false,
+      manualTeam1: [],
+      manualTeam2: [],
+      assignDialog: false,
+      assigningPlayer: null
     };
   },
   computed: {
@@ -375,6 +511,18 @@ export default {
     },
     isQueueOwner() {
       return this.myQueue && this.myQueue.ownerId === this.user.steam_id;
+    },
+    manualUnassigned() {
+      const assigned = new Set([
+        ...this.manualTeam1.map(p => p.steamId),
+        ...this.manualTeam2.map(p => p.steamId)
+      ]);
+      return this.queuePlayers.filter(p => !assigned.has(p.steamId));
+    },
+    teamsValid() {
+      return this.manualUnassigned.length === 0 &&
+        this.manualTeam1.length > 0 &&
+        this.manualTeam2.length > 0;
     }
   },
   async mounted() {
@@ -448,7 +596,8 @@ export default {
       try {
         const result = await this.CreateQueue(
           this.newQueueSize,
-          this.newQueuePrivate
+          this.newQueuePrivate,
+          this.newQueueManual
         );
         this.createDialog = false;
         if (result.matchId) {
@@ -558,6 +707,7 @@ export default {
           this.createdMatchId = data.matchId;
           this.myQueue = null;
           this.queuePlayers = [];
+          this.queueReadyForTeams = false;
           this.disconnectSSE();
           this.showSnack(this.$t("Queue.queueFull"), "success");
           if (data.matchId) {
@@ -565,6 +715,14 @@ export default {
               this.$router.push("/match/" + data.matchId);
             }, 2000);
           }
+        });
+
+        this.sseClient.on("queueReadyForTeams", () => {
+          this.queueReadyForTeams = true;
+          // Initialize unassigned — all players
+          this.manualTeam1 = [];
+          this.manualTeam2 = [];
+          this.showSnack(this.$t("Queue.readyForTeams"), "info");
         });
 
         await this.sseClient.connect();
@@ -630,6 +788,64 @@ export default {
       el.select();
       document.execCommand("copy");
       document.body.removeChild(el);
+    },
+
+    assignPlayerDialog(player) {
+      this.assigningPlayer = player;
+      this.assignDialog = true;
+    },
+
+    assignToTeam(player, team) {
+      this.assignDialog = false;
+      this.assigningPlayer = null;
+      if (team === 1) {
+        this.manualTeam1.push(player);
+      } else {
+        this.manualTeam2.push(player);
+      }
+    },
+
+    moveToUnassigned(player, fromTeam) {
+      if (fromTeam === 1) {
+        this.manualTeam1 = this.manualTeam1.filter(p => p.steamId !== player.steamId);
+      } else {
+        this.manualTeam2 = this.manualTeam2.filter(p => p.steamId !== player.steamId);
+      }
+    },
+
+    autoBalance() {
+      const all = [...this.queuePlayers];
+      all.sort((a, b) => (b.hltvRating || 1) - (a.hltvRating || 1));
+      this.manualTeam1 = [];
+      this.manualTeam2 = [];
+      all.forEach((p, i) => {
+        if (i % 2 === 0) this.manualTeam1.push(p);
+        else this.manualTeam2.push(p);
+      });
+    },
+
+    async startManualMatch() {
+      if (!this.myQueue || !this.teamsValid) return;
+      this.starting = true;
+      try {
+        const team1Ids = this.manualTeam1.map(p => p.steamId);
+        const team2Ids = this.manualTeam2.map(p => p.steamId);
+        await this.SetQueueTeams(this.myQueue.name, team1Ids, team2Ids);
+        const result = await this.StartManualQueue(this.myQueue.name);
+        if (result.matchId) {
+          this.createdMatchId = result.matchId;
+          this.myQueue = null;
+          this.queuePlayers = [];
+          this.queueReadyForTeams = false;
+          this.showSnack(this.$t("Queue.matchCreatedRedir"), "success");
+          setTimeout(() => this.$router.push("/match/" + result.matchId), 2000);
+        }
+      } catch (err) {
+        const msg = err?.response?.data?.error || this.$t("Queue.errorCreate");
+        this.showSnack(msg, "error");
+      } finally {
+        this.starting = false;
+      }
     },
 
     showSnack(text, color = "success") {

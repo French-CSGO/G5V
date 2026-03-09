@@ -466,6 +466,7 @@
       "dialogTitle": "Create a queue",
       "playerCount": "Number of players (per team × 2)",
       "privateSwitch": "Private queue (accessible only via invite link)",
+      "manualTeamsSwitch": "Manual teams (owner assigns players to teams)",
       "cancel": "Cancel",
       "create": "Create",
       "errorLoad": "Error loading queues",
@@ -484,7 +485,17 @@
       "playersN": "{n} players",
       "expired": "expired",
       "timeIn": "in {n}min",
-      "timeInH": "in {n}h"
+      "timeInH": "in {n}h",
+      "readyForTeams": "Queue is full! Assign players to their teams.",
+      "teamAssignTitle": "Team Assignment",
+      "teamAssignSubtitle": "Click a player to assign them to a team. All players must be assigned before starting.",
+      "team1": "Team 1",
+      "team2": "Team 2",
+      "teamEmpty": "No players assigned yet",
+      "unassigned": "Unassigned players — click to assign",
+      "autoBalance": "Auto-balance",
+      "startMatch": "Start Match",
+      "assignTitle": "Assign to team"
     },
     "Footer": {
       "company": "Phlex Plexico",
@@ -959,6 +970,7 @@
       "dialogTitle": "Créer une file",
       "playerCount": "Nombre de joueurs (par équipe × 2)",
       "privateSwitch": "File privée (accessible seulement via le lien)",
+      "manualTeamsSwitch": "Équipes manuelles (le créateur assigne les joueurs aux équipes)",
       "cancel": "Annuler",
       "create": "Créer",
       "errorLoad": "Erreur lors du chargement des files",
@@ -977,7 +989,17 @@
       "playersN": "{n} joueurs",
       "expired": "expiré",
       "timeIn": "dans {n}min",
-      "timeInH": "dans {n}h"
+      "timeInH": "dans {n}h",
+      "readyForTeams": "File complète ! Assigne les joueurs à leur équipe.",
+      "teamAssignTitle": "Assignation des équipes",
+      "teamAssignSubtitle": "Clique sur un joueur pour l'assigner à une équipe. Tous les joueurs doivent être assignés avant de lancer.",
+      "team1": "Équipe 1",
+      "team2": "Équipe 2",
+      "teamEmpty": "Aucun joueur assigné",
+      "unassigned": "Joueurs non assignés — clique pour assigner",
+      "autoBalance": "Auto-équilibrer",
+      "startMatch": "Lancer le match",
+      "assignTitle": "Assigner à l'équipe"
     },
     "Footer": {
       "company": "Phlex Plexico",

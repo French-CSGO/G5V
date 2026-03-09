@@ -1660,10 +1660,10 @@ export default {
         return [];
       }
     },
-    async CreateQueue(maxPlayers, isPrivate) {
+    async CreateQueue(maxPlayers, isPrivate, manualTeams = false) {
       const res = await this.axioCall.post(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/`,
-        [{ maxPlayers, private: isPrivate }]
+        [{ maxPlayers, private: isPrivate, manualTeams }]
       );
       return res.data;
     },
@@ -1685,6 +1685,19 @@ export default {
       const res = await this.axioCall.delete(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/`,
         { data: [{ slug }] }
+      );
+      return res.data;
+    },
+    async SetQueueTeams(slug, team1, team2) {
+      const res = await this.axioCall.put(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/teams`,
+        { team1, team2 }
+      );
+      return res.data;
+    },
+    async StartManualQueue(slug) {
+      const res = await this.axioCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/start`
       );
       return res.data;
     },

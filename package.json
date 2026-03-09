@@ -1,7 +1,23 @@
 {
-  "name": "g5v",
+  "name": "matchzy-panel",
   "version": "1.8.0",
+  "description": "MatchZy Panel — Vue front-end for G5API / MatchZy CS2 match management",
   "private": true,
+  "homepage": "https://github.com/French-CSGO/G5V",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/French-CSGO/G5V.git"
+  },
+  "author": {
+    "name": "PhlexPlexico",
+    "url": "https://github.com/phlexplexico"
+  },
+  "contributors": [
+    {
+      "name": "Iwhite",
+      "url": "https://x.com/Iwhitecs"
+    }
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",

@@ -653,28 +653,18 @@ export default {
     async sendServerChange() {
       if (this.$refs.serverForm.validate()) {
         this.isLoading = true;
-        let serverRes;
-        let matchObject = [
-          {
-            match_id: this.matchInfo.id,
-            server_id: this.selectedServer
-          }
-        ];
         let backupObject = [
           {
             server_id: this.selectedServer,
             backup_file: this.selectedBackup
           }
         ];
-        serverRes = await this.UpdateMatchInfo(matchObject);
-        this.response =
-          serverRes.response == null ? serverRes.message : serverRes.response;
         this.serverChangeDialog = false;
-        serverRes = await this.RestoreFromRemoteBackup(
+        let serverRes = await this.RestoreFromRemoteBackup(
           this.matchInfo.id,
           backupObject
         );
-        this.response +=
+        this.response =
           serverRes.response == null ? serverRes.message : serverRes.response;
         this.isLoading = false;
         this.responseSheet = true;

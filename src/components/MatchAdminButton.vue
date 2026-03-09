@@ -643,8 +643,7 @@ export default {
           this.matchInfo.id,
           backupObject
         );
-        this.response =
-          backupRes.response == null ? backupRes.message : backupRes.response;
+        this.response = backupRes.message;
         this.backupDialog = false;
         this.isLoading = false;
         this.responseSheet = true;
@@ -664,8 +663,7 @@ export default {
           this.matchInfo.id,
           backupObject
         );
-        this.response =
-          serverRes.response == null ? serverRes.message : serverRes.response;
+        this.response = serverRes.message;
         this.isLoading = false;
         this.responseSheet = true;
       }

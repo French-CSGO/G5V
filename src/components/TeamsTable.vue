@@ -15,13 +15,6 @@
         <v-toolbar flat>
           {{ $t("Teams.Title") }}
           <v-spacer />
-          <v-btn
-            color="secondary"
-            @click="newImportDialog = true"
-            v-if="user.id != null"
-          >
-            {{ $t("Seasons.ImportSeason") }}
-          </v-btn>
         </v-toolbar>
       </template>
       <template v-slot:item.id="{ item }">

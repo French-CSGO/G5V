@@ -114,6 +114,22 @@
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>
+
+        <!-- Menu Administration (super_admin uniquement) -->
+        <template v-if="user.super_admin == 1">
+          <v-divider class="my-2" />
+          <v-subheader>Administration</v-subheader>
+          <v-list-item-group active-class="primary--text text--accent-4">
+            <v-list-item :to="'/admin/users'">
+              <v-list-item-icon><v-icon small>mdi-account-group</v-icon></v-list-item-icon>
+              <v-list-item-title>Utilisateurs</v-list-item-title>
+            </v-list-item>
+            <v-list-item :to="'/admin/settings'">
+              <v-list-item-icon><v-icon small>mdi-cog</v-icon></v-list-item-icon>
+              <v-list-item-title>Paramètres</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </template>
       </v-list>
     </v-navigation-drawer>
     <ServerDialog

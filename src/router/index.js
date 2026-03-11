@@ -232,6 +232,18 @@ const routes = [
     name: "PlayerMapStats",
     component: () =>
       import(/* webpackChunkName: "Stats" */ "../views/PlayerMapStats.vue")
+  },
+  {
+    path: "/admin/settings",
+    name: "AdminSettings",
+    component: () =>
+      import(/* webpackChunkName: "Admin" */ "../views/AdminSettings.vue")
+  },
+  {
+    path: "/admin/users",
+    name: "AdminUsers",
+    component: () =>
+      import(/* webpackChunkName: "Admin" */ "../views/AdminUsers.vue")
   }
 ];
 

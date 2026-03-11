@@ -6,11 +6,13 @@
         Paramètres du serveur
       </v-card-title>
 
-      <v-alert v-if="!isSuperAdmin" type="error">
+      <v-progress-linear v-if="loadingUser" indeterminate color="primary" />
+
+      <v-alert v-if="!loadingUser && !isSuperAdmin" type="error">
         Accès réservé aux super-administrateurs.
       </v-alert>
 
-      <template v-if="isSuperAdmin">
+      <template v-if="!loadingUser && isSuperAdmin">
         <v-tabs v-model="tab" background-color="primary" dark>
           <v-tab>Discord</v-tab>
           <v-tab>Twitch</v-tab>
@@ -102,7 +104,8 @@ export default {
   data() {
     return {
       tab: 0,
-      user: { id: null, super_admin: false },
+      user: { id: null, super_admin: 0 },
+      loadingUser: true,
       settings: {},
       showTokens: false,
       saving: false,
@@ -112,11 +115,12 @@ export default {
   },
   computed: {
     isSuperAdmin() {
-      return this.user.super_admin == 1 || this.user.super_admin === true;
+      return Number(this.user.super_admin) === 1;
     }
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
+    this.loadingUser = false;
     if (this.isSuperAdmin) await this.loadSettings();
   },
   methods: {

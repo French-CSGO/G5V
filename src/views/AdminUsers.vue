@@ -6,11 +6,13 @@
         Gestion des utilisateurs
       </v-card-title>
 
-      <v-alert v-if="!isSuperAdmin" type="error">
+      <v-progress-linear v-if="loadingUser" indeterminate color="primary" />
+
+      <v-alert v-if="!loadingUser && !isSuperAdmin" type="error">
         Accès réservé aux super-administrateurs.
       </v-alert>
 
-      <template v-if="isSuperAdmin">
+      <template v-if="!loadingUser && isSuperAdmin">
         <v-card-text>
           <v-text-field
             v-model="search"
@@ -86,7 +88,8 @@ export default {
   name: "AdminUsers",
   data() {
     return {
-      user: { id: null, super_admin: false },
+      user: { id: null, super_admin: 0 },
+      loadingUser: true,
       users: [],
       search: "",
       loading: false,
@@ -106,11 +109,12 @@ export default {
   },
   computed: {
     isSuperAdmin() {
-      return this.user.super_admin == 1 || this.user.super_admin === true;
+      return Number(this.user.super_admin) === 1;
     }
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
+    this.loadingUser = false;
     if (this.isSuperAdmin) await this.loadUsers();
   },
   methods: {
@@ -136,7 +140,11 @@ export default {
       this.loadUsers();
     },
     openEdit(item) {
-      this.editUser = { ...item };
+      this.editUser = {
+        ...item,
+        admin: Number(item.admin),
+        super_admin: Number(item.super_admin)
+      };
       this.editError = "";
       this.editDialog = true;
     },
@@ -147,7 +155,12 @@ export default {
       try {
         await this.axioCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users`,
-          [{ id: this.editUser.id, admin: this.editUser.admin, super_admin: this.editUser.super_admin }]
+          [{
+            id: this.editUser.id,
+            steam_id: this.editUser.steam_id,
+            admin: this.editUser.admin,
+            super_admin: this.editUser.super_admin
+          }]
         );
         // Mise à jour locale
         const idx = this.users.findIndex(u => u.id === this.editUser.id);

@@ -1424,7 +1424,7 @@ export default {
       }
       return message;
     },
-    async register(userinfo) {
+    async registerUser(userinfo) {
       let message;
       let res;
       try {

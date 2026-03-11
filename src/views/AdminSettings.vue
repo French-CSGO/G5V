@@ -43,7 +43,15 @@
             :type="showTokens ? 'text' : 'password'"
             :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
             @click:append="showTokens = !showTokens" />
-          <v-text-field v-model="settings['twitch.channels']" label='Channels (JSON : ["channel1","channel2"])' />
+          <v-combobox
+            v-model="twitchChannels"
+            label="Channels Twitch"
+            multiple
+            chips
+            deletable-chips
+            hint="Appuie sur Entrée pour ajouter un channel"
+            persistent-hint
+          />
         </v-card>
 
         <!-- PTERODACTYL -->
@@ -95,6 +103,7 @@ export default {
       user: { id: null, super_admin: 0 },
       loadingUser: true,
       settings: {},
+      twitchChannels: [],
       showTokens: false,
       saving: false,
       successMsg: "",
@@ -118,6 +127,11 @@ export default {
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`
         );
         this.settings = res.data;
+        try {
+          this.twitchChannels = JSON.parse(this.settings['twitch.channels'] || '[]');
+        } catch {
+          this.twitchChannels = [];
+        }
       } catch (err) {
         this.errorMsg = "Impossible de charger les paramètres.";
       }
@@ -126,6 +140,7 @@ export default {
       this.saving = true;
       this.successMsg = "";
       this.errorMsg = "";
+      this.settings['twitch.channels'] = JSON.stringify(this.twitchChannels);
       try {
         await this.axioCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`,

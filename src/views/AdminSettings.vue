@@ -23,7 +23,7 @@
         <v-tabs-items v-model="tab">
 
           <!-- DISCORD -->
-          <v-tab-item value="discord">
+          <v-tab-item value="#discord">
             <v-card flat class="pa-4">
               <v-switch v-model="settings['discord.enabled']" true-value="true" false-value="false"
                 label="Activer le bot Discord" />
@@ -39,7 +39,7 @@
           </v-tab-item>
 
           <!-- TWITCH -->
-          <v-tab-item value="twitch">
+          <v-tab-item value="#twitch">
             <v-card flat class="pa-4">
               <v-switch v-model="settings['twitch.enabled']" true-value="true" false-value="false"
                 label="Activer le bot Twitch" />
@@ -53,7 +53,7 @@
           </v-tab-item>
 
           <!-- PTERODACTYL -->
-          <v-tab-item value="pterodactyl">
+          <v-tab-item value="#pterodactyl">
             <v-card flat class="pa-4">
               <v-switch v-model="settings['pterodactyl.enabled']" true-value="true" false-value="false"
                 label="Activer Pterodactyl" />
@@ -67,7 +67,7 @@
           </v-tab-item>
 
           <!-- TOORNAMENT -->
-          <v-tab-item value="toornament">
+          <v-tab-item value="#toornament">
             <v-card flat class="pa-4">
               <v-text-field v-model="settings['toornament.clientId']" label="Client ID" />
               <v-text-field v-model="settings['toornament.clientSecret']" label="Client Secret"
@@ -103,7 +103,7 @@ export default {
   name: "AdminSettings",
   data() {
     return {
-      tab: "discord",
+      tab: "#discord",
       user: { id: null, super_admin: 0 },
       loadingUser: true,
       settings: {},

@@ -35,7 +35,7 @@
               {{ $t("Leaderboard.TTitle") }}
             </v-btn>
             <v-btn
-              v-if="isToornamentSeason"
+              v-if="isToornamentSeason && IsAnyAdmin(user)"
               :to="`/season/${seasonData.id}/toornament`"
             >
               <v-icon left>mdi-tournament</v-icon>

@@ -63,7 +63,7 @@
             :type="showTokens ? 'text' : 'password'"
             :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
             @click:append="showTokens = !showTokens" />
-          <v-text-field v-model="settings['pterodactyl.shutdownDelay']" label="Délai d'arrêt (ms)" type="number" />
+          <v-text-field v-model="settings['pterodactyl.shutdownDelay']" label="Délai d'arrêt (s)" type="number" />
         </v-card>
 
         <!-- TOORNAMENT -->

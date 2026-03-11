@@ -1,6 +1,10 @@
 <template>
   <v-container class="seasons" fluid>
-    <SeasonsTable :user="user" v-if="user.id != -1" />
+    <v-progress-linear v-if="user.id === -1" indeterminate color="primary" />
+    <v-alert v-else-if="isMySeasons && !isSuperAdmin" type="error">
+      Accès réservé aux super-administrateurs.
+    </v-alert>
+    <SeasonsTable v-else :user="user" />
   </v-container>
 </template>
 
@@ -23,8 +27,16 @@ export default {
         small_image: "",
         medium_image: "",
         large_image: ""
-      } // should be object from JSON response
+      }
     };
+  },
+  computed: {
+    isMySeasons() {
+      return this.$route.path === "/myseasons";
+    },
+    isSuperAdmin() {
+      return Number(this.user.super_admin) === 1;
+    }
   },
   async mounted() {
     this.user = await this.IsLoggedIn();

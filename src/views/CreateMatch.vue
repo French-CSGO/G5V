@@ -3,7 +3,11 @@
     <v-row class="pb-5">
       <v-col cols="12" class="flex-grow-1">
         <v-card>
-          <NewMatchForm :user="user" v-if="user.id != -1" />
+          <v-progress-linear v-if="user.id === -1" indeterminate color="primary" />
+          <v-alert v-else-if="!isAdmin" type="error">
+            Accès réservé aux administrateurs.
+          </v-alert>
+          <NewMatchForm v-else :user="user" />
         </v-card>
       </v-col>
     </v-row>
@@ -30,6 +34,11 @@ export default {
         large_image: ""
       } // should be object from JSON response
     };
+  },
+  computed: {
+    isAdmin() {
+      return Number(this.user.admin) === 1 || Number(this.user.super_admin) === 1;
+    }
   },
   async mounted() {
     this.user = await this.IsLoggedIn();

@@ -1,6 +1,10 @@
 <template>
   <v-container class="servers" fluid>
-    <ServersTable v-if="user.id != -1" :user="user" />
+    <v-progress-linear v-if="user.id === -1" indeterminate color="primary" />
+    <v-alert v-else-if="Number(user.super_admin) !== 1" type="error">
+      Accès réservé aux super-administrateurs.
+    </v-alert>
+    <ServersTable v-else :user="user" />
   </v-container>
 </template>
 

@@ -1424,7 +1424,7 @@ export default {
       }
       return message;
     },
-    async register(userinfo) {
+    async registerUser(userinfo) {
       let message;
       let res;
       try {
@@ -1498,7 +1498,7 @@ export default {
     },
     AdminToolsAvailable: function(match) {
       if (
-        (this.user.id === match.user_id || this.IsAnyAdmin(this.user)) &&
+        this.IsAnyAdmin(this.user) &&
         (match.end_time == null || match.end_time == "") &&
         (match.cancelled == 0 || match.cancelled == null) &&
         (match.forfeit == 0 || match.forfeit == null)

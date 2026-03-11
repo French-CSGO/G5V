@@ -63,7 +63,7 @@
           </v-list-item>
 
           <v-list-item
-            v-if="user.id != null"
+            v-if="isAdmin"
             index="mymatches"
             :to="'/mymatches'"
           >
@@ -71,7 +71,7 @@
           </v-list-item>
 
           <v-list-item
-            v-if="user.id != null"
+            v-if="isAdmin"
             index="match_create"
             :to="'/match/create'"
           >
@@ -80,7 +80,7 @@
             }}</v-list-item-title>
           </v-list-item>
 
-          <v-list-item v-if="user.id != null" :to="'/myteams'">
+          <v-list-item v-if="isSuperAdmin" :to="'/myteams'">
             <v-list-item-title>{{ $t("Navbar.MyTeams") }}</v-list-item-title>
           </v-list-item>
 
@@ -88,15 +88,15 @@
             <v-list-item-title>{{ $t("Navbar.AllTeams") }}</v-list-item-title>
           </v-list-item>
 
-          <v-list-item v-if="user.id != null" :to="'/teams/create'" exact>
+          <v-list-item v-if="isAdmin" :to="'/teams/create'" exact>
             <v-list-item-title>{{ $t("Navbar.CreateTeam") }}</v-list-item-title>
           </v-list-item>
 
-          <v-list-item v-if="user.id != null" :to="'/myservers'">
+          <v-list-item v-if="isSuperAdmin" :to="'/myservers'">
             <v-list-item-title>{{ $t("Navbar.MyServers") }}</v-list-item-title>
           </v-list-item>
 
-          <v-list-item v-if="user.id != null" @click="newDialog = true">
+          <v-list-item v-if="isSuperAdmin" @click="newDialog = true">
             <v-list-item-title>{{ $t("Navbar.AddServer") }}</v-list-item-title>
           </v-list-item>
 
@@ -104,7 +104,7 @@
             <v-list-item-title>{{ $t("Navbar.AllSeasons") }}</v-list-item-title>
           </v-list-item>
 
-          <v-list-item v-if="user.id != null" :to="'/myseasons'">
+          <v-list-item v-if="isSuperAdmin" :to="'/myseasons'">
             <v-list-item-title>{{ $t("Navbar.MySeasons") }}</v-list-item-title>
           </v-list-item>
 
@@ -114,6 +114,22 @@
             </v-list-item-title>
           </v-list-item>
         </v-list-item-group>
+
+        <!-- Menu Administration (super_admin uniquement) -->
+        <template v-if="user.super_admin == 1">
+          <v-divider class="my-2" />
+          <v-subheader>Administration</v-subheader>
+          <v-list-item-group active-class="primary--text text--accent-4">
+            <v-list-item :to="'/admin/users'">
+              <v-list-item-icon><v-icon small>mdi-account-group</v-icon></v-list-item-icon>
+              <v-list-item-title>Utilisateurs</v-list-item-title>
+            </v-list-item>
+            <v-list-item :to="'/admin/settings'">
+              <v-list-item-icon><v-icon small>mdi-cog</v-icon></v-list-item-icon>
+              <v-list-item-title>Paramètres</v-list-item-title>
+            </v-list-item>
+          </v-list-item-group>
+        </template>
       </v-list>
     </v-navigation-drawer>
     <ServerDialog
@@ -135,6 +151,14 @@ export default {
   components: {
     ServerDialog,
     LoginDialog
+  },
+  computed: {
+    isAdmin() {
+      return Number(this.user.admin) === 1 || Number(this.user.super_admin) === 1;
+    },
+    isSuperAdmin() {
+      return Number(this.user.super_admin) === 1;
+    }
   },
   data() {
     return {

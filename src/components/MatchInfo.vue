@@ -109,22 +109,29 @@
       >
         {{ $t("Match.Connect") }} {{ serverInfo.display_name }}
       </v-btn>
-      <div v-if="serverInfo.gotv_port != null">
-        <v-btn
-          color="secondary"
-          small
-          :href="
-            'steam://rungame/730/' +
-              user.steam_id +
-              '/+connect%20' +
-              serverInfo.ip_string +
-              ':' +
-              serverInfo.gotv_port
-          "
-        >
-          {{ $t("Match.GOTVConnect") }}
-        </v-btn>
-      </div>
+    </div>
+    <div
+      align="center"
+      v-if="
+        serverInfo.gotv_port != null &&
+          serverInfo.ip_string != '' &&
+          matchInfo.end_time == null
+      "
+    >
+      <v-btn
+        color="secondary"
+        small
+        :href="
+          'steam://rungame/730/' +
+            (user.steam_id || '0') +
+            '/+connect%20' +
+            serverInfo.ip_string +
+            ':' +
+            serverInfo.gotv_port
+        "
+      >
+        {{ $t("Match.GOTVConnect") }}
+      </v-btn>
     </div>
   </v-container>
 </template>

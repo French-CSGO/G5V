@@ -1,6 +1,9 @@
 <template>
   <v-container class="home" fluid>
-    <MatchesTable :user="user" />
+    <v-alert v-if="isMyMatches && user.id === null" type="warning">
+      Vous devez être connecté pour accéder à vos matchs.
+    </v-alert>
+    <MatchesTable v-else-if="user.id !== -1" :user="user" />
   </v-container>
 </template>
 
@@ -23,8 +26,13 @@ export default {
         small_image: "",
         medium_image: "",
         large_image: ""
-      } // should be object from JSON response
+      }
     };
+  },
+  computed: {
+    isMyMatches() {
+      return this.$route.path === "/mymatches";
+    }
   },
   async mounted() {
     this.user = await this.IsLoggedIn();

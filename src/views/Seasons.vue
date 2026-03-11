@@ -1,6 +1,6 @@
 <template>
   <v-container class="seasons" fluid>
-    <SeasonsTable :user="user" v-if="user.id != -1" />
+    <SeasonsTable :user="user" v-if="user.id !== -1" />
   </v-container>
 </template>
 

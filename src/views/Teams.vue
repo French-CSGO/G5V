@@ -4,9 +4,6 @@
     <v-alert v-else-if="isMyTeams && !isSuperAdmin" type="error">
       Accès réservé aux super-administrateurs.
     </v-alert>
-    <v-alert v-else-if="!isMyTeams && !isAdmin" type="error">
-      Accès réservé aux administrateurs.
-    </v-alert>
     <TeamsTable v-else :user="user" />
   </v-container>
 </template>

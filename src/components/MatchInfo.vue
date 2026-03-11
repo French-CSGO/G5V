@@ -89,18 +89,14 @@
     </div>
     <div
       align="center"
-      v-if="
-        user.id != null &&
-          serverInfo.ip_string != '' &&
-          matchInfo.end_time == null
-      "
+      v-if="serverInfo.ip_string != '' && matchInfo.end_time == null"
     >
       <v-btn
         color="primary"
         small
         :href="
           'steam://rungame/730/' +
-            user.steam_id +
+            (user.steam_id || '0') +
             '/+connect%20' +
             serverInfo.ip_string +
             ':' +

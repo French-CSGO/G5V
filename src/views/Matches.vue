@@ -1,9 +1,10 @@
 <template>
   <v-container class="home" fluid>
-    <v-alert v-if="isMyMatches && user.id === null" type="warning">
-      Vous devez être connecté pour accéder à vos matchs.
+    <v-progress-linear v-if="user.id === -1" indeterminate color="primary" />
+    <v-alert v-else-if="isMyMatches && !isAdmin" type="error">
+      Accès réservé aux administrateurs.
     </v-alert>
-    <MatchesTable v-else-if="user.id !== -1" :user="user" />
+    <MatchesTable v-else :user="user" />
   </v-container>
 </template>
 
@@ -32,6 +33,9 @@ export default {
   computed: {
     isMyMatches() {
       return this.$route.path === "/mymatches";
+    },
+    isAdmin() {
+      return Number(this.user.admin) === 1 || Number(this.user.super_admin) === 1;
     }
   },
   async mounted() {

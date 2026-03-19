@@ -9,6 +9,12 @@ const routes = [
     component: () => import(/* webpackChunkName: "Home" */ "../views/Home.vue")
   },
   {
+    path: "/queue",
+    name: "Queue",
+    component: () =>
+      import(/* webpackChunkName: "Queue" */ "../views/Queue.vue")
+  },
+  {
     path: "/matches",
     name: "Matches",
     component: () =>
@@ -123,6 +129,20 @@ const routes = [
       import(/* webpackChunkName: "Season" */ "../views/Season.vue")
   },
   {
+    path: "/season/:id/toornament/schedule",
+    name: "SeasonToornamentSchedule",
+    component: () =>
+      import(
+        /* webpackChunkName: "Season" */ "../views/SeasonToornamentSchedule.vue"
+      )
+  },
+  {
+    path: "/season/:id/toornament",
+    name: "SeasonToornament",
+    component: () =>
+      import(/* webpackChunkName: "Season" */ "../views/SeasonToornament.vue")
+  },
+  {
     path: "/servers",
     name: "Servers",
     // route level code-splitting
@@ -130,6 +150,14 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "Server" */ "../views/Servers.vue")
+  },
+  {
+    path: "/servers/pterodactyl-link",
+    name: "ServerPterodactylLink",
+    component: () =>
+      import(
+        /* webpackChunkName: "Server" */ "../views/ServerPterodactylLink.vue"
+      )
   },
   {
     path: "/metrics",
@@ -166,31 +194,62 @@ const routes = [
   {
     path: "/leaderboard/:seasonid",
     name: "SeasonPlayerBoard",
-    // route level code-splitting
-    // this generates a separate chunk (teams.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "Match" */ "../views/PlayerLeaderboard.vue")
-    //children: [{ path: "/create", component: MatchCreate }]
+      import(
+        /* webpackChunkName: "Leaderboards" */ "../views/PlayerLeaderboard.vue"
+      )
   },
   {
-    path: "/leaderboard/teams/:seasonid",
+    path: "/leaderboard/:seasonid/teams",
     name: "SeasonTeamBoard",
-    // route level code-splitting
-    // this generates a separate chunk (teams.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
     component: () =>
       import(
         /* webpackChunkName: "Leaderboards" */ "../views/TeamLeaderboard.vue"
       )
   },
   {
+    path: "/leaderboard/:seasonid/:teamid",
+    name: "TeamsSeasonPlayerBoard",
+    component: () =>
+      import(
+        /* webpackChunkName: "Leaderboards" */ "../views/PlayerLeaderboard.vue"
+      )
+  },
+  {
+    path: "/stats",
+    name: "GlobalStats",
+    component: () =>
+      import(/* webpackChunkName: "Stats" */ "../views/GlobalStats.vue")
+  },
+  {
+    path: "/stats/player/:steam_id",
+    name: "PlayerStats",
+    component: () =>
+      import(/* webpackChunkName: "Stats" */ "../views/PlayerStats.vue")
+  },
+  {
+    path: "/stats/player/:steam_id/maps",
+    name: "PlayerMapStats",
+    component: () =>
+      import(/* webpackChunkName: "Stats" */ "../views/PlayerMapStats.vue")
+  },
+  {
+    path: "/admin/settings",
+    name: "AdminSettings",
+    component: () =>
+      import(/* webpackChunkName: "Admin" */ "../views/AdminSettings.vue")
+  },
+  {
+    path: "/admin/users",
+    name: "AdminUsers",
+    component: () =>
+      import(/* webpackChunkName: "Admin" */ "../views/AdminUsers.vue")
+  },
+  {
     path: "/image-settings",
     name: "ImageSettings",
     component: () =>
-      import(
-        /* webpackChunkName: "ImageSettings" */ "../views/ImageSettings.vue"
-      )
+      import(/* webpackChunkName: "ImageSettings" */ "../views/ImageSettings.vue")
   }
 ];
 

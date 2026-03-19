@@ -249,19 +249,6 @@ export default {
       }
       return message;
     },
-    async GetPublicTeams() {
-      let res;
-      let message;
-      try {
-        res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/public`
-        );
-        message = res.data.teams;
-      } catch (error) {
-        message = error.response.data.message;
-      }
-      return message;
-    },
     async GetMyTeams() {
       let res;
       let message;
@@ -385,7 +372,9 @@ export default {
             withCredentials: true,
             polyfill: true
           })
-          .on("error", err => void err);
+          .on("error", err =>
+            console.error("Failed to parse or lost connection:", err)
+          );
       } catch (error) {
         retVal = error.response.data.message;
       }
@@ -652,19 +641,6 @@ export default {
       }
       return message;
     },
-    async GetPterodactylServers() {
-      try {
-        const res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/servers/pterodactyl-list`
-        );
-        return res.data.servers || [];
-      } catch (error) {
-        return (
-          error?.response?.data?.message || "Error fetching Pterodactyl servers"
-        );
-      }
-    },
     // END SERVER CALLS
     // BEGIN SEASON CALLS
     async GetAllSeasons() {
@@ -806,122 +782,6 @@ export default {
       }
       return message;
     },
-    async GetSeasonTeams(seasonid) {
-      let res;
-      let message;
-      try {
-        res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/teams`
-        );
-        message = res.data.teams;
-      } catch (error) {
-        message = [];
-      }
-      return message;
-    },
-    async AddTeamsToSeason(seasonid, teamIds) {
-      let res;
-      let message;
-      try {
-        res = await this.axioCall.post(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/teams`,
-          { team_ids: teamIds }
-        );
-        message = res.data;
-      } catch (error) {
-        message = error.response.data;
-      }
-      return message;
-    },
-    async RemoveTeamFromSeason(seasonid, teamid) {
-      let res;
-      let message;
-      try {
-        res = await this.axioCall.delete(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/teams/${teamid}`
-        );
-        message = res.data;
-      } catch (error) {
-        message = error.response.data;
-      }
-      return message;
-    },
-    async GetToornamentMatches(seasonId, { team_id, status, stage_id } = {}) {
-      let params = new URLSearchParams();
-      if (team_id) params.append("team_id", team_id);
-      if (status) params.append("status", status);
-      if (stage_id) params.append("stage_id", stage_id);
-      const query = params.toString() ? "?" + params.toString() : "";
-      try {
-        const res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonId}/toornament/matches${query}`
-        );
-        return res.data.matches || [];
-      } catch {
-        return [];
-      }
-    },
-    async GetToornamentStages(seasonId) {
-      try {
-        const res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonId}/toornament/stages`
-        );
-        return res.data.stages || [];
-      } catch {
-        return [];
-      }
-    },
-    async GetToornamentRounds(seasonId) {
-      try {
-        const res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonId}/toornament/rounds`
-        );
-        return res.data.rounds || [];
-      } catch {
-        return [];
-      }
-    },
-    async ScheduleToornamentMatch(seasonId, matchId, scheduled_datetime) {
-      try {
-        const res = await this.axioCall.patch(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonId}/toornament/matches/${matchId}/schedule`,
-          { scheduled_datetime }
-        );
-        return res.data;
-      } catch (error) {
-        return error.response?.data || null;
-      }
-    },
-    async ScheduleToornamentRound(seasonId, roundId, scheduled_datetime) {
-      try {
-        const res = await this.axioCall.patch(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonId}/toornament/rounds/${roundId}/schedule`,
-          { scheduled_datetime }
-        );
-        return res.data;
-      } catch (error) {
-        return error.response?.data || null;
-      }
-    },
-    async GetToornamentMatchPrefill(seasonId, matchId) {
-      try {
-        const res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonId}/toornament/matches/${matchId}/prefill`
-        );
-        return res.data;
-      } catch (error) {
-        return error.response?.data || null;
-      }
-    },
     // END SEASON CALLS
     // BEGIN PLAYER STATS
     async GetUserPlayerStats(steamid) {
@@ -973,7 +833,9 @@ export default {
           withCredentials: true,
           polyfill: true
         })
-        .on("error", err => void err);
+        .on("error", err =>
+          console.error("Failed to parse or lost connection:", err)
+        );
     },
     async GetPlayerStatRecentMatches(steamid) {
       let res;
@@ -987,20 +849,7 @@ export default {
       } catch (error) {
         message = error.response.data.message;
       }
-      return message;
-    },
-    async GetUserExtraStats(steamid) {
-      let res;
-      let message;
-      try {
-        res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/playerstatsextra/${steamid}`
-        );
-        message = res.data.extrastats;
-      } catch (error) {
-        message = error.response.data.message;
-      }
+      console.log(message);
       return message;
     },
     // END PLAYER STATS
@@ -1054,7 +903,9 @@ export default {
           withCredentials: true,
           polyfill: true
         })
-        .on("error", err => void err);
+        .on("error", err =>
+          console.error("Failed to parse or lost connection:", err)
+        );
     },
     // END MAP STATS
     // BEGIN MATCH ADMIN CALLS
@@ -1303,7 +1154,9 @@ export default {
             withCredentials: true,
             polyfill: true
           })
-          .on("error", err => void err);
+          .on("error", err =>
+            console.error("Failed to parse or lost connection:", err)
+          );
       } catch (error) {
         combinedVetoInfo = error.response.data.message;
       }
@@ -1339,20 +1192,6 @@ export default {
       }
       return message;
     },
-    async GetTeamPlayerLeaderboard(teamid) {
-      let res;
-      let message;
-      try {
-        res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/leaderboard/teams/${teamid}`
-        );
-        return res.data.leaderboard;
-      } catch (error) {
-        message = error.response.data.message;
-      }
-      return message;
-    },
     async GetTeamLeaderboard() {
       let res;
       let message;
@@ -1373,20 +1212,6 @@ export default {
         res = await this.axioCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/leaderboard/players/${seasonid}`
-        );
-        return res.data.leaderboard;
-      } catch (error) {
-        message = error.response.data.message;
-      }
-      return message;
-    },
-    async GetSeasonTeamPlayerLeaderboard(seasonid, teamid) {
-      let res;
-      let message;
-      try {
-        res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/leaderboard/teams/${teamid}/${seasonid}`
         );
         return res.data.leaderboard;
       } catch (error) {
@@ -1498,7 +1323,7 @@ export default {
     },
     AdminToolsAvailable: function(match) {
       if (
-        this.IsAnyAdmin(this.user) &&
+        (this.user.id === match.user_id || this.IsAnyAdmin(this.user)) &&
         (match.end_time == null || match.end_time == "") &&
         (match.cancelled == 0 || match.cancelled == null) &&
         (match.forfeit == 0 || match.forfeit == null)
@@ -1625,94 +1450,55 @@ export default {
 
         return rating.toFixed(2);
       } catch (err) {
-        void err;
+        console.log("HELPER GetRating Failed -- " + err);
         return 0;
       }
     },
-    // BEGIN QUEUE CALLS
-    async GetQueues() {
-      try {
-        const res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/`
-        );
-        return res.data;
-      } catch (err) {
-        return [];
-      }
+    // IMAGE SETTINGS
+    async GetImageFonts() {
+      const res = await this.axioCall.get(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/fonts`
+      );
+      return res.data;
     },
-    async GetQueue(slug) {
-      try {
-        const res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`
-        );
-        return res.data;
-      } catch (err) {
-        return null;
-      }
+    async GetImageSettings() {
+      const res = await this.axioCall.get(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings`
+      );
+      return res.data;
     },
-    async GetQueuePlayers(slug) {
-      try {
-        const res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/players`
-        );
-        return res.data;
-      } catch (err) {
-        return [];
-      }
+    async SaveImageSettings(settings) {
+      const res = await this.axioCall.put(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings`,
+        settings
+      );
+      return res.data;
     },
-    async CreateQueue(maxPlayers, isPrivate, manualTeams = false) {
+    async UploadImageBackground(formData) {
       const res = await this.axioCall.post(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/`,
-        [{ maxPlayers, private: isPrivate, manualTeams }]
+        `${process.env?.VUE_APP_G5V_API_URL ||
+          "/api"}/image/settings/background`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       return res.data;
     },
-    async JoinQueue(slug) {
-      const res = await this.axioCall.put(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
-        [{ action: "join" }]
-      );
-      return res.data;
-    },
-    async LeaveQueue(slug) {
-      const res = await this.axioCall.put(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
-        [{ action: "leave" }]
-      );
-      return res.data;
-    },
-    async DeleteQueue(slug) {
-      const res = await this.axioCall.delete(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/`,
-        { data: [{ slug }] }
-      );
-      return res.data;
-    },
-    async SetQueueTeams(slug, team1, team2) {
-      const res = await this.axioCall.put(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/teams`,
-        { team1, team2 }
-      );
-      return res.data;
-    },
-    async StartManualQueue(slug) {
+    async UploadImageFont(formData) {
       const res = await this.axioCall.post(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/start`
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings/font`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
       );
       return res.data;
     },
-    async GetEventQueueData(slug) {
-      return this.$sse
-        .create({
-          url: `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/queue/${slug}/stream`,
-          format: "json",
-          withCredentials: true,
-          polyfill: true
-        })
-        .on("error", err => void err);
+    GetPlayerImageUrl(matchId, steamId) {
+      return `${process.env?.VUE_APP_G5V_API_URL ||
+        "/api"}/image/match/${matchId}/player/${steamId}`;
+    },
+    GetTeamSeasonImageUrl(seasonId, teamId) {
+      return `${process.env?.VUE_APP_G5V_API_URL ||
+        "/api"}/image/season/${seasonId}/team/${teamId}`;
     }
-    // END QUEUE CALLS
   }
 };
 </script>

@@ -88,7 +88,7 @@
         </v-col>
 
         <v-col cols="12">
-          <MatchesTable :user="user" />
+          <MatchesTable :user="user" :prop-matches="seasonMatches" />
         </v-col>
       </v-row>
     </v-card>
@@ -187,6 +187,7 @@ export default {
         start_date: null,
         end_date: null
       },
+      seasonMatches: null,
       seasonTeams: [],
       allTeams: [],
       teamsToAdd: [],
@@ -202,8 +203,9 @@ export default {
   },
   async created() {
     this.user = await this.IsLoggedIn();
-    const info = await this.GetSeasonInfo(this.$route.params.id);
-    this.seasonData = info;
+    const { season, matches } = await this.GetSeasonData(this.$route.params.id);
+    this.seasonData = season;
+    this.seasonMatches = matches;
     this.seasonData.start_date = new Date(this.seasonData.start_date)
       .toISOString()
       .slice(0, 19)

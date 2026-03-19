@@ -66,7 +66,8 @@
 <script>
 export default {
   props: {
-    user: Object
+    user: Object,
+    propMatches: { type: Array, default: null }
   },
   data() {
     return {
@@ -121,37 +122,57 @@ export default {
     async GetMatches() {
       try {
         let res;
-        if (this.$route.path == "/mymatches") res = await this.GetMyMatches();
-        else if (this.$route.path.includes("team"))
+        if (this.propMatches !== null) {
+          res = this.propMatches;
+        } else if (this.$route.path == "/mymatches") {
+          res = await this.GetMyMatches();
+        } else if (this.$route.path.includes("team")) {
           res = await this.GetTeamRecentMatches(this.$route.params.id);
-        else if (this.$route.path.includes("user")) {
+        } else if (this.$route.path.includes("user")) {
           if (this.$route.params.id == undefined) {
             res = await this.GetUserRecentMatches(this.user.id);
-          } else res = await this.GetUserRecentMatches(this.$route.params.id);
+          } else {
+            res = await this.GetUserRecentMatches(this.$route.params.id);
+          }
           if (res.length == 0)
             res = await this.GetPlayerStatRecentMatches(this.$route.params.id);
-        } else if (this.$route.path.includes("season"))
+        } else if (this.$route.path.includes("season")) {
           res = await this.GetSeasonRecentMatches(this.$route.params.id);
-        else res = await this.GetAllMatches();
+        } else {
+          res = await this.GetAllMatches();
+        }
         if (typeof res == "string") res = [];
-        else {
-          res.forEach(async match => {
-            const ownerRes = await this.GetUserData(match.user_id);
-            let teamId =
-              match.team1_id == null ? match.team2_id : match.team1_id;
-            const statusRes = await this.GetMatchResult(teamId, match.id);
-            match.owner = ownerRes.name;
-            match.match_status = statusRes;
+        // If matches come from season endpoint, owner and match_status are already embedded
+        if (this.propMatches !== null) {
+          this.matches = res.map(match => {
             if (match.cancelled == 1) this.isThereCancelledMatches = true;
-            this.matches.push(match);
+            return match;
           });
+        } else {
+          const userCache = new Map();
+          const getUserCached = id => {
+            if (!userCache.has(id)) userCache.set(id, this.GetUserData(id));
+            return userCache.get(id);
+          };
+          this.matches = await Promise.all(
+            res.map(async match => {
+              const teamId = match.team1_id ?? match.team2_id;
+              const [ownerRes, statusRes] = await Promise.all([
+                getUserCached(match.user_id),
+                this.GetMatchResult(teamId, match.id)
+              ]);
+              match.owner = ownerRes.name;
+              match.match_status = statusRes;
+              if (match.cancelled == 1) this.isThereCancelledMatches = true;
+              return match;
+            })
+          );
         }
       } catch (error) {
         void error;
       } finally {
         this.isLoading = false;
       }
-      return;
     },
     async deleteCancelled() {
       this.deletePending = true;

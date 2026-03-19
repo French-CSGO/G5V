@@ -249,6 +249,19 @@ export default {
       }
       return message;
     },
+    async GetPublicTeams() {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams`
+        );
+        message = res.data.teams;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     async GetMyTeams() {
       let res;
       let message;
@@ -700,8 +713,7 @@ export default {
       let message;
       try {
         res = await this.axioCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/myseasons/available`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons`
         );
         message = res.data.seasons;
       } catch (error) {
@@ -721,6 +733,16 @@ export default {
         message = error.response.data.message;
       }
       return message;
+    },
+    async GetSeasonData(seasonid) {
+      try {
+        const res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`
+        );
+        return { season: res.data.season, matches: res.data.matches || [] };
+      } catch (error) {
+        return { season: null, matches: [] };
+      }
     },
     async GetSeasonCVARs(seasonid) {
       let res;
@@ -1327,6 +1349,87 @@ export default {
       return message;
     },
     // END LEADERBOARD CALLS
+    // BEGIN QUEUE CALLS
+    async GetQueues() {
+      try {
+        const res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`
+        );
+        return res.data;
+      } catch (error) {
+        return [];
+      }
+    },
+    async GetQueue(slug) {
+      const res = await this.axioCall.get(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`
+      );
+      return res.data;
+    },
+    async GetQueuePlayers(slug) {
+      try {
+        const res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/players`
+        );
+        return res.data;
+      } catch (error) {
+        return [];
+      }
+    },
+    GetEventQueueData(slug) {
+      return this.$sse
+        .create({
+          url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/stream`,
+          format: "json",
+          withCredentials: true,
+          polyfill: true
+        })
+        .on("error", err =>
+          console.error("Queue SSE error:", err)
+        );
+    },
+    async CreateQueue(maxPlayers = 10, isPrivate = false, manualTeams = false) {
+      const res = await this.axioCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`,
+        [{ maxPlayers, private: isPrivate, manualTeams }]
+      );
+      return res.data;
+    },
+    async JoinQueue(slug) {
+      const res = await this.axioCall.put(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
+        [{ action: "join" }]
+      );
+      return res.data;
+    },
+    async LeaveQueue(slug) {
+      const res = await this.axioCall.put(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
+        [{ action: "leave" }]
+      );
+      return res.data;
+    },
+    async SetQueueTeams(slug, team1, team2) {
+      const res = await this.axioCall.put(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/teams`,
+        { team1, team2 }
+      );
+      return res.data;
+    },
+    async StartManualQueue(slug) {
+      const res = await this.axioCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/start`
+      );
+      return res.data;
+    },
+    async DeleteQueue(slug) {
+      const res = await this.axioCall.delete(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`,
+        { data: [{ slug }] }
+      );
+      return res.data;
+    },
+    // END QUEUE CALLS
     // BEGIN REGISTRATION CALLS
     async login(userinfo) {
       let message;

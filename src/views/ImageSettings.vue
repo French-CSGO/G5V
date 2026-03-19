@@ -247,6 +247,123 @@
           </v-simple-table>
 
           <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            En-têtes de colonnes
+            <v-switch
+              v-model="settings.match.column_headers.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.match.column_headers.enabled">
+            <v-row dense>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.column_headers.y"
+                  label="Y" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-combobox v-model="settings.match.column_headers.font"
+                  :items="fontList" label="Police" outlined dense hide-details />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.column_headers.color" class="color-input" />
+              </v-col>
+              <v-col cols="1">
+                <v-text-field v-model.number="settings.match.column_headers.size"
+                  label="Taille" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <v-checkbox v-model="settings.match.column_headers.bold" label="Gras" hide-details class="mt-0 pt-0" />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-2">
+              <v-col cols="3">
+                <v-text-field v-model="settings.match.column_headers.kills_label"
+                  label="Label Kills" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.match.column_headers.assists_label"
+                  label="Label Assists" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.match.column_headers.deaths_label"
+                  label="Label Deaths" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.match.column_headers.rating_label"
+                  label="Label Rating" outlined dense hide-details />
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Éléments graphiques (fond uni)
+            <v-switch
+              v-model="settings.match.shapes.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.match.shapes.enabled">
+            <!-- Team pills -->
+            <v-subheader class="caption font-weight-bold pl-0">Pilule nom d'équipe</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.match.shapes.team_pill.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.shapes.team_pill.fill" class="color-input" title="Fond" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.team_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.team_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.team_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.team_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.shapes.team_pill.border" class="color-input" title="Bordure" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.team_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.team_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Player pills -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Pilule nom du joueur</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.match.shapes.player_pill.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.shapes.player_pill.fill" class="color-input" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.player_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.player_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.player_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.player_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.player_pill.l_x" label="X gauche" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.player_pill.r_x" label="X droite" type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Stats table -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Tableau stats</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.match.shapes.stats_table.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.shapes.stats_table.fill" class="color-input" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.stats_table.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.stats_table.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.stats_table.l_x" label="X gauche" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.stats_table.r_x" label="X droite" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.stats_table.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.stats_table.row_height" label="H ligne" type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <v-row dense class="mt-1">
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.match.shapes.stats_table.odd_fill" class="color-input" title="Couleur ligne impaire" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.stats_table.odd_alpha" label="Op. impair" type="number" step="0.02" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.match.shapes.stats_table.even_fill" class="color-input" title="Couleur ligne paire" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.match.shapes.stats_table.even_alpha" label="Op. pair" type="number" step="0.02" outlined dense hide-details /></v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
           <v-subheader class="font-weight-bold"
             >Fond &amp; Police personnalisée</v-subheader
           >
@@ -406,6 +523,136 @@
           </v-simple-table>
 
           <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            En-têtes de colonnes
+            <v-switch
+              v-model="settings.player.column_headers.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.player.column_headers.enabled">
+            <v-row dense>
+              <v-col cols="2">
+                <v-combobox v-model="settings.player.column_headers.font"
+                  :items="fontList" label="Police" outlined dense hide-details />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.player.column_headers.color" class="color-input" />
+              </v-col>
+              <v-col cols="1">
+                <v-text-field v-model.number="settings.player.column_headers.size"
+                  label="Taille" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <v-checkbox v-model="settings.player.column_headers.bold" label="Gras" hide-details class="mt-0 pt-0" />
+              </v-col>
+            </v-row>
+            <v-subheader class="caption pl-0 mt-1">Kills / Assists / Deaths</v-subheader>
+            <v-row dense>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.player.column_headers.y"
+                  label="Y (ligne 1)" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.player.column_headers.kills_label"
+                  label="Label Kills" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.player.column_headers.assists_label"
+                  label="Label Assists" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.player.column_headers.deaths_label"
+                  label="Label Deaths" outlined dense hide-details />
+              </v-col>
+            </v-row>
+            <v-subheader class="caption pl-0 mt-1">Rating / HS% / Clutches</v-subheader>
+            <v-row dense>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.player.column_headers.y2"
+                  label="Y (ligne 2)" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.player.column_headers.rating_label"
+                  label="Label Rating" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.player.column_headers.hs_label"
+                  label="Label HS%" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.player.column_headers.clutches_label"
+                  label="Label Clutches" outlined dense hide-details />
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Éléments graphiques (fond uni)
+            <v-switch
+              v-model="settings.player.shapes.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.player.shapes.enabled">
+            <!-- Team pills -->
+            <v-subheader class="caption font-weight-bold pl-0">Pilule nom d'équipe</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.player.shapes.team_pill.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.player.shapes.team_pill.fill" class="color-input" title="Fond" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.team_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.team_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.team_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.team_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.player.shapes.team_pill.border" class="color-input" title="Bordure" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.team_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.team_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Player pill -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Pilule nom du joueur</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.player.shapes.player_pill.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.player.shapes.player_pill.fill" class="color-input" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.player_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.player_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.player_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.player_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.player.shapes.player_pill.border" class="color-input" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.player_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.player_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Stats bar -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Barre stats</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.player.shapes.stats_bar.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.player.shapes.stats_bar.fill" class="color-input" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.stats_bar.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.stats_bar.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.stats_bar.x" label="X" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.stats_bar.y" label="Y (0=auto)" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.stats_bar.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.player.shapes.stats_bar.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
           <v-subheader class="font-weight-bold"
             >Fond &amp; Police personnalisée</v-subheader
           >
@@ -563,10 +810,19 @@
               </tr>
             </tbody>
           </v-simple-table>
+          <v-row dense class="mt-2">
+            <v-col cols="4">
+              <v-text-field
+                v-model="settings.team_season.best_map_label.text"
+                label="Texte 'Meilleure Map'"
+                outlined dense hide-details
+              />
+            </v-col>
+          </v-row>
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold"
-            >Joueurs (3 colonnes)</v-subheader
+            >Joueurs (jusqu'à 5)</v-subheader
           >
           <v-row align="center">
             <v-col cols="1"
@@ -597,6 +853,22 @@
               ><v-text-field
                 v-model.number="settings.team_season.players.x[2]"
                 label="Joueur 3 X"
+                type="number"
+                outlined
+                dense
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.team_season.players.x[3]"
+                label="Joueur 4 X"
+                type="number"
+                outlined
+                dense
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.team_season.players.x[4]"
+                label="Joueur 5 X"
                 type="number"
                 outlined
                 dense
@@ -702,6 +974,79 @@
           </v-row>
 
           <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Labels des statistiques
+            <v-switch
+              v-model="settings.team_season.stat_labels.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.team_season.stat_labels.enabled">
+            <v-row dense>
+              <v-col cols="2">
+                <v-combobox v-model="settings.team_season.stat_labels.font"
+                  :items="fontList" label="Police" outlined dense hide-details />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.team_season.stat_labels.color" class="color-input" />
+              </v-col>
+              <v-col cols="1">
+                <v-text-field v-model.number="settings.team_season.stat_labels.size"
+                  label="Taille" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <v-checkbox v-model="settings.team_season.stat_labels.bold" label="Gras" hide-details class="mt-0 pt-0" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.team_season.stat_labels.y_offset"
+                  label="Décalage Y (au-dessus)" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-2">
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.team_rating_label"
+                  label="Label Rating équipe" outlined dense hide-details />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1">
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.kills_label"
+                  label="Label Kills" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.deaths_label"
+                  label="Label Morts" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.plants_label"
+                  label="Label Plants" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.defuses_label"
+                  label="Label Défuses" outlined dense hide-details />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1">
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.rounds_won_label"
+                  label="Label Rounds gagnés" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.rounds_lost_label"
+                  label="Label Rounds perdus" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.wins_label"
+                  label="Label Victoires" outlined dense hide-details />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field v-model="settings.team_season.stat_labels.losses_label"
+                  label="Label Défaites" outlined dense hide-details />
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
           <v-subheader class="font-weight-bold"
             >Image de map (map avec le + de victoires)</v-subheader
           >
@@ -787,6 +1132,71 @@
             class="mt-2"
             >{{ uploadMapMsg }}</v-alert
           >
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Éléments graphiques (fond uni)
+            <v-switch
+              v-model="settings.team_season.shapes.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.team_season.shapes.enabled">
+            <!-- Team pill -->
+            <v-subheader class="caption font-weight-bold pl-0">Pilule nom d'équipe</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.team_season.shapes.team_pill.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.team_season.shapes.team_pill.fill" class="color-input" title="Fond" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.team_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.team_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.team_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.team_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.team_season.shapes.team_pill.border" class="color-input" title="Bordure" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.team_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.team_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Player pills -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Pilules joueurs</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.team_season.shapes.player_pill.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.team_season.shapes.player_pill.fill" class="color-input" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.player_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.player_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.player_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.player_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.team_season.shapes.player_pill.border" class="color-input" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.player_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.player_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Stats background -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Fond tableau stats</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.team_season.shapes.stats_background.enabled" color="primary" inset dense hide-details class="mt-0 pt-0" label="Actif" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.team_season.shapes.stats_background.fill" class="color-input" />
+              </v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.stats_background.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.stats_background.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.stats_background.x" label="X" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.stats_background.y" label="Y" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.stats_background.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.team_season.shapes.stats_background.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+            </v-row>
+          </div>
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold"
@@ -1068,7 +1478,33 @@ export default {
           kills_r: defFX(true, "Arial", "#1a1a2e", 20, false, 1025),
           assists_r: defFX(true, "Arial", "#1a1a2e", 20, false, 1105),
           deaths_r: defFX(true, "Arial", "#1a1a2e", 20, false, 1195),
-          rating_r: defFX(true, "Arial", "#1a1a2e", 20, false, 1280)
+          rating_r: defFX(true, "Arial", "#1a1a2e", 20, false, 1280),
+          column_headers: {
+            enabled: false, y: 400,
+            font: "Arial", color: "#1a1a2e", size: 20, bold: true,
+            kills_label: "K", assists_label: "A", deaths_label: "D", rating_label: "RTG"
+          },
+          shapes: {
+            enabled: false,
+            team_pill: {
+              enabled: true, fill: "#000000", alpha: 0.35,
+              radius: 50, width: 480, height: 70,
+              border: "#ffffff", border_alpha: 0.2, border_width: 2
+            },
+            player_pill: {
+              enabled: true, fill: "#ffffff", alpha: 0.18,
+              radius: 50, width: 420, height: 58,
+              border: "#ffffff", border_alpha: 0.3, border_width: 1.5,
+              l_x: 60, r_x: 1440
+            },
+            stats_table: {
+              enabled: true, fill: "#000000", alpha: 0.2,
+              radius: 22, l_x: 510, r_x: 920, width: 430,
+              pad_y: 30, row_height: 58,
+              odd_fill: "#000000", odd_alpha: 0.08,
+              even_fill: "#ffffff", even_alpha: 0.05
+            }
+          }
         },
 
         player: {
@@ -1083,7 +1519,31 @@ export default {
           deaths: defFC(true, "Arial", "#1a1a2e", 28, false, 900, 600),
           rating: defFC(true, "Arial", "#1a1a2e", 28, false, 1100, 600),
           hs: defFC(true, "Arial", "#1a1a2e", 28, false, 1310, 600),
-          clutches: defFC(true, "Arial", "#1a1a2e", 28, false, 1500, 600)
+          clutches: defFC(true, "Arial", "#1a1a2e", 28, false, 1500, 600),
+          column_headers: {
+            enabled: false, y: 530, y2: 530,
+            font: "Arial", color: "#1a1a2e", size: 20, bold: true,
+            kills_label: "Kills", assists_label: "Assists", deaths_label: "Deaths",
+            rating_label: "Rating", hs_label: "HS%", clutches_label: "Clutches"
+          },
+          shapes: {
+            enabled: false,
+            team_pill: {
+              enabled: true, fill: "#000000", alpha: 0.35,
+              radius: 50, width: 400, height: 65,
+              border: "#ffffff", border_alpha: 0.2, border_width: 2
+            },
+            player_pill: {
+              enabled: true, fill: "#000000", alpha: 0.3,
+              radius: 50, width: 600, height: 75,
+              border: "#ffffff", border_alpha: 0.2, border_width: 2
+            },
+            stats_bar: {
+              enabled: true, fill: "#000000", alpha: 0.2,
+              radius: 22, x: 420, y: 0, width: 1140, height: 70,
+              border: "#ffffff", border_alpha: 0.1, border_width: 1
+            }
+          }
         },
 
         team_season: {
@@ -1091,13 +1551,14 @@ export default {
           fontFile: "",
           team_name: defFC(true, "Arial", "#1a1a2e", 42, true, 960, 150),
           team_rating: defFC(true, "Arial", "#1a1a2e", 24, true, 960, 460),
+          best_map_label: { ...defFC(true, "Arial", "#1a1a2e", 22, false, 960, 510), text: "Meilleure Map" },
           players: {
             enabled: true,
             font: "Arial",
             color: "#1a1a2e",
             size: 26,
             bold: true,
-            x: [480, 960, 1440],
+            x: [320, 640, 960, 1280, 1600],
             name_y: 320,
             show_rating: true,
             rating_font: "Arial",
@@ -1114,7 +1575,34 @@ export default {
           rounds_lost: defFC(true, "Arial", "#c62828", 24, false, 600, 760),
           wins: defFC(true, "Arial", "#2e7d32", 24, false, 900, 760),
           losses: defFC(true, "Arial", "#c62828", 24, false, 1140, 760),
-          map_image: { enabled: true, x: 760, y: 390, width: 400, height: 225 }
+          stat_labels: {
+            enabled: true,
+            font: "Arial", color: "#888888", size: 16, bold: false,
+            y_offset: 30,
+            team_rating_label: "Rating",
+            kills_label: "Kills", deaths_label: "Décès",
+            plants_label: "Plants", defuses_label: "Défuses",
+            rounds_won_label: "Rounds gagnés", rounds_lost_label: "Rounds perdus",
+            wins_label: "Victoires", losses_label: "Défaites"
+          },
+          map_image: { enabled: true, x: 760, y: 390, width: 400, height: 225 },
+          shapes: {
+            enabled: false,
+            team_pill: {
+              enabled: true, fill: "#000000", alpha: 0.35,
+              radius: 50, width: 600, height: 75,
+              border: "#ffffff", border_alpha: 0.2, border_width: 2
+            },
+            player_pill: {
+              enabled: true, fill: "#000000", alpha: 0.25,
+              radius: 50, width: 280, height: 55,
+              border: "#ffffff", border_alpha: 0.2, border_width: 1.5
+            },
+            stats_background: {
+              enabled: true, fill: "#000000", alpha: 0.15,
+              radius: 22, x: 220, y: 580, width: 1480, height: 240
+            }
+          }
         }
       },
 
@@ -1195,6 +1683,7 @@ export default {
       teamSeasonFields: [
         { key: "team_name", label: "Nom équipe" },
         { key: "team_rating", label: "Rating équipe" },
+        { key: "best_map_label", label: "Meilleure map (texte)" },
         { key: "kills", label: "Kills" },
         { key: "deaths", label: "Morts" },
         { key: "plants", label: "Plants" },
@@ -1229,7 +1718,51 @@ export default {
             .catch(() => [])
         ]);
         this.mapImages = mapImages;
-        this.settings = settings;
+        // Merge API response with local defaults so new fields never crash
+        const def = this.settings;
+        const s = settings || {};
+        const sm = s.match || {};
+        const sp = s.player || {};
+        const st = s.team_season || {};
+        this.settings = {
+          canvas: { ...def.canvas, ...(s.canvas || {}) },
+          match: {
+            ...def.match, ...sm,
+            column_headers: { ...def.match.column_headers, ...(sm.column_headers || {}) },
+            shapes: {
+              ...def.match.shapes, ...(sm.shapes || {}),
+              team_pill:   { ...def.match.shapes.team_pill,   ...(sm.shapes?.team_pill   || {}) },
+              player_pill: { ...def.match.shapes.player_pill, ...(sm.shapes?.player_pill || {}) },
+              stats_table: { ...def.match.shapes.stats_table, ...(sm.shapes?.stats_table || {}) },
+            },
+          },
+          player: {
+            ...def.player, ...sp,
+            column_headers: { ...def.player.column_headers, ...(sp.column_headers || {}) },
+            shapes: {
+              ...def.player.shapes, ...(sp.shapes || {}),
+              team_pill:   { ...def.player.shapes.team_pill,   ...(sp.shapes?.team_pill   || {}) },
+              player_pill: { ...def.player.shapes.player_pill, ...(sp.shapes?.player_pill || {}) },
+              stats_bar:   { ...def.player.shapes.stats_bar,   ...(sp.shapes?.stats_bar   || {}) },
+            },
+          },
+          team_season: {
+            ...def.team_season, ...st,
+            players: {
+              ...def.team_season.players, ...(st.players || {}),
+              x: [0,1,2,3,4].map(i => (st.players?.x?.[i] ?? def.team_season.players.x[i])),
+            },
+            best_map_label: { ...def.team_season.best_map_label, ...(st.best_map_label || {}), text: (st.best_map_label?.text ?? def.team_season.best_map_label.text) },
+            stat_labels: { ...def.team_season.stat_labels, ...(st.stat_labels || {}) },
+            map_image: { ...def.team_season.map_image, ...(st.map_image || {}) },
+            shapes: {
+              ...def.team_season.shapes, ...(st.shapes || {}),
+              team_pill:        { ...def.team_season.shapes.team_pill,        ...(st.shapes?.team_pill        || {}) },
+              player_pill:      { ...def.team_season.shapes.player_pill,      ...(st.shapes?.player_pill      || {}) },
+              stats_background: { ...def.team_season.shapes.stats_background, ...(st.shapes?.stats_background || {}) },
+            },
+          },
+        };
         const systemFonts = [
           "Arial",
           "Helvetica",
@@ -1373,6 +1906,7 @@ export default {
         s.players.font = family;
         s.players.rating_font = family;
       }
+      if (s.column_headers) s.column_headers.font = family;
       if (!this.fontList.includes(family)) this.fontList.push(family);
     },
 

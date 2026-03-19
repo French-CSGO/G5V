@@ -641,6 +641,19 @@ export default {
       }
       return message;
     },
+    async GetPterodactylServers() {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/pterodactyl-list`
+        );
+        message = res.data.servers;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     // END SERVER CALLS
     // BEGIN SEASON CALLS
     async GetAllSeasons() {
@@ -819,6 +832,46 @@ export default {
         message = res.data;
       } catch (error) {
         message = error.response.data;
+      }
+      return message;
+    },
+    async GetToornamentMatches(seasonid, filters = {}) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/matches`,
+          { params: filters }
+        );
+        message = res.data.matches;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async GetToornamentStages(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/stages`
+        );
+        message = res.data.stages;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async GetToornamentMatchPrefill(seasonid, toornamentMatchId) {
+      let res;
+      let message;
+      try {
+        res = await this.axioCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/matches/${toornamentMatchId}/prefill`
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data.message;
       }
       return message;
     },

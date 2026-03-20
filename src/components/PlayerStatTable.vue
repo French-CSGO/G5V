@@ -42,6 +42,27 @@
           </div>
           <div
             class="text-subtitle-2 mapInfo"
+            v-if="mapStats[index] != null"
+            align="center"
+          >
+            <v-btn
+              small
+              color="primary"
+              :href="
+                apiUrl +
+                  '/image/match/' +
+                  match_id +
+                  '/map/' +
+                  mapStats[index].id
+              "
+              target="_blank"
+            >
+              <v-icon left small>mdi-image</v-icon>
+              Stat Image
+            </v-btn>
+          </div>
+          <div
+            class="text-subtitle-2 mapInfo"
             v-if="mapStats[index] != null && mapStats[index].end == null"
             align="left"
           ></div>
@@ -83,6 +104,35 @@
                 disable-sort
                 :colspan="headers.length"
               />
+              <div class="py-2" align="center">
+                <v-btn
+                  small
+                  color="secondary"
+                  :href="GetPlayerImageUrl(match_id, item.steam_id)"
+                  target="_blank"
+                  class="mr-2"
+                >
+                  <v-icon left small>mdi-image</v-icon>
+                  Stat Image Joueur
+                </v-btn>
+                <v-btn
+                  small
+                  color="primary"
+                  :href="
+                    apiUrl +
+                      '/image/match/' +
+                      match_id +
+                      '/map/' +
+                      item.map_id +
+                      '/player/' +
+                      item.steam_id
+                  "
+                  target="_blank"
+                >
+                  <v-icon left small>mdi-image-filter-center-focus</v-icon>
+                  Stat Image Map
+                </v-btn>
+              </div>
             </td>
           </template>
         </v-data-table>
@@ -231,10 +281,8 @@ export default {
       // Template will contain v-rows/etc like on main Team page.
       let matchData = await this.GetMatchData(this.match_id);
       if (matchData.end_time == null) {
-        //this.GetMapStatsStream(matchData);
-        //this.GetMapPlayerStatsStream(matchData);
-        this.getMapString(matchData);
-        this.GetMapPlayerStats(matchData);
+        this.GetMapStatsStream(matchData);
+        this.GetMapPlayerStatsStream(matchData);
       } else {
         this.getMapString(matchData);
         this.GetMapPlayerStats(matchData);
@@ -314,7 +362,7 @@ export default {
           await this.retrieveStatsHelper(message, matchData);
         });
       } catch (error) {
-        void error;
+        console.log("Our error: " + error);
       } finally {
         this.isLoading = false;
       }
@@ -325,7 +373,7 @@ export default {
         let res = await this.GetPlayerStats(this.match_id);
         await this.retrieveStatsHelper(res, matchData);
       } catch (error) {
-        void error;
+        console.log("Our error: " + error);
       } finally {
         this.isLoading = false;
       }
@@ -339,7 +387,7 @@ export default {
           await this.retrieveMapStatsHelper(message, matchData);
         });
       } catch (error) {
-        void error;
+        console.log("Our error: " + error);
       } finally {
         this.isLoading = false;
       }
@@ -350,7 +398,7 @@ export default {
         let res = await this.GetMapStats(this.match_id);
         await this.retrieveMapStatsHelper(res, matchData);
       } catch (error) {
-        void error;
+        console.log("Our error: " + error);
       } finally {
         this.isLoading = false;
       }
@@ -394,6 +442,7 @@ export default {
           "Map: " + singleMapStat.map_name
         );
         this.$set(this.mapStats[index], "demo", singleMapStat.demoFile);
+        this.$set(this.mapStats[index], "id", singleMapStat.id);
       });
       if (matchData.end_time != null) this.isFinished = true;
     }

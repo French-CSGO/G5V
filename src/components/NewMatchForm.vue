@@ -427,7 +427,7 @@ export default {
         .indexOf(val);
       this.selectedSeasonObject = this.seasons[arrIndex];
       if (val && val !== -1) {
-        let seasonTeams = await this.GetSeasonTeams(val);
+        const seasonTeams = await this.GetSeasonTeams(val);
         this.teams =
           Array.isArray(seasonTeams) && seasonTeams.length > 0
             ? seasonTeams
@@ -519,8 +519,11 @@ export default {
       return a.user_id - this.user.id || a.public_team - b.public_team;
     });
     this.teams = this.allTeams;
-    this.seasons = await this.GetMyAvailableSeasons();
-    if (typeof this.seasons == "string") this.seasons = [];
+    const allSeasons = await this.GetMyAvailableSeasons();
+    const now = new Date();
+    this.seasons = Array.isArray(allSeasons)
+      ? allSeasons.filter(s => s.end_date == null || new Date(s.end_date) >= now)
+      : [];
     this.MapList = await this.GetUserEnabledMapList(this.user.id);
   },
   methods: {

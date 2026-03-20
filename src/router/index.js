@@ -244,6 +244,12 @@ const routes = [
     name: "AdminUsers",
     component: () =>
       import(/* webpackChunkName: "Admin" */ "../views/AdminUsers.vue")
+  },
+  {
+    path: "/image-settings",
+    name: "ImageSettings",
+    component: () =>
+      import(/* webpackChunkName: "ImageSettings" */ "../views/ImageSettings.vue")
   }
 ];
 

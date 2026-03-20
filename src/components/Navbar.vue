@@ -128,6 +128,10 @@
               <v-list-item-icon><v-icon small>mdi-cog</v-icon></v-list-item-icon>
               <v-list-item-title>Paramètres</v-list-item-title>
             </v-list-item>
+            <v-list-item :to="'/image-settings'">
+              <v-list-item-icon><v-icon small>mdi-image-edit</v-icon></v-list-item-icon>
+              <v-list-item-title>{{ $t("Navbar.ImageSettings") }}</v-list-item-title>
+            </v-list-item>
           </v-list-item-group>
         </template>
       </v-list>

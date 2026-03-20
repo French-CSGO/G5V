@@ -1413,8 +1413,23 @@
           </div>
         </v-card>
 
-        <!-- ── Bouton Sauvegarder ─────────────────────────────────────── -->
+        <!-- ── Actions ───────────────────────────────────────────────── -->
         <v-card-actions class="pa-4">
+          <v-btn outlined @click="exportConfig" v-if="tab < 3">
+            <v-icon left>mdi-download</v-icon>
+            Exporter
+          </v-btn>
+          <v-btn outlined @click="$refs.importFile.click()" v-if="tab < 3">
+            <v-icon left>mdi-upload</v-icon>
+            Importer
+          </v-btn>
+          <input
+            ref="importFile"
+            type="file"
+            accept=".json"
+            style="display:none"
+            @change="importConfig"
+          />
           <v-spacer />
           <v-btn color="primary" @click="save" :loading="saving">
             <v-icon left>mdi-content-save</v-icon>
@@ -1794,6 +1809,37 @@ export default {
       } finally {
         this.saving = false;
       }
+    },
+
+    exportConfig() {
+      const sectionKey = ["match", "player", "team_season"][this.tab];
+      const data = JSON.stringify(this.settings[sectionKey], null, 2);
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `image-settings-${sectionKey}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    },
+
+    importConfig(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const sectionKey = ["match", "player", "team_season"][this.tab];
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const parsed = JSON.parse(e.target.result);
+          this.$set(this.settings, sectionKey, parsed);
+          this.notify(`Configuration "${sectionKey}" importée — pensez à sauvegarder.`, "info");
+        } catch {
+          this.notify("Fichier JSON invalide", "error");
+        }
+        // reset input so the same file can be re-imported
+        event.target.value = "";
+      };
+      reader.readAsText(file);
     },
 
     async uploadBg(idx) {

@@ -3,23 +3,13 @@ import axios from "axios";
 export default {
   name: "api",
   data() {
-    const instance = axios.create({
-      headers: {
-        "Content-Type": "application/json"
-      },
-      withCredentials: true
-    });
-    instance.interceptors.request.use(config => {
-      if (["post", "put", "delete", "patch"].includes(config.method)) {
-        const match = document.cookie.match(/(?:^|;\s*)_csrf=([^;]*)/);
-        if (match) {
-          config.headers["x-csrf-token"] = decodeURIComponent(match[1]);
-        }
-      }
-      return config;
-    });
     return {
-      axiosCall: instance,
+      axiosCall: axios.create({
+        headers: {
+          "Content-Type": "application/json"
+        },
+        withCredentials: true
+      }),
       languageAlert: false
     };
   },

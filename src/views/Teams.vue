@@ -1,6 +1,6 @@
 <template>
   <v-container class="teams" fluid>
-    <v-progress-linear v-if="user.id === -1" indeterminate color="primary" />
+    <v-progress-linear v-if="user.id === null" indeterminate color="primary" />
     <v-alert v-else-if="isMyTeams && !isSuperAdmin" type="error">
       Accès réservé aux super-administrateurs.
     </v-alert>
@@ -21,7 +21,7 @@ export default {
       user: {
         admin: false,
         steam_id: "",
-        id: -1,
+        id: null,
         super_admin: false,
         name: "",
         small_image: "",

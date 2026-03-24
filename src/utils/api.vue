@@ -46,7 +46,6 @@ export default {
         );
         message = res.data.user;
       } catch (err) {
-        //console.log(err)
         message = {
           id: 0,
           steam_id: "",
@@ -93,7 +92,11 @@ export default {
         );
         message = res.data;
       } catch (err) {
-        message = [];
+        message = {
+          error: true,
+          message: err?.response?.data?.message || "Failed to update map",
+          data: err?.response?.data || null
+        };
       }
       return message;
     },
@@ -242,7 +245,7 @@ export default {
         );
         message = res.data.teams;
       } catch (error) {
-        message = error.response.data.message;
+        message = error.response?.data?.message || "Failed to fetch teams";
       }
       return message;
     },
@@ -251,11 +254,11 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/public`
         );
         message = res.data.teams;
       } catch (error) {
-        message = error.response.data.message;
+        message = error.response?.data?.message || "Failed to fetch public teams";
       }
       return message;
     },
@@ -268,7 +271,7 @@ export default {
         );
         message = res.data.teams;
       } catch (error) {
-        message = error.response.data.message;
+        message = error.response?.data?.message || "Failed to fetch your teams";
       }
       return message;
     },
@@ -352,7 +355,6 @@ export default {
         );
         message = res.data.match;
       } catch (err) {
-        //console.log(err);
         message = {
           id: 0,
           user_id: null,
@@ -520,7 +522,6 @@ export default {
         );
         message = res.data.server;
       } catch (err) {
-        //console.log(err)
         message = {
           id: 0,
           in_use: 0,
@@ -702,7 +703,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/myavailable`
         );
         message = res.data.seasons;
       } catch (error) {

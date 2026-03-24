@@ -1,4 +1,4 @@
-FROM node:16 as builder
+FROM node:25 as builder
 
 ARG VUE_APP_G5V_API_URL
 ENV VUE_APP_G5V_API_URL=$VUE_APP_G5V_API_URL

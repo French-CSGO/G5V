@@ -38,7 +38,9 @@ export default {
       return Number(this.user.super_admin) === 1;
     },
     isAdmin() {
-      return Number(this.user.admin) === 1 || Number(this.user.super_admin) === 1;
+      return (
+        Number(this.user.admin) === 1 || Number(this.user.super_admin) === 1
+      );
     }
   },
   async mounted() {

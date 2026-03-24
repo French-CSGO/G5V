@@ -3,7 +3,11 @@
     <v-row class="pb-5">
       <v-col cols="12" class="flex-grow-1">
         <v-card>
-          <v-progress-linear v-if="user.id === -1" indeterminate color="primary" />
+          <v-progress-linear
+            v-if="user.id === -1"
+            indeterminate
+            color="primary"
+          />
           <v-alert v-else-if="!isAdmin" type="error">
             Accès réservé aux administrateurs.
           </v-alert>
@@ -37,7 +41,9 @@ export default {
   },
   computed: {
     isAdmin() {
-      return Number(this.user.admin) === 1 || Number(this.user.super_admin) === 1;
+      return (
+        Number(this.user.admin) === 1 || Number(this.user.super_admin) === 1
+      );
     }
   },
   async mounted() {

@@ -567,9 +567,13 @@ export default {
           res.map(async season => {
             const ownerRes = await getUserCached(season.user_id);
             season.owner = ownerRes.name;
-            season.start_date = new Date(season.start_date).toLocaleDateString("en-CA");
+            season.start_date = new Date(season.start_date).toLocaleDateString(
+              "en-CA"
+            );
             if (season.end_date != null)
-              season.end_date = new Date(season.end_date).toLocaleDateString("en-CA");
+              season.end_date = new Date(season.end_date).toLocaleDateString(
+                "en-CA"
+              );
             return season;
           })
         );

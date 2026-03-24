@@ -114,7 +114,11 @@
 
                 <!-- Players list -->
                 <v-list dense>
-                  <v-subheader>{{ $t("Queue.players") }} ({{ queuePlayers.length }})</v-subheader>
+                  <v-subheader
+                    >{{ $t("Queue.players") }} ({{
+                      queuePlayers.length
+                    }})</v-subheader
+                  >
                   <v-list-item
                     v-for="player in queuePlayers"
                     :key="player.steamId"
@@ -140,9 +144,9 @@
                       >
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title class="grey--text"
-                        >{{ $t("Queue.waiting") }}</v-list-item-title
-                      >
+                      <v-list-item-title class="grey--text">{{
+                        $t("Queue.waiting")
+                      }}</v-list-item-title>
                     </v-list-item-content>
                   </v-list-item>
                 </v-list>
@@ -165,8 +169,12 @@
                   :color="linkCopied ? 'success' : 'primary'"
                   @click="copyInviteLink"
                 >
-                  <v-icon left>{{ linkCopied ? 'mdi-check' : 'mdi-link-variant' }}</v-icon>
-                  {{ linkCopied ? $t("Queue.linkCopied") : $t("Queue.copyLink") }}
+                  <v-icon left>{{
+                    linkCopied ? "mdi-check" : "mdi-link-variant"
+                  }}</v-icon>
+                  {{
+                    linkCopied ? $t("Queue.linkCopied") : $t("Queue.copyLink")
+                  }}
                 </v-btn>
                 <v-btn
                   v-if="isQueueOwner"
@@ -185,7 +193,11 @@
       </template>
 
       <!-- Manual team assignment panel (owner only, queue full) -->
-      <template v-if="myQueue && myQueue.manualTeams && isQueueOwner && queueReadyForTeams">
+      <template
+        v-if="
+          myQueue && myQueue.manualTeams && isQueueOwner && queueReadyForTeams
+        "
+      >
         <v-row class="mt-2">
           <v-col cols="12">
             <v-card outlined color="orange lighten-5">
@@ -193,33 +205,51 @@
                 <v-icon left color="orange darken-2">mdi-account-switch</v-icon>
                 {{ $t("Queue.teamAssignTitle") }}
               </v-card-title>
-              <v-card-subtitle>{{ $t("Queue.teamAssignSubtitle") }}</v-card-subtitle>
+              <v-card-subtitle>{{
+                $t("Queue.teamAssignSubtitle")
+              }}</v-card-subtitle>
               <v-card-text>
                 <v-row>
                   <!-- Team 1 -->
                   <v-col cols="12" sm="6">
                     <v-card outlined>
                       <v-card-title class="subtitle-2 blue--text">
-                        <v-icon small left color="blue">mdi-alpha-t-circle</v-icon>
+                        <v-icon small left color="blue"
+                          >mdi-alpha-t-circle</v-icon
+                        >
                         {{ $t("Queue.team1") }}
-                        <v-chip x-small class="ml-2" color="blue" dark>{{ manualTeam1.length }}</v-chip>
+                        <v-chip x-small class="ml-2" color="blue" dark>{{
+                          manualTeam1.length
+                        }}</v-chip>
                       </v-card-title>
                       <v-list dense>
-                        <v-list-item v-for="player in manualTeam1" :key="player.steamId">
+                        <v-list-item
+                          v-for="player in manualTeam1"
+                          :key="player.steamId"
+                        >
                           <v-list-item-avatar size="24">
                             <v-icon small>mdi-account</v-icon>
                           </v-list-item-avatar>
                           <v-list-item-content>
-                            <v-list-item-title>{{ player.nickname || player.steamId }}</v-list-item-title>
+                            <v-list-item-title>{{
+                              player.nickname || player.steamId
+                            }}</v-list-item-title>
                           </v-list-item-content>
                           <v-list-item-action>
-                            <v-btn icon x-small color="orange" @click="moveToUnassigned(player, 1)">
+                            <v-btn
+                              icon
+                              x-small
+                              color="orange"
+                              @click="moveToUnassigned(player, 1)"
+                            >
                               <v-icon x-small>mdi-arrow-right</v-icon>
                             </v-btn>
                           </v-list-item-action>
                         </v-list-item>
                         <v-list-item v-if="manualTeam1.length === 0">
-                          <v-list-item-content class="grey--text caption">{{ $t("Queue.teamEmpty") }}</v-list-item-content>
+                          <v-list-item-content class="grey--text caption">{{
+                            $t("Queue.teamEmpty")
+                          }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -228,26 +258,42 @@
                   <v-col cols="12" sm="6">
                     <v-card outlined>
                       <v-card-title class="subtitle-2 red--text">
-                        <v-icon small left color="red">mdi-alpha-t-circle</v-icon>
+                        <v-icon small left color="red"
+                          >mdi-alpha-t-circle</v-icon
+                        >
                         {{ $t("Queue.team2") }}
-                        <v-chip x-small class="ml-2" color="red" dark>{{ manualTeam2.length }}</v-chip>
+                        <v-chip x-small class="ml-2" color="red" dark>{{
+                          manualTeam2.length
+                        }}</v-chip>
                       </v-card-title>
                       <v-list dense>
-                        <v-list-item v-for="player in manualTeam2" :key="player.steamId">
+                        <v-list-item
+                          v-for="player in manualTeam2"
+                          :key="player.steamId"
+                        >
                           <v-list-item-avatar size="24">
                             <v-icon small>mdi-account</v-icon>
                           </v-list-item-avatar>
                           <v-list-item-content>
-                            <v-list-item-title>{{ player.nickname || player.steamId }}</v-list-item-title>
+                            <v-list-item-title>{{
+                              player.nickname || player.steamId
+                            }}</v-list-item-title>
                           </v-list-item-content>
                           <v-list-item-action>
-                            <v-btn icon x-small color="orange" @click="moveToUnassigned(player, 2)">
+                            <v-btn
+                              icon
+                              x-small
+                              color="orange"
+                              @click="moveToUnassigned(player, 2)"
+                            >
                               <v-icon x-small>mdi-arrow-left</v-icon>
                             </v-btn>
                           </v-list-item-action>
                         </v-list-item>
                         <v-list-item v-if="manualTeam2.length === 0">
-                          <v-list-item-content class="grey--text caption">{{ $t("Queue.teamEmpty") }}</v-list-item-content>
+                          <v-list-item-content class="grey--text caption">{{
+                            $t("Queue.teamEmpty")
+                          }}</v-list-item-content>
                         </v-list-item>
                       </v-list>
                     </v-card>
@@ -256,7 +302,9 @@
                 <!-- Unassigned players -->
                 <v-row v-if="manualUnassigned.length > 0" class="mt-2">
                   <v-col cols="12">
-                    <div class="caption grey--text mb-1">{{ $t("Queue.unassigned") }}</div>
+                    <div class="caption grey--text mb-1">
+                      {{ $t("Queue.unassigned") }}
+                    </div>
                     <v-chip-group>
                       <v-chip
                         v-for="player in manualUnassigned"
@@ -296,8 +344,12 @@
       <!-- Assign player to team dialog -->
       <v-dialog v-model="assignDialog" max-width="300">
         <v-card v-if="assigningPlayer">
-          <v-card-title class="subtitle-1">{{ $t("Queue.assignTitle") }}</v-card-title>
-          <v-card-subtitle>{{ assigningPlayer.nickname || assigningPlayer.steamId }}</v-card-subtitle>
+          <v-card-title class="subtitle-1">{{
+            $t("Queue.assignTitle")
+          }}</v-card-title>
+          <v-card-subtitle>{{
+            assigningPlayer.nickname || assigningPlayer.steamId
+          }}</v-card-subtitle>
           <v-card-actions class="justify-center pb-4">
             <v-btn color="blue" dark @click="assignToTeam(assigningPlayer, 1)">
               {{ $t("Queue.team1") }}
@@ -397,7 +449,9 @@
               >
                 {{ $t("Queue.leave") }}
               </v-btn>
-              <span v-else class="caption grey--text">{{ $t("Queue.alreadyIn") }}</span>
+              <span v-else class="caption grey--text">{{
+                $t("Queue.alreadyIn")
+              }}</span>
             </v-card-actions>
           </v-card>
         </v-col>
@@ -427,7 +481,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="createDialog = false">{{ $t("Queue.cancel") }}</v-btn>
+          <v-btn text @click="createDialog = false">{{
+            $t("Queue.cancel")
+          }}</v-btn>
           <v-btn color="primary" @click="createQueue" :loading="creating">
             {{ $t("Queue.create") }}
           </v-btn>
@@ -495,7 +551,8 @@ export default {
       for (let i = 1; i <= 10; i++) {
         let label;
         if (i === 1) label = this.$t("Queue.playerTest");
-        else if (i % 2 === 0) label = this.$t("Queue.players2", { n: i, h: i / 2 });
+        else if (i % 2 === 0)
+          label = this.$t("Queue.players2", { n: i, h: i / 2 });
         else label = this.$t("Queue.playersN", { n: i });
         opts.push({ text: label, value: i });
       }
@@ -520,9 +577,11 @@ export default {
       return this.queuePlayers.filter(p => !assigned.has(p.steamId));
     },
     teamsValid() {
-      return this.manualUnassigned.length === 0 &&
+      return (
+        this.manualUnassigned.length === 0 &&
         this.manualTeam1.length > 0 &&
-        this.manualTeam2.length > 0;
+        this.manualTeam2.length > 0
+      );
     }
   },
   async mounted() {
@@ -759,8 +818,7 @@ export default {
 
     copyInviteLink() {
       if (!this.myQueue) return;
-      const url =
-        window.location.origin + "/queue?join=" + this.myQueue.name;
+      const url = window.location.origin + "/queue?join=" + this.myQueue.name;
       const done = () => {
         this.linkCopied = true;
         setTimeout(() => {
@@ -768,10 +826,13 @@ export default {
         }, 2500);
       };
       if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(done).catch(() => {
-          this.fallbackCopy(url);
-          done();
-        });
+        navigator.clipboard
+          .writeText(url)
+          .then(done)
+          .catch(() => {
+            this.fallbackCopy(url);
+            done();
+          });
       } else {
         this.fallbackCopy(url);
         done();
@@ -807,9 +868,13 @@ export default {
 
     moveToUnassigned(player, fromTeam) {
       if (fromTeam === 1) {
-        this.manualTeam1 = this.manualTeam1.filter(p => p.steamId !== player.steamId);
+        this.manualTeam1 = this.manualTeam1.filter(
+          p => p.steamId !== player.steamId
+        );
       } else {
-        this.manualTeam2 = this.manualTeam2.filter(p => p.steamId !== player.steamId);
+        this.manualTeam2 = this.manualTeam2.filter(
+          p => p.steamId !== player.steamId
+        );
       }
     },
 

@@ -522,7 +522,9 @@ export default {
     const allSeasons = await this.GetMyAvailableSeasons();
     const now = new Date();
     this.seasons = Array.isArray(allSeasons)
-      ? allSeasons.filter(s => s.end_date == null || new Date(s.end_date) >= now)
+      ? allSeasons.filter(
+          s => s.end_date == null || new Date(s.end_date) >= now
+        )
       : [];
     this.MapList = await this.GetUserEnabledMapList(this.user.id);
   },

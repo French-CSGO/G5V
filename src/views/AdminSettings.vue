@@ -22,27 +22,56 @@
 
         <!-- DISCORD -->
         <v-card v-if="tab === 0" flat class="pa-4">
-          <v-switch v-model="settings['discord.enabled']" true-value="true" false-value="false"
-            label="Activer le bot Discord" />
-          <v-text-field v-model="settings['discord.token']" label="Token Discord"
+          <v-switch
+            v-model="settings['discord.enabled']"
+            true-value="true"
+            false-value="false"
+            label="Activer le bot Discord"
+          />
+          <v-text-field
+            v-model="settings['discord.token']"
+            label="Token Discord"
             :type="showTokens ? 'text' : 'password'"
             :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append="showTokens = !showTokens" />
-          <v-text-field v-model="settings['discord.announceChannelId']" label="Channel Annonces (ID)" />
-          <v-text-field v-model="settings['discord.scoreboardChannelId']" label="Channel Scoreboard (ID)" />
-          <v-text-field v-model="settings['discord.scheduleChannelId']" label="Channel Planning (ID)" />
-          <v-text-field v-model="settings['discord.guildId']" label="Guild ID (optionnel)" />
+            @click:append="showTokens = !showTokens"
+          />
+          <v-text-field
+            v-model="settings['discord.announceChannelId']"
+            label="Channel Annonces (ID)"
+          />
+          <v-text-field
+            v-model="settings['discord.scoreboardChannelId']"
+            label="Channel Scoreboard (ID)"
+          />
+          <v-text-field
+            v-model="settings['discord.scheduleChannelId']"
+            label="Channel Planning (ID)"
+          />
+          <v-text-field
+            v-model="settings['discord.guildId']"
+            label="Guild ID (optionnel)"
+          />
         </v-card>
 
         <!-- TWITCH -->
         <v-card v-if="tab === 1" flat class="pa-4">
-          <v-switch v-model="settings['twitch.enabled']" true-value="true" false-value="false"
-            label="Activer le bot Twitch" />
-          <v-text-field v-model="settings['twitch.username']" label="Nom du compte bot (login Twitch)" />
-          <v-text-field v-model="settings['twitch.token']" label="Access Token (oauth:xxx...)"
+          <v-switch
+            v-model="settings['twitch.enabled']"
+            true-value="true"
+            false-value="false"
+            label="Activer le bot Twitch"
+          />
+          <v-text-field
+            v-model="settings['twitch.username']"
+            label="Nom du compte bot (login Twitch)"
+          />
+          <v-text-field
+            v-model="settings['twitch.token']"
+            label="Access Token (oauth:xxx...)"
             :type="showTokens ? 'text' : 'password'"
             :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append="showTokens = !showTokens" />
+            @click:append="showTokens = !showTokens"
+          />
           <v-combobox
             v-model="twitchChannels"
             label="Channels Twitch"
@@ -56,27 +85,50 @@
 
         <!-- PTERODACTYL -->
         <v-card v-if="tab === 2" flat class="pa-4">
-          <v-switch v-model="settings['pterodactyl.enabled']" true-value="true" false-value="false"
-            label="Activer Pterodactyl" />
-          <v-text-field v-model="settings['pterodactyl.url']" label="URL du panel (https://panel.example.com)" />
-          <v-text-field v-model="settings['pterodactyl.apiKey']" label="Client API Key"
+          <v-switch
+            v-model="settings['pterodactyl.enabled']"
+            true-value="true"
+            false-value="false"
+            label="Activer Pterodactyl"
+          />
+          <v-text-field
+            v-model="settings['pterodactyl.url']"
+            label="URL du panel (https://panel.example.com)"
+          />
+          <v-text-field
+            v-model="settings['pterodactyl.apiKey']"
+            label="Client API Key"
             :type="showTokens ? 'text' : 'password'"
             :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append="showTokens = !showTokens" />
-          <v-text-field v-model="settings['pterodactyl.shutdownDelay']" label="Délai d'arrêt (s)" type="number" />
+            @click:append="showTokens = !showTokens"
+          />
+          <v-text-field
+            v-model="settings['pterodactyl.shutdownDelay']"
+            label="Délai d'arrêt (s)"
+            type="number"
+          />
         </v-card>
 
         <!-- TOORNAMENT -->
         <v-card v-if="tab === 3" flat class="pa-4">
-          <v-text-field v-model="settings['toornament.clientId']" label="Client ID" />
-          <v-text-field v-model="settings['toornament.clientSecret']" label="Client Secret"
+          <v-text-field
+            v-model="settings['toornament.clientId']"
+            label="Client ID"
+          />
+          <v-text-field
+            v-model="settings['toornament.clientSecret']"
+            label="Client Secret"
             :type="showTokens ? 'text' : 'password'"
             :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append="showTokens = !showTokens" />
-          <v-text-field v-model="settings['toornament.apiKey']" label="API Key"
+            @click:append="showTokens = !showTokens"
+          />
+          <v-text-field
+            v-model="settings['toornament.apiKey']"
+            label="API Key"
             :type="showTokens ? 'text' : 'password'"
             :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append="showTokens = !showTokens" />
+            @click:append="showTokens = !showTokens"
+          />
         </v-card>
 
         <v-card-actions class="pa-4">
@@ -87,8 +139,12 @@
           </v-btn>
         </v-card-actions>
 
-        <v-alert v-if="successMsg" type="success" class="ma-4">{{ successMsg }}</v-alert>
-        <v-alert v-if="errorMsg" type="error" class="ma-4">{{ errorMsg }}</v-alert>
+        <v-alert v-if="successMsg" type="success" class="ma-4">{{
+          successMsg
+        }}</v-alert>
+        <v-alert v-if="errorMsg" type="error" class="ma-4">{{
+          errorMsg
+        }}</v-alert>
       </div>
     </v-card>
   </v-container>
@@ -128,7 +184,9 @@ export default {
         );
         this.settings = res.data;
         try {
-          this.twitchChannels = JSON.parse(this.settings['twitch.channels'] || '[]');
+          this.twitchChannels = JSON.parse(
+            this.settings["twitch.channels"] || "[]"
+          );
         } catch {
           this.twitchChannels = [];
         }
@@ -140,7 +198,7 @@ export default {
       this.saving = true;
       this.successMsg = "";
       this.errorMsg = "";
-      this.settings['twitch.channels'] = JSON.stringify(this.twitchChannels);
+      this.settings["twitch.channels"] = JSON.stringify(this.twitchChannels);
       try {
         await this.axioCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`,
@@ -148,7 +206,8 @@ export default {
         );
         this.successMsg = "Paramètres enregistrés et services rechargés.";
       } catch (err) {
-        this.errorMsg = err.response?.data?.message || "Erreur lors de la sauvegarde.";
+        this.errorMsg =
+          err.response?.data?.message || "Erreur lors de la sauvegarde.";
       } finally {
         this.saving = false;
       }

@@ -280,13 +280,8 @@ export default {
     async useStreamOrStaticData() {
       // Template will contain v-rows/etc like on main Team page.
       let matchData = await this.GetMatchData(this.match_id);
-      if (matchData.end_time == null) {
-        this.GetMapStatsStream(matchData);
-        this.GetMapPlayerStatsStream(matchData);
-      } else {
         this.getMapString(matchData);
         this.GetMapPlayerStats(matchData);
-      }
     },
     async retrieveStatsHelper(serverResponse, matchData) {
       if (typeof serverResponse == "string") return;

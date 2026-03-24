@@ -1501,12 +1501,12 @@
     webpack "^5.54.0"
     yorkie "^2.0.0"
 
-"@vue/cli-plugin-pwa@~5.0.4":
-  version "5.0.8"
-  resolved "https://registry.npmjs.org/@vue/cli-plugin-pwa/-/cli-plugin-pwa-5.0.8.tgz"
-  integrity sha512-MnD9Y6I3nX7c/NawpsJtbXaGFjI9LT5Az7IQjpshS65+yvuOcxV2j/tCjPTrja+zd1VmB4DZUhrfUU2exSBfGg==
+"@vue/cli-plugin-pwa@~5.0.9":
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/@vue/cli-plugin-pwa/-/cli-plugin-pwa-5.0.9.tgz#7e1693878a85c14aa5e7913f8279ae661304139b"
+  integrity sha512-x8yavT2kvD8iyARc5eHMNrYfwWB4+cDtiwz2N2F/SHDMTfxdA2wcmqUHBB3oc1kn+hMbgvf8cDeQc211Uvb3xg==
   dependencies:
-    "@vue/cli-shared-utils" "^5.0.8"
+    "@vue/cli-shared-utils" "^5.0.9"
     html-webpack-plugin "^5.1.0"
     webpack "^5.54.0"
     workbox-webpack-plugin "^6.1.0"
@@ -1584,10 +1584,10 @@
     webpack-virtual-modules "^0.4.2"
     whatwg-fetch "^3.6.2"
 
-"@vue/cli-shared-utils@^5.0.8":
-  version "5.0.8"
-  resolved "https://registry.npmjs.org/@vue/cli-shared-utils/-/cli-shared-utils-5.0.8.tgz"
-  integrity sha512-uK2YB7bBVuQhjOJF+O52P9yFMXeJVj7ozqJkwYE9PlMHL1LMHjtCYm4cSdOebuPzyP+/9p0BimM/OqxsevIopQ==
+"@vue/cli-shared-utils@^5.0.8", "@vue/cli-shared-utils@^5.0.9":
+  version "5.0.9"
+  resolved "https://registry.yarnpkg.com/@vue/cli-shared-utils/-/cli-shared-utils-5.0.9.tgz#dbb62953e953757773e89e69f369559fced135cf"
+  integrity sha512-lf4KykiG8j9KwvNVi7fKtASmHuLsxCcCsflVU2b2CHMRuR4weOIV3zuuCrjWKjk0APn/MHJhgCjJGzHMbTtd5w==
   dependencies:
     "@achrinza/node-ipc" "^9.2.5"
     chalk "^4.1.2"

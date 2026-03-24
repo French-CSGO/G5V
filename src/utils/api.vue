@@ -19,7 +19,7 @@ export default {
       return config;
     });
     return {
-      axioCall: instance,
+      axiosCall: instance,
       languageAlert: false
     };
   },
@@ -30,7 +30,7 @@ export default {
     },
     // BEGIN USER CALLS
     async IsLoggedIn() {
-      const res = await this.axioCall.get(
+      const res = await this.axiosCall.get(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/isLoggedIn`
       );
       if (res.data == false) {
@@ -51,7 +51,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/${userid}`
         );
         message = res.data.user;
@@ -71,7 +71,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/${userid}`
         );
         message = res.data.maplist;
@@ -84,7 +84,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/${userid}/enabled`
         );
         message = res.data.maplist;
@@ -97,7 +97,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/`,
           mapdata
         );
@@ -111,7 +111,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.delete(
+        res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/`,
           { data: mapdata }
         );
@@ -125,7 +125,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/`,
           mapdata
         );
@@ -139,7 +139,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/${userid}/recent`
         );
         message = res.data.matches;
@@ -152,7 +152,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/`
         );
         message = res.data.users;
@@ -165,7 +165,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/`,
           userInfo
         );
@@ -181,7 +181,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}`
         );
         message = res.data.team;
@@ -189,7 +189,7 @@ export default {
         message = {
           id: 0,
           user_id: 0,
-          name: "NON EXISTANT TEAM",
+          name: "NON EXISTENT TEAM",
           tag: "",
           flag: "",
           logo: "",
@@ -203,7 +203,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/basic`
         );
         message = res.data.team.name;
@@ -211,7 +211,7 @@ export default {
         message = {
           id: 0,
           user_id: 0,
-          name: "NON EXISTANT TEAM",
+          name: "NON EXISTENT TEAM",
           tag: "",
           flag: "",
           logo: "",
@@ -225,7 +225,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/basic`
         );
         message = res.data.team;
@@ -233,7 +233,7 @@ export default {
         message = {
           id: 0,
           user_id: 0,
-          name: "NON EXISTANT TEAM",
+          name: "NON EXISTENT TEAM",
           tag: "",
           flag: "",
           logo: "",
@@ -247,7 +247,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams`
         );
         message = res.data.teams;
@@ -260,7 +260,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams`
         );
         message = res.data.teams;
@@ -273,7 +273,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/myteams`
         );
         message = res.data.teams;
@@ -286,7 +286,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/recent`
         );
         message = res.data.matches;
@@ -299,7 +299,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/`,
           teamInfo
         );
@@ -313,7 +313,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/`,
           teamInfo
         );
@@ -327,7 +327,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.delete(
+        res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/`,
           { data: member }
         );
@@ -341,7 +341,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/challonge`,
           tournamentInfo
         );
@@ -357,7 +357,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/${matchid}`
         );
         message = res.data.match;
@@ -401,7 +401,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/recent`
         );
         message = res.data.matches;
@@ -414,7 +414,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/teams/${team}/result/${match}`
         );
@@ -428,7 +428,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches`
         );
         message = res.data.matches;
@@ -441,7 +441,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/limit/${limit}`
         );
         message = res.data.matches;
@@ -454,7 +454,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/page/${offset}&${limit}`
         );
@@ -468,7 +468,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/mymatches`
         );
         message = res.data.matches;
@@ -481,7 +481,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/`,
           matchInfo
         );
@@ -495,7 +495,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/`,
           matchInfo
         );
@@ -509,7 +509,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.delete(
+        res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/`,
           { data: [{ all_cancelled: true }] }
         );
@@ -525,7 +525,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/${serverid}`
         );
         message = res.data.server;
@@ -537,7 +537,7 @@ export default {
           ip_string: "",
           port: 0,
           rcon_password: null,
-          display_name: "ERROR RETREIVING SERVER",
+          display_name: "ERROR RETRIEVING SERVER",
           public_server: 0,
           name: "ERROR"
         };
@@ -548,7 +548,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers`
         );
         return res.data.servers;
@@ -561,7 +561,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/publiccount`
         );
         return res.data.servers;
@@ -574,7 +574,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/myservers`
         );
         return res.data.servers;
@@ -587,7 +587,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.delete(
+        res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/`,
           { data: serverData }
         );
@@ -601,7 +601,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/available`
         );
         return res.data.servers;
@@ -614,7 +614,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/`,
           serverInfo
         );
@@ -628,7 +628,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/servers/${serverId}/status`
         );
@@ -642,7 +642,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/`,
           serverInfo
         );
@@ -656,7 +656,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/pterodactyl-list`
         );
         message = res.data.servers;
@@ -671,7 +671,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons`
         );
         message = res.data.seasons;
@@ -684,7 +684,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`
         );
         message = res.data.matches;
@@ -697,7 +697,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/myseasons`
         );
         message = res.data.seasons;
@@ -710,7 +710,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons`
         );
         message = res.data.seasons;
@@ -723,7 +723,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`
         );
         message = res.data.season;
@@ -734,7 +734,7 @@ export default {
     },
     async GetSeasonData(seasonid) {
       try {
-        const res = await this.axioCall.get(
+        const res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`
         );
         return { season: res.data.season, matches: res.data.matches || [] };
@@ -746,7 +746,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/seasons/${seasonid}/cvar`
         );
@@ -760,7 +760,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.delete(
+        res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/`,
           { data: seasonData }
         );
@@ -774,7 +774,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/`,
           seasonInfo
         );
@@ -788,7 +788,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/`,
           seasonInfo
         );
@@ -802,7 +802,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/challonge`,
           challongeInfo
         );
@@ -816,7 +816,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams`
         );
         message = res.data.teams;
@@ -829,7 +829,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams`,
           { team_ids: teamIds }
         );
@@ -843,7 +843,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.delete(
+        res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams/${teamid}`
         );
         message = res.data;
@@ -856,7 +856,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/matches`,
           { params: filters }
         );
@@ -870,7 +870,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/stages`
         );
         message = res.data.stages;
@@ -883,7 +883,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/matches/${toornamentMatchId}/prefill`
         );
         message = res.data;
@@ -898,7 +898,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/${steamid}`
         );
         message = res.data.playerstats;
@@ -911,7 +911,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/unique`
         );
         message = res.data.count;
@@ -924,7 +924,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/playerstats/match/${matchid}`
         );
@@ -951,7 +951,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/playerstats/${steamid}/recent`
         );
@@ -968,7 +968,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/mapstats/`
         );
         message = res.data.mapstats;
@@ -981,7 +981,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/mapstats/${matchid}/${mapnumber}`
         );
@@ -995,7 +995,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/mapstats/${matchid}`
         );
         message = res.data.mapstats;
@@ -1023,7 +1023,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/pause`
         );
@@ -1037,7 +1037,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/unpause`
         );
@@ -1051,7 +1051,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/backup`
         );
@@ -1065,7 +1065,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/cancel`
         );
@@ -1079,7 +1079,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/addspec`,
           matchObject
@@ -1094,7 +1094,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/adduser`,
           matchObject
@@ -1109,7 +1109,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/forfeit/${winner}`
         );
@@ -1123,7 +1123,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.put(
+        res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/rcon/`,
           rconBody
@@ -1138,7 +1138,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/backup/remote`
         );
@@ -1152,7 +1152,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/backup/`,
           backupBody
@@ -1167,7 +1167,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/backup/remote`,
           backupBody
@@ -1182,7 +1182,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/matches/${matchid}/restart/`
         );
@@ -1200,12 +1200,12 @@ export default {
       let vetoSideMessage;
       let combinedVetoInfo = [];
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/vetoes/${matchid}`
         );
         vetoMessage = res.data.vetoes;
         try {
-          res = await this.axioCall.get(
+          res = await this.axiosCall.get(
             `${process.env?.VUE_APP_G5V_API_URL || "/api"}/vetosides/${matchid}`
           );
           vetoSideMessage = res.data.vetoes;
@@ -1293,7 +1293,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/players`
         );
         return res.data.leaderboard;
@@ -1306,7 +1306,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard`
         );
         return res.data.leaderboard;
@@ -1319,7 +1319,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/leaderboard/players/${seasonid}`
         );
@@ -1333,7 +1333,7 @@ export default {
       let res;
       let message;
       try {
-        res = await this.axioCall.get(
+        res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/leaderboard/${seasonid}`
         );
@@ -1347,7 +1347,7 @@ export default {
     // BEGIN QUEUE CALLS
     async GetQueues() {
       try {
-        const res = await this.axioCall.get(
+        const res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`
         );
         return res.data;
@@ -1356,14 +1356,14 @@ export default {
       }
     },
     async GetQueue(slug) {
-      const res = await this.axioCall.get(
+      const res = await this.axiosCall.get(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`
       );
       return res.data;
     },
     async GetQueuePlayers(slug) {
       try {
-        const res = await this.axioCall.get(
+        const res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/players`
         );
         return res.data;
@@ -1384,41 +1384,41 @@ export default {
         );
     },
     async CreateQueue(maxPlayers = 10, isPrivate = false, manualTeams = false) {
-      const res = await this.axioCall.post(
+      const res = await this.axiosCall.post(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`,
         [{ maxPlayers, private: isPrivate, manualTeams }]
       );
       return res.data;
     },
     async JoinQueue(slug) {
-      const res = await this.axioCall.put(
+      const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
         [{ action: "join" }]
       );
       return res.data;
     },
     async LeaveQueue(slug) {
-      const res = await this.axioCall.put(
+      const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
         [{ action: "leave" }]
       );
       return res.data;
     },
     async SetQueueTeams(slug, team1, team2) {
-      const res = await this.axioCall.put(
+      const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/teams`,
         { team1, team2 }
       );
       return res.data;
     },
     async StartManualQueue(slug) {
-      const res = await this.axioCall.post(
+      const res = await this.axiosCall.post(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/start`
       );
       return res.data;
     },
     async DeleteQueue(slug) {
-      const res = await this.axioCall.delete(
+      const res = await this.axiosCall.delete(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`,
         { data: [{ slug }] }
       );
@@ -1430,7 +1430,7 @@ export default {
       let message;
       let res;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/login`,
           userinfo
         );
@@ -1444,7 +1444,7 @@ export default {
       let message;
       let res;
       try {
-        res = await this.axioCall.post(
+        res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/register`,
           userinfo
         );
@@ -1647,26 +1647,26 @@ export default {
     },
     // IMAGE SETTINGS
     async GetImageFonts() {
-      const res = await this.axioCall.get(
+      const res = await this.axiosCall.get(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/fonts`
       );
       return res.data;
     },
     async GetImageSettings() {
-      const res = await this.axioCall.get(
+      const res = await this.axiosCall.get(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings`
       );
       return res.data;
     },
     async SaveImageSettings(settings) {
-      const res = await this.axioCall.put(
+      const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings`,
         settings
       );
       return res.data;
     },
     async UploadImageBackground(formData) {
-      const res = await this.axioCall.post(
+      const res = await this.axiosCall.post(
         `${process.env?.VUE_APP_G5V_API_URL ||
           "/api"}/image/settings/background`,
         formData,
@@ -1675,7 +1675,7 @@ export default {
       return res.data;
     },
     async UploadImageFont(formData) {
-      const res = await this.axioCall.post(
+      const res = await this.axiosCall.post(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings/font`,
         formData,
         { headers: { "Content-Type": "multipart/form-data" } }

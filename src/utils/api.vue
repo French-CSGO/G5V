@@ -657,7 +657,8 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/pterodactyl-list`
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/servers/pterodactyl-list`
         );
         message = res.data.servers;
       } catch (error) {
@@ -817,7 +818,8 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams`
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/teams`
         );
         message = res.data.teams;
       } catch (error) {
@@ -830,7 +832,8 @@ export default {
       let message;
       try {
         res = await this.axiosCall.post(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams`,
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/teams`,
           { team_ids: teamIds }
         );
         message = res.data;
@@ -844,7 +847,8 @@ export default {
       let message;
       try {
         res = await this.axiosCall.delete(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/teams/${teamid}`
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/teams/${teamid}`
         );
         message = res.data;
       } catch (error) {
@@ -857,7 +861,8 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/matches`,
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/toornament/matches`,
           { params: filters }
         );
         message = res.data.matches;
@@ -871,7 +876,8 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/stages`
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/toornament/stages`
         );
         message = res.data.stages;
       } catch (error) {
@@ -884,7 +890,8 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/toornament/matches/${toornamentMatchId}/prefill`
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/toornament/matches/${toornamentMatchId}/prefill`
         );
         message = res.data;
       } catch (error) {
@@ -1373,14 +1380,13 @@ export default {
     GetEventQueueData(slug) {
       return this.$sse
         .create({
-          url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/stream`,
+          url: `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/queue/${slug}/stream`,
           format: "json",
           withCredentials: true,
           polyfill: true
         })
-        .on("error", err =>
-          console.error("Queue SSE error:", err)
-        );
+        .on("error", err => console.error("Queue SSE error:", err));
     },
     async CreateQueue(maxPlayers = 10, isPrivate = false, manualTeams = false) {
       const res = await this.axiosCall.post(

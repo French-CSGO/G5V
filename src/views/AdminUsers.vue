@@ -32,17 +32,28 @@
           class="elevation-1"
         >
           <template v-slot:item.super_admin="{ item }">
-            <v-chip small :color="item.super_admin === 1 ? 'primary' : 'grey lighten-1'">
-              {{ item.super_admin === 1 ? 'Oui' : 'Non' }}
+            <v-chip
+              small
+              :color="item.super_admin === 1 ? 'primary' : 'grey lighten-1'"
+            >
+              {{ item.super_admin === 1 ? "Oui" : "Non" }}
             </v-chip>
           </template>
           <template v-slot:item.admin="{ item }">
-            <v-chip small :color="item.admin === 1 ? 'orange' : 'grey lighten-1'">
-              {{ item.admin === 1 ? 'Oui' : 'Non' }}
+            <v-chip
+              small
+              :color="item.admin === 1 ? 'orange' : 'grey lighten-1'"
+            >
+              {{ item.admin === 1 ? "Oui" : "Non" }}
             </v-chip>
           </template>
           <template v-slot:item.actions="{ item }">
-            <v-btn icon small @click="openEdit(item)" title="Modifier les droits">
+            <v-btn
+              icon
+              small
+              @click="openEdit(item)"
+              title="Modifier les droits"
+            >
               <v-icon>mdi-pencil</v-icon>
             </v-btn>
           </template>
@@ -60,10 +71,20 @@
             </v-card-title>
             <v-card-subtitle>{{ editUser.steam_id }}</v-card-subtitle>
             <v-card-text>
-              <v-switch v-model="editUser.admin" :true-value="1" :false-value="0"
-                label="Admin" color="orange" />
-              <v-switch v-model="editUser.super_admin" :true-value="1" :false-value="0"
-                label="Super Admin" color="primary" />
+              <v-switch
+                v-model="editUser.admin"
+                :true-value="1"
+                :false-value="0"
+                label="Admin"
+                color="orange"
+              />
+              <v-switch
+                v-model="editUser.super_admin"
+                :true-value="1"
+                :false-value="0"
+                label="Super Admin"
+                color="primary"
+              />
             </v-card-text>
             <v-card-actions>
               <v-spacer />
@@ -73,11 +94,15 @@
                 Enregistrer
               </v-btn>
             </v-card-actions>
-            <v-alert v-if="editError" type="error" class="ma-2">{{ editError }}</v-alert>
+            <v-alert v-if="editError" type="error" class="ma-2">{{
+              editError
+            }}</v-alert>
           </v-card>
         </v-dialog>
 
-        <v-alert v-if="successMsg" type="success" class="ma-4">{{ successMsg }}</v-alert>
+        <v-alert v-if="successMsg" type="success" class="ma-4">{{
+          successMsg
+        }}</v-alert>
       </template>
     </v-card>
   </v-container>
@@ -122,10 +147,11 @@ export default {
       this.loading = true;
       try {
         const url = query
-          ? `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users?search=${encodeURIComponent(query)}`
+          ? `${process.env?.VUE_APP_G5V_API_URL ||
+              "/api"}/users?search=${encodeURIComponent(query)}`
           : `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users`;
         const res = await this.axioCall.get(url);
-        this.users = Array.isArray(res.data) ? res.data : (res.data.users || []);
+        this.users = Array.isArray(res.data) ? res.data : res.data.users || [];
       } catch {
         this.users = [];
       } finally {
@@ -155,12 +181,14 @@ export default {
       try {
         await this.axioCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users`,
-          [{
-            id: this.editUser.id,
-            steam_id: this.editUser.steam_id,
-            admin: this.editUser.admin,
-            super_admin: this.editUser.super_admin
-          }]
+          [
+            {
+              id: this.editUser.id,
+              steam_id: this.editUser.steam_id,
+              admin: this.editUser.admin,
+              super_admin: this.editUser.super_admin
+            }
+          ]
         );
         // Mise à jour locale
         const idx = this.users.findIndex(u => u.id === this.editUser.id);
@@ -172,7 +200,8 @@ export default {
         this.successMsg = `Droits de ${this.editUser.name} mis à jour.`;
         this.editDialog = false;
       } catch (err) {
-        this.editError = err.response?.data?.message || "Erreur lors de la sauvegarde.";
+        this.editError =
+          err.response?.data?.message || "Erreur lors de la sauvegarde.";
       } finally {
         this.editSaving = false;
       }

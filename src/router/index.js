@@ -249,7 +249,9 @@ const routes = [
     path: "/image-settings",
     name: "ImageSettings",
     component: () =>
-      import(/* webpackChunkName: "ImageSettings" */ "../views/ImageSettings.vue")
+      import(
+        /* webpackChunkName: "ImageSettings" */ "../views/ImageSettings.vue"
+      )
   }
 ];
 

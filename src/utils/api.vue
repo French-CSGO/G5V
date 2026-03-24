@@ -3,13 +3,23 @@ import axios from "axios";
 export default {
   name: "api",
   data() {
+    const instance = axios.create({
+      headers: {
+        "Content-Type": "application/json"
+      },
+      withCredentials: true
+    });
+    instance.interceptors.request.use(config => {
+      if (["post", "put", "delete", "patch"].includes(config.method)) {
+        const match = document.cookie.match(/(?:^|;\s*)_csrf=([^;]*)/);
+        if (match) {
+          config.headers["x-csrf-token"] = decodeURIComponent(match[1]);
+        }
+      }
+      return config;
+    });
     return {
-      axioCall: axios.create({
-        headers: {
-          "Content-Type": "application/json"
-        },
-        withCredentials: true
-      }),
+      axioCall: instance,
       languageAlert: false
     };
   },
@@ -101,13 +111,10 @@ export default {
       let res;
       let message;
       try {
-        res = await axios({
-          method: "delete",
-          url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/`,
-          data: mapdata,
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true
-        });
+        res = await this.axioCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/`,
+          { data: mapdata }
+        );
         message = res.data;
       } catch (error) {
         message = error.response.data;
@@ -320,13 +327,10 @@ export default {
       let res;
       let message;
       try {
-        res = await axios({
-          method: "delete",
-          url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/`,
-          data: member,
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true
-        });
+        res = await this.axioCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/`,
+          { data: member }
+        );
         message = res.data;
       } catch (error) {
         message = error.response.data;
@@ -505,13 +509,10 @@ export default {
       let res;
       let message;
       try {
-        res = await axios({
-          method: "delete",
-          url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/`,
-          data: [{ all_cancelled: true }],
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true
-        });
+        res = await this.axioCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/`,
+          { data: [{ all_cancelled: true }] }
+        );
         message = res.data;
       } catch (error) {
         message = error.response.data;
@@ -586,13 +587,10 @@ export default {
       let res;
       let message;
       try {
-        res = await axios({
-          method: "delete",
-          url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/`,
-          data: serverData,
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true
-        });
+        res = await this.axioCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/`,
+          { data: serverData }
+        );
         message = res.data.message;
       } catch (error) {
         message = error.response.data.message;
@@ -762,13 +760,10 @@ export default {
       let res;
       let message;
       try {
-        res = await axios({
-          method: "delete",
-          url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/`,
-          data: seasonData,
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true
-        });
+        res = await this.axioCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/`,
+          { data: seasonData }
+        );
         message = res.data.message;
       } catch (error) {
         message = error.response.data.message;

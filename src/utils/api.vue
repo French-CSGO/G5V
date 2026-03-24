@@ -33,7 +33,7 @@ export default {
       const res = await this.axiosCall.get(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/isLoggedIn`
       );
-      if (res.data == false) {
+      if (res.data === false) {
         return {
           admin: false,
           steam_id: "",
@@ -959,7 +959,6 @@ export default {
       } catch (error) {
         message = error.response.data.message;
       }
-      console.log(message);
       return message;
     },
     // END PLAYER STATS
@@ -1475,15 +1474,15 @@ export default {
     get_loser: function(matchdata) {
       // returns loser's teamname
       if (matchdata.team1_score > matchdata.team2_score) {
-        return matchdata.team1_name;
-      } else if (matchdata.team1_score < matchdata.team2_score) {
         return matchdata.team2_name;
+      } else if (matchdata.team1_score < matchdata.team2_score) {
+        return matchdata.team1_name;
       } else {
         return "";
       }
     },
     get_flag_link: function(team) {
-      if (team.flag == null || team.flag === "") {
+      if (team.flag === null || team.flag === undefined || team.flag === "") {
         return `/img/_unknown.png`;
       }
       return `/img/valve_flags/${team.flag.toLowerCase()}.png`;

@@ -179,7 +179,7 @@ export default {
   methods: {
     async loadSettings() {
       try {
-        const res = await this.axioCall.get(
+        const res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`
         );
         this.settings = res.data;
@@ -200,7 +200,7 @@ export default {
       this.errorMsg = "";
       this.settings["twitch.channels"] = JSON.stringify(this.twitchChannels);
       try {
-        await this.axioCall.put(
+        await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`,
           this.settings
         );

@@ -150,7 +150,7 @@ export default {
           ? `${process.env?.VUE_APP_G5V_API_URL ||
               "/api"}/users?search=${encodeURIComponent(query)}`
           : `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users`;
-        const res = await this.axioCall.get(url);
+        const res = await this.axiosCall.get(url);
         this.users = Array.isArray(res.data) ? res.data : res.data.users || [];
       } catch {
         this.users = [];
@@ -179,7 +179,7 @@ export default {
       this.editError = "";
       this.successMsg = "";
       try {
-        await this.axioCall.put(
+        await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users`,
           [
             {

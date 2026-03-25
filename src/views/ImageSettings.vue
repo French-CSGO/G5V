@@ -2680,7 +2680,7 @@ export default {
         const [settings, uploadedFonts, mapImages] = await Promise.all([
           this.GetImageSettings(),
           this.GetImageFonts().catch(() => []),
-          this.axioCall
+          this.axiosCall
             .get(`${this.apiUrl}/image/maps`)
             .then(r => r.data)
             .catch(() => [])
@@ -2859,7 +2859,7 @@ export default {
       try {
         const form = new FormData();
         form.append("file", file);
-        const res = await this.axioCall.post(
+        const res = await this.axiosCall.post(
           `${this.apiUrl}/image/upload/img`,
           form,
           { headers: { "Content-Type": "multipart/form-data" } }
@@ -2887,7 +2887,7 @@ export default {
       try {
         const form = new FormData();
         form.append("file", file);
-        const res = await this.axioCall.post(
+        const res = await this.axiosCall.post(
           `${this.apiUrl}/image/upload/font`,
           form,
           { headers: { "Content-Type": "multipart/form-data" } }
@@ -2927,13 +2927,13 @@ export default {
       try {
         const form = new FormData();
         form.append("file", this.mapImageFile);
-        await this.axioCall.post(`${this.apiUrl}/image/upload/map`, form, {
+        await this.axiosCall.post(`${this.apiUrl}/image/upload/map`, form, {
           headers: { "Content-Type": "multipart/form-data" }
         });
         this.uploadMapMsg = `Image uploadée : ${this.mapImageFile.name}`;
         this.uploadMapMsgType = "success";
         this.mapImageFile = null;
-        this.mapImages = await this.axioCall
+        this.mapImages = await this.axiosCall
           .get(`${this.apiUrl}/image/maps`)
           .then(r => r.data)
           .catch(() => []);

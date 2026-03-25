@@ -83,6 +83,13 @@ const routes = [
     //children: [{ path: "/create", component: MatchCreate }]
   },
   {
+    path: "/match/:id/veto",
+    name: "VetoDisplay",
+    meta: { hideChrome: true },
+    component: () =>
+      import(/* webpackChunkName: "Match" */ "../views/VetoDisplay.vue")
+  },
+  {
     path: "/match/:id",
     name: "Match",
     // route level code-splitting

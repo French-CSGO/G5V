@@ -457,7 +457,12 @@
       "PLeader": "Player Leaderboard",
       "TWins": "Total Wins",
       "LessThan": "Date two must be greater than or equal to date one.",
-      "Import": "Import"
+      "Import": "Import",
+      "Search": "Search"
+    },
+    "GlobalStats": {
+      "Title": "Global Statistics",
+      "Maps": "Maps Played"
     },
     "ServerPteroLink": {
       "Title": "Link Servers to Pterodactyl",
@@ -931,7 +936,12 @@
       "PLeader": "Classement des joueurs",
       "TWins": "Total de victoires",
       "LessThan": "La date 2 doit être supérieur ou égale à la date 1.",
-      "Import": "Importer"
+      "Import": "Importer",
+      "Search": "Rechercher"
+    },
+    "GlobalStats": {
+      "Title": "Statistiques globales",
+      "Maps": "Cartes jouées"
     },
     "ServerPteroLink": {
       "Title": "Lier les serveurs à Pterodactyl",
@@ -1399,7 +1409,12 @@
       "PLeader": "プレイヤーリーダーボード",
       "TWins": "合計勝利数",
       "LessThan": "日付2は日付1以上でなければなりません。",
-      "Import": "輸入"
+      "Import": "輸入",
+      "Search": "検索"
+    },
+    "GlobalStats": {
+      "Title": "グローバル統計",
+      "Maps": "プレイしたマップ"
     },
     "ServerPteroLink": {
       "Title": "サーバーをPterodactylにリンク",

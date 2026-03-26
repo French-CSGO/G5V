@@ -101,13 +101,16 @@
           </span>
         </v-card-title>
         <v-card-text>
-          <v-form ref="addPlayerForm">
+          <v-form ref="deleteMapForm">
             <v-container>
               <v-row>
                 <v-col cols="12">
                   {{
                     $t("User.MapDeleteExplain", {
-                      map: selectedMap.map_display_name
+                      map:
+                        selectedMap && selectedMap.map_display_name
+                          ? selectedMap.map_display_name
+                          : ""
                     })
                   }}
                 </v-col>
@@ -217,7 +220,8 @@ export default {
         map_display_name: "",
         map_name: "",
         enabled: true
-      }
+      },
+      errorMessage: ""
     };
   },
   created() {
@@ -235,7 +239,8 @@ export default {
           });
         }
       } catch (error) {
-        void error;
+        console.error("Failed to get map info:", error);
+        this.errorMessage = "Unable to load maps. Please try again later.";
       }
       return;
     },
@@ -251,7 +256,8 @@ export default {
         ];
         await this.UpdateUserMap(updateMapData);
       } catch (error) {
-        void error;
+        console.error("Failed to update map info:", error);
+        this.errorMessage = "Unable to update map. Please try again.";
       }
     },
     async DeleteMapInfo(mapInfo) {
@@ -268,7 +274,8 @@ export default {
         this.selectedMap = {};
         this.deleteDialog = false;
       } catch (error) {
-        void error;
+        console.error("Failed to delete map:", error);
+        this.errorMessage = "Unable to delete map. Please try again.";
       }
     },
     async InsertMapInfo(mapInfo) {
@@ -289,7 +296,8 @@ export default {
           enabled: true
         };
       } catch (error) {
-        void error;
+        console.error("Failed to insert new map:", error);
+        this.errorMessage = "Unable to create map. Please try again.";
       }
     }
   }

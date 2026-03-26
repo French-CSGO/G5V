@@ -227,7 +227,7 @@ export default {
     async GetMapInfo() {
       try {
         let res = await this.GetUserMapList(this.user.id);
-        if (typeof res == "string") res = [];
+        if (typeof res == "string") return;
         else {
           res.forEach(mapInfo => {
             mapInfo.reveal = false;

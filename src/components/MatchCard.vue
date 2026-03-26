@@ -57,7 +57,7 @@ export default {
       try {
         let res;
         res = await this.GetLimitMatches(3);
-        if (typeof res == "string") res = [];
+        if (typeof res == "string") return;
         else {
           res.forEach(async match => {
             let mapStats = await this.GetSingleMapStat(match.id, 0);

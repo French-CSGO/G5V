@@ -2602,6 +2602,7 @@ export default {
       snack: false,
       snackMsg: "",
       snackColor: "success",
+      DEFAULT_API_URL: "/api",
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
 
       fontList: [
@@ -2692,6 +2693,8 @@ export default {
         const sm = s.match || {};
         const sp = s.player || {};
         const st = s.team_season || {};
+        // Number of player slots for the X positions
+        const MAX_PLAYERS = 5;
         this.settings = {
           canvas: { ...def.canvas, ...(s.canvas || {}) },
           match: {
@@ -2748,8 +2751,9 @@ export default {
             players: {
               ...def.team_season.players,
               ...(st.players || {}),
-              x: [0, 1, 2, 3, 4].map(
-                i => st.players?.x?.[i] ?? def.team_season.players.x[i]
+              x: Array.from(
+                { length: MAX_PLAYERS },
+                (_, i) => st.players?.x?.[i] ?? def.team_season.players.x[i]
               )
             },
             best_map_label: {
@@ -2829,8 +2833,15 @@ export default {
       URL.revokeObjectURL(url);
     },
 
+    resetFileInput(inputEl) {
+      if (inputEl && typeof inputEl.value !== "undefined") {
+        inputEl.value = "";
+      }
+    },
+
     importConfig(event) {
-      const file = event.target.files[0];
+      const inputEl = event.target;
+      const file = inputEl.files[0];
       if (!file) return;
       const sectionKey = ["match", "player", "team_season"][this.tab];
       const reader = new FileReader();
@@ -2846,7 +2857,7 @@ export default {
           this.notify("Fichier JSON invalide", "error");
         }
         // reset input so the same file can be re-imported
-        event.target.value = "";
+        this.resetFileInput(inputEl);
       };
       reader.readAsText(file);
     },

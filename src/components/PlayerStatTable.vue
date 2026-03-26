@@ -113,7 +113,7 @@
                   class="mr-2"
                 >
                   <v-icon left small>mdi-image</v-icon>
-                  Stat Image Joueur
+                  {{ $t("PlayerStats.PlayerStatImage") }}
                 </v-btn>
                 <v-btn
                   small
@@ -280,8 +280,8 @@ export default {
     async useStreamOrStaticData() {
       // Template will contain v-rows/etc like on main Team page.
       let matchData = await this.GetMatchData(this.match_id);
-        this.getMapString(matchData);
-        this.GetMapPlayerStats(matchData);
+      this.getMapString(matchData);
+      this.GetMapPlayerStats(matchData);
     },
     async retrieveStatsHelper(serverResponse, matchData) {
       if (typeof serverResponse == "string") return;
@@ -300,8 +300,10 @@ export default {
         );
       });
       this.playerstats = totalMatchTeam;
-      await this.playerstats.forEach((matchStats, idx) => {
-        matchStats.forEach(async (player, pIdx) => {
+      for (let idx = 0; idx < this.playerstats.length; idx++) {
+        const matchStats = this.playerstats[idx];
+        for (let pIdx = 0; pIdx < matchStats.length; pIdx++) {
+          const player = matchStats[pIdx];
           if (player.roundsplayed > 0) {
             let getRating = this.GetRating(
               player.kills,
@@ -334,19 +336,19 @@ export default {
                   ? matchData.team1_string
                   : matchData.team2_string;
             }
-            this.$set(
-              this.playerstats[idx][pIdx],
-              "Team",
-              teamNum + " " + newName
-            );
-            this.$set(this.playerstats[idx][pIdx], "rating", getRating);
-            this.$set(this.playerstats[idx][pIdx], "adr", adr);
-            this.$set(this.playerstats[idx][pIdx], "hsp", hsp);
-            this.$set(this.playerstats[idx][pIdx], "kdr", kdr);
-            this.$set(this.playerstats[idx][pIdx], "fpr", fpr);
+            const updatedPlayer = {
+              ...this.playerstats[idx][pIdx],
+              Team: teamNum + " " + newName,
+              rating: getRating,
+              adr: adr,
+              hsp: hsp,
+              kdr: kdr,
+              fpr: fpr
+            };
+            this.$set(this.playerstats[idx], pIdx, updatedPlayer);
           }
-        });
-      });
+        }
+      }
       if (matchData.end_time != null) this.isFinished = true;
     },
     async GetMapPlayerStatsStream(matchData) {
@@ -401,44 +403,42 @@ export default {
     },
     async retrieveMapStatsHelper(serverResponse, matchData) {
       if (typeof serverResponse == "string") return;
-      await serverResponse.forEach((singleMapStat, index) => {
-        if (!this.mapStats[index]) {
-          this.$set(this.mapStats, index, {});
-        }
+      if (!serverResponse || !serverResponse.forEach) return;
 
-        this.$set(
-          this.mapStats[index],
-          "score",
+      const nextMapStats = [];
+
+      serverResponse.forEach((singleMapStat, index) => {
+        const scoreText =
           "Score: " +
-            singleMapStat.team1_score +
-            " " +
-            this.GetScoreSymbol(
-              singleMapStat.team1_score,
-              singleMapStat.team2_score
-            ) +
-            " " +
+          singleMapStat.team1_score +
+          " " +
+          this.GetScoreSymbol(
+            singleMapStat.team1_score,
             singleMapStat.team2_score
-        );
-        this.$set(
-          this.mapStats[index],
-          "start",
-          "Map Start: " + new Date(singleMapStat.start_time).toLocaleString()
-        );
-        this.$set(
-          this.mapStats[index],
-          "end",
+          ) +
+          " " +
+          singleMapStat.team2_score;
+
+        const startText =
+          "Map Start: " + new Date(singleMapStat.start_time).toLocaleString();
+
+        const endText =
           singleMapStat.end_time == null
             ? null
-            : "Map End: " + new Date(singleMapStat.end_time).toLocaleString()
-        );
-        this.$set(
-          this.mapStats[index],
-          "map",
-          "Map: " + singleMapStat.map_name
-        );
-        this.$set(this.mapStats[index], "demo", singleMapStat.demoFile);
-        this.$set(this.mapStats[index], "id", singleMapStat.id);
+            : "Map End: " + new Date(singleMapStat.end_time).toLocaleString();
+
+        nextMapStats[index] = {
+          score: scoreText,
+          start: startText,
+          end: endText,
+          map: "Map: " + singleMapStat.map_name,
+          demo: singleMapStat.demoFile,
+          id: singleMapStat.id
+        };
       });
+
+      this.mapStats = nextMapStats;
+
       if (matchData.end_time != null) this.isFinished = true;
     }
   }

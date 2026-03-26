@@ -153,7 +153,8 @@
       "ContribScore": "Contribution Score",
       "MVP": "MVPs",
       "RefreshData": "Stats will refresh in {sec} seconds.",
-      "RefreshForce": "Force Refresh"
+      "RefreshForce": "Force Refresh",
+      "PlayerStatImage": "Player Stat Image"
     },
     "Seasons": {
       "Title": "Seasons/Tournaments",
@@ -632,7 +633,8 @@
       "ContribScore": "Contribution Score",
       "MVP": "MVPs",
       "RefreshData": "Les statistiques vont être mises à jour dans {sec} secondes.",
-      "RefreshForce": "Forcer la mise à jour"
+      "RefreshForce": "Forcer la mise à jour",
+      "PlayerStatImage": "Image Statistique Joueur"
     },
     "Seasons": {
       "Title": "Saisons/Tournois",
@@ -1107,7 +1109,8 @@
       "ContribScore": "貢献度",
       "MVP": "M V P",
       "RefreshData": "統計情報は{sec}秒後に更新されます。",
-      "RefreshForce": "強制リフレッシュ"
+      "RefreshForce": "強制リフレッシュ",
+      "PlayerStatImage": "プレイヤー統計画像"
     },
     "Seasons": {
       "Title": "シーズンズ/トーナメント",

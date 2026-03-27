@@ -53,7 +53,7 @@
                   '/image/match/' +
                   match_id +
                   '/map/' +
-                  mapStats[index].id
+                  (index + 1)
               "
               target="_blank"
             >
@@ -123,7 +123,7 @@
                       '/image/match/' +
                       match_id +
                       '/map/' +
-                      item.map_id +
+                      (index + 1) +
                       '/player/' +
                       item.steam_id
                   "

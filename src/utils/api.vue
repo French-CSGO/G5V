@@ -879,6 +879,20 @@ export default {
       }
       return message;
     },
+    async GetToornamentRounds(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/toornament/rounds`
+        );
+        message = res.data.rounds;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     async GetToornamentMatchPrefill(seasonid, toornamentMatchId) {
       let res;
       let message;

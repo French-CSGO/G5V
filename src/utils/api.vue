@@ -895,7 +895,7 @@ export default {
     },
     async ScheduleToornamentMatch(seasonId, matchId, scheduled_datetime) {
       try {
-        const res = await this.axioCall.patch(
+        const res = await this.axiosCall.patch(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/matches/${matchId}/schedule`,
           { scheduled_datetime }
         );
@@ -906,7 +906,7 @@ export default {
     },
     async ScheduleToornamentRound(seasonId, roundId, scheduled_datetime) {
       try {
-        const res = await this.axioCall.patch(
+        const res = await this.axiosCall.patch(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/rounds/${roundId}/schedule`,
           { scheduled_datetime }
         );

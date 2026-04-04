@@ -929,6 +929,20 @@ export default {
       }
       return message;
     },
+    async GetToornamentGroups(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/toornament/groups`
+        );
+        message = res.data.groups;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     // END SEASON CALLS
     // BEGIN PLAYER STATS
     async GetUserPlayerStats(steamid) {

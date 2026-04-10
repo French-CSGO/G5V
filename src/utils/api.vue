@@ -879,6 +879,42 @@ export default {
       }
       return message;
     },
+    async GetToornamentRounds(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/toornament/rounds`
+        );
+        message = res.data.rounds;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async ScheduleToornamentMatch(seasonId, matchId, scheduled_datetime) {
+      try {
+        const res = await this.axiosCall.patch(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/matches/${matchId}/schedule`,
+          { scheduled_datetime }
+        );
+        return res.data;
+      } catch (error) {
+        return error.response?.data || null;
+      }
+    },
+    async ScheduleToornamentRound(seasonId, roundId, scheduled_datetime) {
+      try {
+        const res = await this.axiosCall.patch(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/rounds/${roundId}/schedule`,
+          { scheduled_datetime }
+        );
+        return res.data;
+      } catch (error) {
+        return error.response?.data || null;
+      }
+    },
     async GetToornamentMatchPrefill(seasonid, toornamentMatchId) {
       let res;
       let message;
@@ -888,6 +924,20 @@ export default {
             "/api"}/seasons/${seasonid}/toornament/matches/${toornamentMatchId}/prefill`
         );
         message = res.data;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async GetToornamentGroups(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/toornament/groups`
+        );
+        message = res.data.groups;
       } catch (error) {
         message = error.response.data.message;
       }

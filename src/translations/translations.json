@@ -377,7 +377,11 @@
       "MatchInfo": "This match is linked to Toornament match",
       "StepVerify": "Verify",
       "StepDetails": "Details",
-      "CreateError": "Error creating match"
+      "CreateError": "Error creating match",
+      "FilterGroup": "Filter by Group",
+      "MatchCreated": "G5 Match",
+      "Matches": "matches",
+      "NoMatches": "No matches found."
     },
     "Queue": {
       "title": "Queue",
@@ -857,7 +861,11 @@
       "MatchInfo": "Ce match est lié au match Toornament",
       "StepVerify": "Vérifier",
       "StepDetails": "Détails",
-      "CreateError": "Erreur lors de la création du match"
+      "CreateError": "Erreur lors de la création du match",
+      "FilterGroup": "Filtrer par Groupe",
+      "MatchCreated": "Match G5",
+      "Matches": "matchs",
+      "NoMatches": "Aucun match trouvé."
     },
     "Queue": {
       "title": "File d'attente",
@@ -1331,7 +1339,11 @@
       "MatchInfo": "このマッチはToornamentマッチにリンクされています",
       "StepVerify": "確認",
       "StepDetails": "詳細",
-      "CreateError": "マッチ作成エラー"
+      "CreateError": "マッチ作成エラー",
+      "FilterGroup": "グループでフィルター",
+      "MatchCreated": "G5マッチ",
+      "Matches": "マッチ",
+      "NoMatches": "マッチが見つかりません。"
     },
     "Queue": {
       "title": "キュー",

@@ -247,7 +247,7 @@ export default {
     }
   },
   watch: {
-    activeTournament(val) {
+    activeTournament() {
       this.pushQuery();
       this.loadMatches();
     },

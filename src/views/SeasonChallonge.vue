@@ -187,7 +187,8 @@ export default {
       filterState: null,
       filterCreatable: false,
       showForm: false,
-      prefill: {}
+      prefill: {},
+      _syncingQuery: false
     };
   },
   computed: {
@@ -247,9 +248,12 @@ export default {
     }
   },
   watch: {
-    activeTournament() {
+    activeTournament(val) {
+      this.pushQuery();
       this.loadMatches();
-    }
+    },
+    filterState() { this.pushQuery(); },
+    filterCreatable() { this.pushQuery(); }
   },
   async created() {
     this.user = await this.IsLoggedIn();
@@ -262,11 +266,26 @@ export default {
     const t = await this.GetChallongeTournaments(this.seasonId);
     this.tournaments = Array.isArray(t) ? t : [];
     this.loadingTournaments = false;
+    // Restore filters from URL query params
+    const q = this.$route.query;
+    if (q.state) this.filterState = q.state;
+    if (q.creatable === "1") this.filterCreatable = true;
+    if (q.tab !== undefined) {
+      const idx = parseInt(q.tab);
+      if (!isNaN(idx) && idx < this.tournaments.length) this.activeTournament = idx;
+    }
     if (this.tournaments.length) {
       await this.loadMatches();
     }
   },
   methods: {
+    pushQuery() {
+      const query = {};
+      if (this.filterState) query.state = this.filterState;
+      if (this.filterCreatable) query.creatable = "1";
+      if (this.activeTournament) query.tab = String(this.activeTournament);
+      this.$router.replace({ query }).catch(() => {});
+    },
     async loadMatches() {
       if (!this.currentTournament) return;
       this.loading = true;

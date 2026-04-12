@@ -27,7 +27,7 @@
           <v-card-title v-else>
             {{ seasonData.name }}
           </v-card-title>
-          <v-card-title>
+          <v-card-title style="gap: 8px; flex-wrap: wrap;">
             <v-btn :to="`/leaderboard/${seasonData.id}`">
               {{ $t("misc.PLeader") }}
             </v-btn>
@@ -49,12 +49,10 @@
               {{ $t("Challonge.MatchesTitle") }}
             </v-btn>
             <v-btn
-              v-if="isChallongeSeason && IsAnyAdmin(user)"
-              small
-              outlined
+              v-if="isChallongeSeason && Number(user.super_admin) === 1"
               @click="showAddBracketDialog = true"
             >
-              <v-icon left small>mdi-plus</v-icon>
+              <v-icon left>mdi-plus</v-icon>
               {{ $t("Challonge.AddBracket") }}
             </v-btn>
           </v-card-title>

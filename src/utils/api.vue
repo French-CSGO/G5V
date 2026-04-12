@@ -1462,6 +1462,32 @@ export default {
       }
       return message;
     },
+    async GetTeamPlayerLeaderboard(teamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}`
+        );
+        return res.data.leaderboard;
+      } catch (error) {
+        message = error.response?.data?.message;
+      }
+      return message;
+    },
+    async GetSeasonTeamPlayerLeaderboard(seasonid, teamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}/${seasonid}`
+        );
+        return res.data.leaderboard;
+      } catch (error) {
+        message = error.response?.data?.message;
+      }
+      return message;
+    },
     // END LEADERBOARD CALLS
     // BEGIN QUEUE CALLS
     async GetQueues() {

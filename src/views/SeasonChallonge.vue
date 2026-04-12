@@ -188,7 +188,6 @@ export default {
       filterCreatable: false,
       showForm: false,
       prefill: {},
-      _syncingQuery: false
     };
   },
   computed: {

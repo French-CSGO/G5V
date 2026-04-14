@@ -27,7 +27,7 @@
           <v-card-title v-else>
             {{ seasonData.name }}
           </v-card-title>
-          <v-card-title>
+          <v-card-title style="gap: 8px; flex-wrap: wrap;">
             <v-btn :to="`/leaderboard/${seasonData.id}`">
               {{ $t("misc.PLeader") }}
             </v-btn>
@@ -40,6 +40,20 @@
             >
               <v-icon left>mdi-tournament</v-icon>
               {{ $t("Toornament.MatchesTitle") }}
+            </v-btn>
+            <v-btn
+              v-if="isChallongeSeason && IsAnyAdmin(user)"
+              :to="`/season/${seasonData.id}/challonge`"
+            >
+              <v-icon left>mdi-tournament</v-icon>
+              {{ $t("Challonge.MatchesTitle") }}
+            </v-btn>
+            <v-btn
+              v-if="isChallongeSeason && Number(user.super_admin) === 1"
+              @click="showAddBracketDialog = true"
+            >
+              <v-icon left>mdi-plus</v-icon>
+              {{ $t("Challonge.AddBracket") }}
             </v-btn>
           </v-card-title>
         </v-col>
@@ -157,6 +171,42 @@
         <v-btn text v-bind="attrs" @click="snackbar = false">OK</v-btn>
       </template>
     </v-snackbar>
+    <!-- Add Challonge bracket dialog -->
+    <v-dialog v-model="showAddBracketDialog" max-width="500px" persistent>
+      <v-card>
+        <v-card-title>{{ $t("Challonge.AddBracket") }}</v-card-title>
+        <v-card-text>
+          <v-text-field
+            v-model="newBracketSlug"
+            :label="$t('Challonge.BracketSlug')"
+            :hint="$t('Challonge.BracketSlugHint')"
+            persistent-hint
+            outlined
+            dense
+          />
+          <v-text-field
+            v-model="newBracketLabel"
+            :label="$t('Challonge.BracketLabel')"
+            :placeholder="$t('Challonge.BracketLabelPlaceholder')"
+            outlined
+            dense
+            class="mt-3"
+          />
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn text @click="showAddBracketDialog = false">{{ $t("misc.Cancel") }}</v-btn>
+          <v-btn
+            color="primary"
+            :loading="isAddingBracket"
+            :disabled="!newBracketSlug"
+            @click="addBracket"
+          >
+            {{ $t("misc.Add") }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -195,6 +245,10 @@ export default {
       showAddTeamDialog: false,
       showRemoveDialog: false,
       isAddingTeams: false,
+      showAddBracketDialog: false,
+      newBracketSlug: "",
+      newBracketLabel: "",
+      isAddingBracket: false,
       isRemovingTeam: false,
       snackbar: false,
       snackbarMessage: "",
@@ -226,6 +280,13 @@ export default {
         this.seasonData.is_challonge &&
         typeof this.seasonData.challonge_url === "string" &&
         this.seasonData.challonge_url.startsWith("t:")
+      );
+    },
+    isChallongeSeason() {
+      return (
+        this.seasonData.is_challonge &&
+        typeof this.seasonData.challonge_url === "string" &&
+        !this.seasonData.challonge_url.startsWith("t:")
       );
     },
     isStarted() {
@@ -323,6 +384,27 @@ export default {
           res && res.message ? res.message : "Error removing team.";
       }
       this.teamToRemove = null;
+      this.snackbar = true;
+    },
+    async addBracket() {
+      if (!this.newBracketSlug) return;
+      this.isAddingBracket = true;
+      const res = await this.AddChallongeTournament(
+        this.$route.params.id,
+        this.newBracketSlug.trim(),
+        this.newBracketLabel.trim() || this.newBracketSlug.trim()
+      );
+      this.isAddingBracket = false;
+      if (res && res.message && !res.message.toLowerCase().includes("error")) {
+        this.snackbarColor = "success";
+        this.snackbarMessage = res.message;
+        this.showAddBracketDialog = false;
+        this.newBracketSlug = "";
+        this.newBracketLabel = "";
+      } else {
+        this.snackbarColor = "error";
+        this.snackbarMessage = res && res.message ? res.message : this.$t("Challonge.AddBracketError");
+      }
       this.snackbar = true;
     }
   }

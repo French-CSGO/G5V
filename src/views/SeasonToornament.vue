@@ -309,6 +309,13 @@ export default {
       ];
     }
   },
+  watch: {
+    filterTeam() { this.pushQuery(); },
+    filterStatus() { this.pushQuery(); },
+    filterStage() { this.pushQuery(); },
+    filterGroup() { this.pushQuery(); },
+    filterCreatable() { this.pushQuery(); }
+  },
   async created() {
     this.user = await this.IsLoggedIn();
     const season = await this.GetSeasonInfo(this.seasonId);
@@ -326,9 +333,25 @@ export default {
     this.stages = Array.isArray(stages) ? stages : [];
     this.groups = Array.isArray(groups) ? groups : [];
     this.rounds = Array.isArray(rounds) ? rounds : [];
+    // Restore filters from URL query params
+    const q = this.$route.query;
+    if (q.team) this.filterTeam = parseInt(q.team);
+    if (q.status) this.filterStatus = q.status;
+    if (q.stage) this.filterStage = q.stage;
+    if (q.group) this.filterGroup = q.group;
+    if (q.creatable === "1") this.filterCreatable = true;
     await this.loadMatches();
   },
   methods: {
+    pushQuery() {
+      const query = {};
+      if (this.filterTeam) query.team = String(this.filterTeam);
+      if (this.filterStatus) query.status = this.filterStatus;
+      if (this.filterStage) query.stage = this.filterStage;
+      if (this.filterGroup) query.group = this.filterGroup;
+      if (this.filterCreatable) query.creatable = "1";
+      this.$router.replace({ query }).catch(() => {});
+    },
     async loadMatches() {
       this.loading = true;
       this.matches = await this.GetToornamentMatches(this.seasonId, {

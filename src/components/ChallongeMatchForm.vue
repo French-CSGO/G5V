@@ -12,18 +12,14 @@
       </v-card-title>
 
       <v-window v-model="step">
-        <!-- Step 1: Verification -->
+        <!-- Step 1 : Vérification -->
         <v-window-item :value="1">
           <v-card-text>
             <v-row>
-              <!-- Teams locked -->
+              <!-- Équipes verrouillées -->
               <v-col cols="6">
                 <v-text-field
-                  :value="
-                    prefill.team1
-                      ? prefill.team1.name
-                      : $t('Toornament.TeamTBD')
-                  "
+                  :value="prefill.team1 ? prefill.team1.name : $t('Challonge.TeamTBD')"
                   :label="$t('CreateMatch.FormTeam1')"
                   readonly
                   outlined
@@ -33,11 +29,7 @@
               </v-col>
               <v-col cols="6">
                 <v-text-field
-                  :value="
-                    prefill.team2
-                      ? prefill.team2.name
-                      : $t('Toornament.TeamTBD')
-                  "
+                  :value="prefill.team2 ? prefill.team2.name : $t('Challonge.TeamTBD')"
                   :label="$t('CreateMatch.FormTeam2')"
                   readonly
                   outlined
@@ -46,7 +38,7 @@
                 />
               </v-col>
 
-              <!-- Season locked -->
+              <!-- Saison verrouillée -->
               <v-col cols="12">
                 <v-text-field
                   :value="prefill.season_name"
@@ -58,7 +50,7 @@
                 />
               </v-col>
 
-              <!-- Server editable -->
+              <!-- Serveur -->
               <v-col cols="12">
                 <v-select
                   v-model="selectedServer"
@@ -77,15 +69,10 @@
                 </v-select>
               </v-col>
 
-              <!-- Format editable -->
+              <!-- Format -->
               <v-col cols="12">
                 <div class="text-subtitle-1 mb-2">
                   <strong>{{ $t("CreateMatch.FormSeriesType") }}</strong>
-                  <span class="ml-2 caption grey--text"
-                    >({{
-                      $t("Toornament.SuggestedFormat", { n: prefill.max_maps })
-                    }})</span
-                  >
                 </div>
                 <v-radio-group v-model="formData.maps_to_win" row>
                   <v-radio :label="$t('CreateMatch.BestOf') + 1" :value="1" />
@@ -95,24 +82,24 @@
                 </v-radio-group>
               </v-col>
 
-              <!-- Match info (read only) -->
+              <!-- Info match Challonge -->
               <v-col cols="12">
                 <v-alert type="info" text dense>
-                  {{ $t("Toornament.MatchInfo") }} #{{
-                    prefill.toornament_match
-                      ? prefill.toornament_match.number
+                  {{ $t("Challonge.MatchInfo") }} #{{
+                    prefill.challonge_match
+                      ? prefill.challonge_match.suggested_play_order || prefill.challonge_match.id
                       : ""
                   }}
                   <span
                     v-if="
-                      prefill.toornament_match &&
-                        prefill.toornament_match.scheduled_datetime
+                      prefill.challonge_match &&
+                        prefill.challonge_match.scheduled_time
                     "
                   >
                     —
                     {{
                       new Date(
-                        prefill.toornament_match.scheduled_datetime
+                        prefill.challonge_match.scheduled_time
                       ).toLocaleString()
                     }}
                   </span>
@@ -122,7 +109,7 @@
           </v-card-text>
         </v-window-item>
 
-        <!-- Step 2: Spectators + CVARs -->
+        <!-- Step 2 : Spectateurs + CVARs -->
         <v-window-item :value="2">
           <v-card-text>
             <v-row>
@@ -153,13 +140,11 @@
       <v-divider />
       <v-alert v-if="isLoading" type="info" text dense class="ma-3 mb-0">
         <v-progress-circular indeterminate size="14" width="2" class="mr-2" />
-        {{ $t("Toornament.ServerStarting") }}
+        {{ $t("Challonge.ServerStarting") }}
       </v-alert>
       <v-card-actions>
         <v-btn text @click="close">{{ $t("misc.Cancel") }}</v-btn>
-        <v-btn :disabled="step === 1" text @click="step--">{{
-          $t("misc.Back")
-        }}</v-btn>
+        <v-btn :disabled="step === 1" text @click="step--">{{ $t("misc.Back") }}</v-btn>
         <v-spacer />
         <v-btn v-if="step < 2" color="primary" depressed @click="step++">
           {{ $t("misc.Next") }}
@@ -187,7 +172,7 @@
 
 <script>
 export default {
-  name: "ToornamentMatchForm",
+  name: "ChallongeMatchForm",
   props: {
     value: Boolean,
     prefill: {
@@ -221,8 +206,8 @@ export default {
     },
     currentTitle() {
       return this.step === 1
-        ? this.$t("Toornament.StepVerify")
-        : this.$t("Toornament.StepDetails");
+        ? this.$t("Challonge.StepVerify")
+        : this.$t("Challonge.StepDetails");
     }
   },
   watch: {
@@ -230,9 +215,6 @@ export default {
       if (val) this.reset();
     },
     prefill(val) {
-      if (val && val.max_maps) {
-        this.formData.maps_to_win = val.max_maps;
-      }
       if (val && val.season_cvars) {
         this.formData.cvars = this.buildCvarArray(val.season_cvars);
       }
@@ -245,14 +227,10 @@ export default {
     reset() {
       this.step = 1;
       this.isLoading = false;
-      if (this.prefill.max_maps)
-        this.formData.maps_to_win = this.prefill.max_maps;
-      if (this.prefill.season_cvars)
+      if (this.prefill.season_cvars) {
         this.formData.cvars = this.buildCvarArray(this.prefill.season_cvars);
-      if (
-        this.prefill.available_servers &&
-        this.prefill.available_servers.length > 0
-      ) {
+      }
+      if (this.prefill.available_servers && this.prefill.available_servers.length > 0) {
         this.selectedServer = this.prefill.available_servers[0].id;
       }
     },
@@ -292,7 +270,7 @@ export default {
         return;
       }
       if (!this.prefill.team1 || !this.prefill.team2) {
-        this.snackbarMessage = this.$t("Toornament.TeamTBD");
+        this.snackbarMessage = this.$t("Challonge.TeamTBD");
         this.snackbarColor = "error";
         this.snackbar = true;
         return;
@@ -310,7 +288,7 @@ export default {
           team1_id: this.prefill.team1.id,
           team2_id: this.prefill.team2.id,
           season_id: this.prefill.season_id,
-          toornament_id: this.prefill.toornament_match_id ?? null,
+          challonge_id: this.prefill.challonge_match_id ?? null,
           start_time: new Date()
             .toISOString()
             .slice(0, 19)
@@ -325,10 +303,7 @@ export default {
           side_type: sc.side_type || "standard",
           veto_mappool: sc.map_pool || null,
           map_sides: sc.map_sides
-            ? sc.map_sides
-                .trim()
-                .split(/\s+/)
-                .join(",")
+            ? sc.map_sides.trim().split(/\s+/).join(",")
             : null,
           min_players_to_ready:
             sc.min_players_to_ready != null
@@ -351,13 +326,12 @@ export default {
           this.close();
           this.$router.push({ name: "Match", params: { id: res.id } });
         } else {
-          this.snackbarMessage =
-            res?.message || this.$t("Toornament.CreateError");
+          this.snackbarMessage = res?.message || this.$t("Challonge.CreateError");
           this.snackbarColor = "error";
           this.snackbar = true;
         }
       } catch (err) {
-        this.snackbarMessage = err.message || this.$t("Toornament.CreateError");
+        this.snackbarMessage = err.message || this.$t("Challonge.CreateError");
         this.snackbarColor = "error";
         this.snackbar = true;
       }

@@ -18,6 +18,7 @@
           <v-tab>Twitch</v-tab>
           <v-tab>Pterodactyl</v-tab>
           <v-tab>Toornament</v-tab>
+          <v-tab>Challonge</v-tab>
         </v-tabs>
 
         <!-- DISCORD -->
@@ -128,6 +129,19 @@
             :type="showTokens ? 'text' : 'password'"
             :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
             @click:append="showTokens = !showTokens"
+          />
+        </v-card>
+
+        <!-- CHALLONGE -->
+        <v-card v-if="tab === 4" flat class="pa-4">
+          <v-text-field
+            v-model="settings['challonge.apiKey']"
+            label="Challonge API Key (v1)"
+            :type="showTokens ? 'text' : 'password'"
+            :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
+            @click:append="showTokens = !showTokens"
+            hint="Clé disponible sur challonge.com/settings/developer"
+            persistent-hint
           />
         </v-card>
 

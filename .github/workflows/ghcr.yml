@@ -31,7 +31,7 @@ jobs:
           password: ${{ secrets.TOKEN }}
       - id: getversion
         uses: Saionaro/extract-package-version@v1.4.0
-      - uses: actions/setup-node@v6.3.0
+      - uses: actions/setup-node@v6.4.0
         with:
           node-version: 18
           cache: 'yarn'

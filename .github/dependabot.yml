@@ -8,6 +8,7 @@ updates:
     ignore:
       - dependency-name: "@vue/eslint-config-prettier"
       - dependency-name: "eslint-plugin-vue"
+      - dependency-name: "vue"
 
   - package-ecosystem: "github-actions"
     directory: "/"

@@ -84,7 +84,7 @@
           show-expand
         >
           <template v-slot:item.name="{ item }">
-            <router-link :to="{ path: '/user/' + item.steam_id }">
+            <router-link :to="{ path: '/stats/player/' + item.steam_id }">
               {{ item.name }}
             </router-link>
           </template>

@@ -943,6 +943,75 @@ export default {
       }
       return message;
     },
+    async GetChallongeTournaments(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments`
+        );
+        message = res.data.tournaments;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async AddChallongeTournament(seasonid, challonge_slug, label) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments`,
+          { challonge_slug, label }
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async DeleteChallongeTournament(seasonid, tournamentId) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments/${tournamentId}`
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async GetChallongeMatches(seasonid, filters = {}) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/challonge/matches`,
+          { params: filters }
+        );
+        message = res.data.matches;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async GetChallongeMatchPrefill(seasonid, challongeMatchId) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL ||
+            "/api"}/seasons/${seasonid}/challonge/matches/${challongeMatchId}/prefill`
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
     // END SEASON CALLS
     // BEGIN PLAYER STATS
     async GetUserPlayerStats(steamid) {
@@ -1390,6 +1459,32 @@ export default {
         return res.data.leaderboard;
       } catch (error) {
         message = error.response.data.message;
+      }
+      return message;
+    },
+    async GetTeamPlayerLeaderboard(teamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}`
+        );
+        return res.data.leaderboard;
+      } catch (error) {
+        message = error.response?.data?.message;
+      }
+      return message;
+    },
+    async GetSeasonTeamPlayerLeaderboard(seasonid, teamid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}/${seasonid}`
+        );
+        return res.data.leaderboard;
+      } catch (error) {
+        message = error.response?.data?.message;
       }
       return message;
     },

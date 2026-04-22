@@ -5,6 +5,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    ignore:
+      - dependency-name: "@vue/eslint-config-prettier"
+      - dependency-name: "eslint-plugin-vue"
 
   - package-ecosystem: "github-actions"
     directory: "/"

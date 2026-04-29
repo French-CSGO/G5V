@@ -19,6 +19,7 @@
           <v-tab>Pterodactyl</v-tab>
           <v-tab>Toornament</v-tab>
           <v-tab>Challonge</v-tab>
+          <v-tab>VPS Relay</v-tab>
         </v-tabs>
 
         <!-- DISCORD -->
@@ -142,6 +143,27 @@
             @click:append="showTokens = !showTokens"
             hint="Clé disponible sur challonge.com/settings/developer"
             persistent-hint
+          />
+        </v-card>
+
+        <!-- VPS RELAY -->
+        <v-card v-if="tab === 5" flat class="pa-4">
+          <v-switch
+            v-model="settings['vpsRelay.enabled']"
+            true-value="true"
+            false-value="false"
+            label="Activer le VPS Relay (transfert de démos)"
+          />
+          <v-text-field
+            v-model="settings['vpsRelay.url']"
+            label="URL du VPS (https://vps.example.com)"
+          />
+          <v-text-field
+            v-model="settings['vpsRelay.apiKey']"
+            label="API Key"
+            :type="showTokens ? 'text' : 'password'"
+            :append-icon="showTokens ? 'mdi-eye-off' : 'mdi-eye'"
+            @click:append="showTokens = !showTokens"
           />
         </v-card>
 

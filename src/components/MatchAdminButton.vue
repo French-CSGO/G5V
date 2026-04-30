@@ -310,7 +310,9 @@
                 <v-col cols="12">
                   <v-select
                     v-model="selectedBackup"
-                    :items="backups"
+                    :items="formattedBackups"
+                    item-text="text"
+                    item-value="value"
                     :rules="[v => !!v || $t('misc.Required')]"
                     :label="$t('MatchAdmin.Backup')"
                     required
@@ -390,6 +392,15 @@ export default {
     }
   },
   computed: {
+    formattedBackups() {
+      return this.backups.map(f => {
+        const m = f.match(/match(\d+)_map(\d+)_round(\d+)/i);
+        if (m) {
+          return { text: `Map ${m[2]} · Round ${m[3]}  (${f})`, value: f };
+        }
+        return { text: f, value: f };
+      });
+    },
     items() {
       return [
         {

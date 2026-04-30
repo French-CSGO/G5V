@@ -275,6 +275,14 @@ export default {
     }
     if (this.tournaments.length) {
       await this.loadMatches();
+      // Auto-open create form if ?match=<challonge_match_id> is in URL
+      if (q.match) {
+        const targetId = parseInt(q.match);
+        const match = this.allMatches.find(m => m.id === targetId);
+        if (match && !match.g5_match_id && match.state === "open" && match.player1?.local_team && match.player2?.local_team) {
+          this.openCreate(match);
+        }
+      }
     }
   },
   methods: {

@@ -393,12 +393,19 @@ export default {
   },
   computed: {
     formattedBackups() {
-      return this.backups.map(f => {
-        const m = f.match(/match(\d+)_map(\d+)_round(\d+)/i);
-        if (m) {
-          return { text: `Map ${m[2]} · Round ${m[3]}  (${f})`, value: f };
+      return this.backups.map(b => {
+        if (typeof b === "object" && b.file) {
+          const map   = b.mapNum  !== undefined ? `Map ${b.mapNum}`   : "";
+          const round = b.round   !== undefined ? `Round ${b.round}`  : "";
+          const score = (b.team1Score !== undefined && b.team2Score !== undefined)
+            ? `  ${b.team1Score}–${b.team2Score}` : "";
+          const label = [map, round].filter(Boolean).join(" · ") + score;
+          return { text: label ? `${label}  (${b.file})` : b.file, value: b.file };
         }
-        return { text: f, value: f };
+        // fallback: plain string (old format)
+        const m = b.match && b.match(/match\d+_map(\d+)_round(\d+)/i);
+        if (m) return { text: `Map ${m[1]} · Round ${m[2]}  (${b})`, value: b };
+        return { text: b, value: b };
       });
     },
     items() {

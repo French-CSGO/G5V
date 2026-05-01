@@ -210,7 +210,7 @@
 
           <div v-if="demoUploading" class="mt-3">
             <div class="d-flex justify-space-between text-caption mb-1">
-              <span>{{ demoProgress < 100 ? 'Envoi en cours...' : 'Traitement serveur...' }}</span>
+              <span>{{ demoProgress < 30 ? 'Compression...' : demoProgress < 100 ? 'Envoi en cours...' : 'Traitement serveur...' }}</span>
               <span>{{ demoProgress }}%</span>
             </div>
             <v-progress-linear
@@ -336,15 +336,41 @@ export default {
       this.demoProgress = 0;
       this.demoResults = [];
       try {
+        const { zipSync } = await import("fflate");
         const form = new FormData();
-        for (const f of this.demoFiles) form.append("demos", f);
+        const demFiles = this.demoFiles;
+        const total = demFiles.length;
+
+        for (let i = 0; i < total; i++) {
+          const file = demFiles[i];
+          const isDem = file.name.toLowerCase().endsWith(".dem");
+
+          if (isDem) {
+            // Compression côté client
+            const arrayBuf = await file.arrayBuffer();
+            const compressed = zipSync(
+              { [file.name]: new Uint8Array(arrayBuf) },
+              { level: 6 }
+            );
+            const zipName = file.name.replace(/\.dem$/i, ".zip");
+            const blob = new Blob([compressed], { type: "application/zip" });
+            form.append("demos", blob, zipName);
+          } else {
+            form.append("demos", file);
+          }
+
+          // Progression compression (avant upload)
+          this.demoProgress = Math.round(((i + 1) / total) * 30);
+        }
+
         const res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/v2/demoadmin`,
           form,
           {
             headers: { "Content-Type": "multipart/form-data" },
             onUploadProgress: (e) => {
-              this.demoProgress = e.total ? Math.round((e.loaded * 100) / e.total) : 0;
+              const uploadPct = e.total ? Math.round((e.loaded / e.total) * 70) : 0;
+              this.demoProgress = 30 + uploadPct;
             },
           }
         );

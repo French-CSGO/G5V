@@ -127,7 +127,12 @@ export default {
         } else if (this.$route.path == "/mymatches") {
           res = await this.GetMyMatches();
         } else if (this.$route.path.includes("team")) {
-          res = await this.GetTeamRecentMatches(this.$route.params.id);
+          const teamId = this.$route.params.id;
+          if (teamId && !isNaN(parseInt(teamId))) {
+            res = await this.GetTeamRecentMatches(teamId);
+          } else {
+            res = [];
+          }
         } else if (this.$route.path.includes("user")) {
           if (this.$route.params.id == undefined) {
             res = await this.GetUserRecentMatches(this.user.id);

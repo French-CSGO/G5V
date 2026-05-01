@@ -200,13 +200,27 @@
           <v-btn
             class="mt-3"
             color="primary"
-            :loading="demoUploading"
+            :loading="demoUploading && demoProgress === 0"
             :disabled="!demoFiles || !demoFiles.length"
             @click="uploadDemos"
           >
             <v-icon left>mdi-upload</v-icon>
             Uploader
           </v-btn>
+
+          <div v-if="demoUploading" class="mt-3">
+            <div class="d-flex justify-space-between text-caption mb-1">
+              <span>{{ demoProgress < 100 ? 'Envoi en cours...' : 'Traitement serveur...' }}</span>
+              <span>{{ demoProgress }}%</span>
+            </div>
+            <v-progress-linear
+              :value="demoProgress"
+              :indeterminate="demoProgress === 100"
+              color="primary"
+              height="6"
+              rounded
+            />
+          </div>
 
           <div v-if="demoResults.length" class="mt-4">
             <v-list dense>
@@ -260,6 +274,7 @@ export default {
       errorMsg: "",
       demoFiles: [],
       demoUploading: false,
+      demoProgress: 0,
       demoResults: [],
       notifChannels: {
         announce: [],
@@ -318,6 +333,7 @@ export default {
     },
     async uploadDemos() {
       this.demoUploading = true;
+      this.demoProgress = 0;
       this.demoResults = [];
       try {
         const form = new FormData();
@@ -325,13 +341,19 @@ export default {
         const res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/v2/demoadmin`,
           form,
-          { headers: { "Content-Type": "multipart/form-data" } }
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+            onUploadProgress: (e) => {
+              this.demoProgress = e.total ? Math.round((e.loaded * 100) / e.total) : 0;
+            },
+          }
         );
         this.demoResults = res.data.results || [];
       } catch (err) {
         this.demoResults = [{ file: "—", status: "error", message: err.response?.data?.message || err.message }];
       } finally {
         this.demoUploading = false;
+        this.demoProgress = 0;
         this.demoFiles = [];
       }
     },

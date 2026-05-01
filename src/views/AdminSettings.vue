@@ -188,12 +188,12 @@
           <v-file-input
             v-model="demoFiles"
             label="Fichiers .dem"
-            accept=".dem"
+            accept=".dem,.zip"
             multiple
             chips
             show-size
             prepend-icon="mdi-file-video"
-            hint="Nommage attendu : YYYY-MM-DD_HH-MM-SS_MATCHID_de_MAP_…dem"
+            hint="Nommage attendu : YYYY-MM-DD_HH-MM-SS_MATCHID_de_MAP_….dem ou .zip"
             persistent-hint
           />
 

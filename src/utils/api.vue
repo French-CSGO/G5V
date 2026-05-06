@@ -1776,7 +1776,8 @@ export default {
           roundsplayed === 0
             ? 0
             : (roundsplayed - deaths) / roundsplayed / AverageSPR;
-        let killcount = k1 + 4 * k2 + 9 * k3 + 16 * k4 + 25 * k5;
+        let computed_k1 = Math.max(0, roundsplayed - k2 - k3 - k4 - k5);
+        let killcount = computed_k1 + 4 * k2 + 9 * k3 + 16 * k4 + 25 * k5;
         let RoundsWithMultipleKillsRating =
           roundsplayed === 0 ? 0 : killcount / roundsplayed / AverageRMK;
         let rating =

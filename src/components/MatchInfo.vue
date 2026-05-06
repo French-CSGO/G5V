@@ -1,13 +1,5 @@
 <template>
   <v-container class="mapstatsinfo" fluid>
-    <v-flex class="text-right" v-if="AdminToolsAvailable(matchInfo)">
-      <AdminButton
-        :matchInfo="matchInfo"
-        :user="user"
-        @force-the-reload="getMatchInfo()"
-      />
-    </v-flex>
-    <v-flex v-else />
     <div class="text-h4 names" align="center">
       <router-link
         v-if="matchInfo.team1.id != 0"
@@ -133,15 +125,12 @@
 </template>
 
 <script>
-import AdminButton from "./MatchAdminButton";
 export default {
-  components: {
-    AdminButton
-  },
   props: {
     match_id: Number,
     user: Object
   },
+  emits: ["match-loaded"],
   sse: {
     cleanup: true
   },
@@ -256,6 +245,7 @@ export default {
         this.matchInfo.forfeit = serverResponse.forfeit;
         this.matchInfo.id = this.match_id;
         this.matchInfo.user_id = serverResponse.user_id;
+        this.$emit("match-loaded", serverResponse);
         if (serveRes) {
           this.serverInfo.ip_string = serveRes.ip_string;
           this.serverInfo.port = serveRes.port;

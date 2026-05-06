@@ -1760,7 +1760,7 @@ export default {
       kills = 0,
       roundsplayed = 0,
       deaths = 0,
-      k1 = 0,
+      _k1 = 0,
       k2 = 0,
       k3 = 0,
       k4 = 0,

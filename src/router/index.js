@@ -247,6 +247,13 @@ const routes = [
       import(/* webpackChunkName: "Stats" */ "../views/PlayerMapStats.vue")
   },
   {
+    path: "/cast",
+    name: "Cast",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/CastView.vue")
+  },
+  {
     path: "/admin/settings",
     name: "AdminSettings",
     component: () =>

@@ -391,6 +391,24 @@ export default {
       }
       return retVal;
     },
+    async GetCastStream() {
+      let retVal;
+      try {
+        retVal = this.$sse
+          .create({
+            url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/cast/stream`,
+            format: "json",
+            withCredentials: true,
+            polyfill: true
+          })
+          .on("error", err =>
+            console.error("Cast SSE error:", err)
+          );
+      } catch (error) {
+        retVal = null;
+      }
+      return retVal;
+    },
     async GetRecentMatches(teamid) {
       let res;
       let message;

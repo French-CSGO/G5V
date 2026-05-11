@@ -87,8 +87,14 @@
                   </td>
                   <td class="text-center">
                     <div class="d-flex flex-column" style="gap:2px">
-                      <v-btn x-small dark color="teal" :to="'/match/' + match.id">
-                        <v-icon x-small left>mdi-chart-bar</v-icon>Stats
+                      <v-btn
+                        v-for="(map, i) in match.maps"
+                        :key="'img-a-'+match.id+'-'+i"
+                        x-small dark color="teal"
+                        :href="'/api/image/match/' + match.id + '/map/' + (map.map_number + 1)"
+                        target="_blank"
+                      >
+                        <v-icon x-small left>mdi-chart-bar</v-icon>Map {{ map.map_number + 1 }}
                       </v-btn>
                       <v-btn x-small dark color="orange darken-2" :to="'/match/' + match.id + '/veto'">
                         <v-icon x-small left>mdi-map-marker-multiple</v-icon>Veto
@@ -146,12 +152,15 @@
                     <span v-else class="grey--text">—</span>
                   </td>
                   <td class="text-center">
-                    <div class="d-flex" style="gap:4px; justify-content:center">
-                      <v-btn x-small dark color="teal" :to="'/match/' + match.id">
-                        <v-icon x-small left>mdi-chart-bar</v-icon>Stats
-                      </v-btn>
-                      <v-btn x-small dark color="orange darken-2" :to="'/match/' + match.id + '/veto'">
-                        <v-icon x-small left>mdi-map-marker-multiple</v-icon>Veto
+                    <div class="d-flex flex-column" style="gap:2px; align-items:center">
+                      <v-btn
+                        v-for="(map, i) in match.maps"
+                        :key="'img-f-'+match.id+'-'+i"
+                        x-small dark color="teal"
+                        :href="'/api/image/match/' + match.id + '/map/' + (map.map_number + 1)"
+                        target="_blank"
+                      >
+                        <v-icon x-small left>mdi-chart-bar</v-icon>Map {{ map.map_number + 1 }}
                       </v-btn>
                     </div>
                   </td>

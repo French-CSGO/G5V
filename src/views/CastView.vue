@@ -10,7 +10,7 @@
       <!-- En-tête -->
       <v-row class="mb-2" align="center">
         <v-col>
-          <h2 class="white--text">
+          <h2>
             <v-icon left color="teal">mdi-broadcast</v-icon>
             Cast / Observer
           </h2>
@@ -23,192 +23,191 @@
         </v-col>
       </v-row>
 
-      <!-- Flux d'événements -->
-      <v-card dark class="mb-4" color="grey darken-4">
-        <v-card-title class="subtitle-1 py-2">
-          <v-icon left small>mdi-timeline-clock</v-icon>
-          Flux d'événements
-        </v-card-title>
-        <v-card-text class="pa-0">
-          <div class="event-log" ref="eventLog">
-            <div v-if="events.length === 0" class="text-center grey--text pa-4">
-              Aucun événement
+      <!-- Layout principal : tableaux gauche (8/12) + flux droite (4/12) -->
+      <v-row no-gutters class="layout-row">
+
+        <!-- Colonne gauche : matchs -->
+        <v-col cols="8" class="pr-2 tables-col">
+
+          <!-- Matchs en cours -->
+          <v-card class="mb-3">
+            <v-card-title class="subtitle-1 py-2 primary white--text">
+              <v-icon left small dark>mdi-play-circle</v-icon>
+              Matchs en cours
+              <v-chip x-small class="ml-2" color="green" dark>{{ activeMatches.length }}</v-chip>
+            </v-card-title>
+            <v-simple-table dense v-if="activeMatches.length">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Équipe 1</th>
+                  <th class="text-center">Série</th>
+                  <th>Équipe 2</th>
+                  <th v-for="n in 3" :key="'ah'+n" class="text-center">Map {{ n }}</th>
+                  <th class="text-center">Connexion</th>
+                  <th class="text-center">Pages</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="match in activeMatches" :key="match.id">
+                  <td>
+                    <router-link :to="'/match/' + match.id" class="teal--text font-weight-bold">
+                      #{{ match.id }}
+                    </router-link>
+                  </td>
+                  <td class="font-weight-medium">{{ match.team1_string }}</td>
+                  <td class="text-center">
+                    <span class="font-weight-bold">
+                      {{ match.team1_series_score }} – {{ match.team2_series_score }}
+                    </span>
+                    <span class="grey--text caption ml-1">BO{{ match.max_maps }}</span>
+                  </td>
+                  <td class="font-weight-medium">{{ match.team2_string }}</td>
+                  <td v-for="n in 3" :key="'am'+n" class="text-center">
+                    <template v-if="match.maps[n-1]">
+                      <div class="caption font-weight-bold">{{ mapShortName(match.maps[n-1].map) }}</div>
+                      <div class="caption">
+                        {{ match.maps[n-1].team1_score }} – {{ match.maps[n-1].team2_score }}
+                      </div>
+                    </template>
+                    <span v-else class="grey--text">—</span>
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex flex-column" style="gap:2px">
+                      <v-btn x-small dark color="blue darken-2" :href="connectUrl(match, 'server')" target="_blank">
+                        <v-icon x-small left>mdi-server</v-icon>Serveur
+                      </v-btn>
+                      <v-btn x-small dark color="indigo" :href="connectUrl(match, 'tv90')" target="_blank">
+                        <v-icon x-small left>mdi-television-play</v-icon>TV 90s
+                      </v-btn>
+                      <v-btn x-small dark color="deep-purple" :href="connectUrl(match, 'tv0')" target="_blank">
+                        <v-icon x-small left>mdi-television-play</v-icon>TV 0s
+                      </v-btn>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex flex-column" style="gap:2px">
+                      <v-btn x-small dark color="teal" :to="'/match/' + match.id">
+                        <v-icon x-small left>mdi-chart-bar</v-icon>Stats
+                      </v-btn>
+                      <v-btn x-small dark color="orange darken-2" :to="'/match/' + match.id + '/veto'">
+                        <v-icon x-small left>mdi-map-marker-multiple</v-icon>Veto
+                      </v-btn>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </v-simple-table>
+            <v-card-text v-else class="grey--text text-center">
+              Aucun match en cours
+            </v-card-text>
+          </v-card>
+
+          <!-- Matchs terminés -->
+          <v-card>
+            <v-card-title class="subtitle-1 py-2">
+              <v-icon left small>mdi-check-circle</v-icon>
+              Matchs terminés
+              <v-chip x-small class="ml-2">{{ finishedMatches.length }}</v-chip>
+            </v-card-title>
+            <v-simple-table dense v-if="finishedMatches.length">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Équipe 1</th>
+                  <th class="text-center">Série</th>
+                  <th>Équipe 2</th>
+                  <th v-for="n in 3" :key="'fh'+n" class="text-center">Map {{ n }}</th>
+                  <th class="text-center">Pages</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="match in finishedMatches" :key="match.id">
+                  <td>
+                    <router-link :to="'/match/' + match.id" class="grey--text text--lighten-1 font-weight-bold">
+                      #{{ match.id }}
+                    </router-link>
+                  </td>
+                  <td>{{ match.team1_string }}</td>
+                  <td class="text-center">
+                    <span class="font-weight-bold">
+                      {{ match.team1_series_score }} – {{ match.team2_series_score }}
+                    </span>
+                    <span class="grey--text caption ml-1">BO{{ match.max_maps }}</span>
+                  </td>
+                  <td>{{ match.team2_string }}</td>
+                  <td v-for="n in 3" :key="'fm'+n" class="text-center">
+                    <template v-if="match.maps[n-1]">
+                      <div class="caption font-weight-bold">{{ mapShortName(match.maps[n-1].map) }}</div>
+                      <div class="caption grey--text">
+                        {{ match.maps[n-1].team1_score }} – {{ match.maps[n-1].team2_score }}
+                      </div>
+                    </template>
+                    <span v-else class="grey--text">—</span>
+                  </td>
+                  <td class="text-center">
+                    <div class="d-flex" style="gap:4px; justify-content:center">
+                      <v-btn x-small dark color="teal" :to="'/match/' + match.id">
+                        <v-icon x-small left>mdi-chart-bar</v-icon>Stats
+                      </v-btn>
+                      <v-btn x-small dark color="orange darken-2" :to="'/match/' + match.id + '/veto'">
+                        <v-icon x-small left>mdi-map-marker-multiple</v-icon>Veto
+                      </v-btn>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </v-simple-table>
+            <v-card-text v-else class="grey--text text-center">
+              Aucun match terminé
+            </v-card-text>
+          </v-card>
+
+        </v-col>
+
+        <!-- Colonne droite : flux d'événements (1/3) -->
+        <v-col cols="4" class="event-col">
+          <v-card class="event-sidebar">
+            <v-card-title class="subtitle-1 py-2">
+              <v-icon left small>mdi-timeline-clock</v-icon>
+              Flux d'événements
+            </v-card-title>
+            <v-divider />
+            <div class="event-log" ref="eventLog">
+              <div v-if="events.length === 0" class="text-center grey--text pa-4">
+                Aucun événement
+              </div>
+              <v-list dense class="transparent py-0">
+                <v-list-item
+                  v-for="(ev, i) in eventsReversed"
+                  :key="i"
+                  class="event-item py-1"
+                  :class="eventClass(ev.event_type)"
+                  dense
+                >
+                  <v-list-item-icon class="my-auto mr-2">
+                    <v-icon small :color="eventColor(ev.event_type)">{{ eventIcon(ev.event_type) }}</v-icon>
+                  </v-list-item-icon>
+                  <v-list-item-content>
+                    <v-list-item-title class="body-2" style="white-space:normal; word-break:break-word">
+                      {{ formatEventLabel(ev) }}
+                      <router-link
+                        :to="'/match/' + ev.match_id"
+                        class="ml-1 grey--text text--lighten-1"
+                        style="font-size:11px"
+                      >#{{ ev.match_id }}</router-link>
+                    </v-list-item-title>
+                    <v-list-item-subtitle class="caption grey--text">
+                      {{ formatTime(ev.event_time) }}
+                    </v-list-item-subtitle>
+                  </v-list-item-content>
+                </v-list-item>
+              </v-list>
             </div>
-            <v-list dense dark class="transparent py-0">
-              <v-list-item
-                v-for="(ev, i) in eventsReversed"
-                :key="i"
-                class="event-item py-1"
-                :class="eventClass(ev.event_type)"
-                dense
-              >
-                <v-list-item-icon class="my-auto mr-2">
-                  <v-icon small :color="eventColor(ev.event_type)">{{ eventIcon(ev.event_type) }}</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title class="body-2">
-                    <span class="font-weight-bold">{{ formatEventLabel(ev) }}</span>
-                    <router-link
-                      :to="'/match/' + ev.match_id"
-                      class="ml-1 grey--text text--lighten-1"
-                      style="font-size:11px"
-                    >#{{ ev.match_id }}</router-link>
-                  </v-list-item-title>
-                </v-list-item-content>
-                <v-list-item-action class="my-auto">
-                  <span class="caption grey--text">{{ formatTime(ev.event_time) }}</span>
-                </v-list-item-action>
-              </v-list-item>
-            </v-list>
-          </div>
-        </v-card-text>
-      </v-card>
+          </v-card>
+        </v-col>
 
-      <!-- Matchs en cours -->
-      <v-card dark class="mb-4" color="grey darken-3">
-        <v-card-title class="subtitle-1 py-2">
-          <v-icon left small color="green">mdi-play-circle</v-icon>
-          Matchs en cours
-          <v-chip x-small class="ml-2" color="green">{{ activeMatches.length }}</v-chip>
-        </v-card-title>
-        <v-simple-table dark dense v-if="activeMatches.length">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Équipe 1</th>
-              <th class="text-center">Série</th>
-              <th>Équipe 2</th>
-              <th v-for="n in 3" :key="'ah'+n" class="text-center">Map {{ n }}</th>
-              <th class="text-center">Connexion</th>
-              <th class="text-center">Pages</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="match in activeMatches" :key="match.id">
-              <td>
-                <router-link :to="'/match/' + match.id" class="teal--text font-weight-bold">
-                  #{{ match.id }}
-                </router-link>
-              </td>
-              <td class="font-weight-medium">{{ match.team1_string }}</td>
-              <td class="text-center">
-                <span class="font-weight-bold white--text">
-                  {{ match.team1_series_score }} – {{ match.team2_series_score }}
-                </span>
-                <span class="grey--text caption ml-1">BO{{ match.max_maps }}</span>
-              </td>
-              <td class="font-weight-medium">{{ match.team2_string }}</td>
-              <td v-for="n in 3" :key="'am'+n" class="text-center">
-                <template v-if="match.maps[n-1]">
-                  <div class="caption font-weight-bold">{{ mapShortName(match.maps[n-1].map) }}</div>
-                  <div class="caption white--text">
-                    {{ match.maps[n-1].team1_score }} – {{ match.maps[n-1].team2_score }}
-                  </div>
-                </template>
-                <span v-else class="grey--text">—</span>
-              </td>
-              <td class="text-center">
-                <div class="d-flex flex-column" style="gap:2px">
-                  <v-btn
-                    x-small dark color="blue darken-2"
-                    :href="connectUrl(match, 'server')"
-                    target="_blank"
-                  >
-                    <v-icon x-small left>mdi-server</v-icon>Serveur
-                  </v-btn>
-                  <v-btn
-                    x-small dark color="indigo"
-                    :href="connectUrl(match, 'tv90')"
-                    target="_blank"
-                  >
-                    <v-icon x-small left>mdi-television-play</v-icon>TV 90s
-                  </v-btn>
-                  <v-btn
-                    x-small dark color="deep-purple"
-                    :href="connectUrl(match, 'tv0')"
-                    target="_blank"
-                  >
-                    <v-icon x-small left>mdi-television-play</v-icon>TV 0s
-                  </v-btn>
-                </div>
-              </td>
-              <td class="text-center">
-                <div class="d-flex flex-column" style="gap:2px">
-                  <v-btn x-small dark color="teal" :to="'/match/' + match.id">
-                    <v-icon x-small left>mdi-chart-bar</v-icon>Stats
-                  </v-btn>
-                  <v-btn x-small dark color="orange darken-2" :to="'/match/' + match.id + '/veto'">
-                    <v-icon x-small left>mdi-map-marker-multiple</v-icon>Veto
-                  </v-btn>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </v-simple-table>
-        <v-card-text v-else class="grey--text text-center">
-          Aucun match en cours
-        </v-card-text>
-      </v-card>
-
-      <!-- Matchs terminés -->
-      <v-card dark color="grey darken-4">
-        <v-card-title class="subtitle-1 py-2">
-          <v-icon left small color="grey lighten-1">mdi-check-circle</v-icon>
-          Matchs terminés
-          <v-chip x-small class="ml-2" color="grey">{{ finishedMatches.length }}</v-chip>
-        </v-card-title>
-        <v-simple-table dark dense v-if="finishedMatches.length">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Équipe 1</th>
-              <th class="text-center">Série</th>
-              <th>Équipe 2</th>
-              <th v-for="n in 3" :key="'fh'+n" class="text-center">Map {{ n }}</th>
-              <th class="text-center">Pages</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="match in finishedMatches" :key="match.id">
-              <td>
-                <router-link :to="'/match/' + match.id" class="grey--text text--lighten-1 font-weight-bold">
-                  #{{ match.id }}
-                </router-link>
-              </td>
-              <td>{{ match.team1_string }}</td>
-              <td class="text-center">
-                <span class="font-weight-bold white--text">
-                  {{ match.team1_series_score }} – {{ match.team2_series_score }}
-                </span>
-                <span class="grey--text caption ml-1">BO{{ match.max_maps }}</span>
-              </td>
-              <td>{{ match.team2_string }}</td>
-              <td v-for="n in 3" :key="'fm'+n" class="text-center">
-                <template v-if="match.maps[n-1]">
-                  <div class="caption font-weight-bold">{{ mapShortName(match.maps[n-1].map) }}</div>
-                  <div class="caption grey--text">
-                    {{ match.maps[n-1].team1_score }} – {{ match.maps[n-1].team2_score }}
-                  </div>
-                </template>
-                <span v-else class="grey--text">—</span>
-              </td>
-              <td class="text-center">
-                <div class="d-flex" style="gap:4px; justify-content:center">
-                  <v-btn x-small dark color="teal" :to="'/match/' + match.id">
-                    <v-icon x-small left>mdi-chart-bar</v-icon>Stats
-                  </v-btn>
-                  <v-btn x-small dark color="orange darken-2" :to="'/match/' + match.id + '/veto'">
-                    <v-icon x-small left>mdi-map-marker-multiple</v-icon>Veto
-                  </v-btn>
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </v-simple-table>
-        <v-card-text v-else class="grey--text text-center">
-          Aucun match terminé
-        </v-card-text>
-      </v-card>
+      </v-row>
 
     </template>
   </v-container>
@@ -339,16 +338,28 @@ export default {
 </script>
 
 <style scoped>
-.cast-view {
-  background: #1a1a2e;
-  min-height: 100vh;
+.layout-row {
+  align-items: flex-start;
+}
+.tables-col {
+  min-width: 0;
+}
+.event-col {
+  position: sticky;
+  top: 64px;
+  align-self: flex-start;
+}
+.event-sidebar {
+  max-height: calc(100vh - 90px);
+  display: flex;
+  flex-direction: column;
 }
 .event-log {
-  max-height: 220px;
+  flex: 1;
   overflow-y: auto;
 }
 .event-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
 }
 .event-created {
   border-left: 3px solid #42a5f5;

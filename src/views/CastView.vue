@@ -279,15 +279,17 @@ export default {
 
     connectUrl(match, type) {
       const ip = match.ip_cast || match.ip_string;
-      if (!ip) return "#";
+      const steamId = this.user.steam_id;
+      if (!ip || !steamId) return "#";
+      const base = `steam://rungame/730/${steamId}/`;
       if (type === "server") {
-        return `steam://connect/${ip}:${match.port}`;
+        return `${base}+connect%20${ip}:${match.port}`;
       }
       if (!match.gotv_port) return "#";
       if (type === "tv90") {
-        return `steam://connect/${ip}:${match.gotv_port}`;
+        return `${base}+connect%20${ip}:${match.gotv_port}`;
       }
-      return `steam://connect/${ip}:${match.gotv_port + 100}`;
+      return `${base}+connect%20${ip}:${match.gotv_port + 100}`;
     },
 
     mapShortName(map) {

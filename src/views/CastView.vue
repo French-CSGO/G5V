@@ -246,7 +246,7 @@ export default {
       );
     },
     eventsReversed() {
-      return [...this.events].reverse();
+      return this.events;
     }
   },
   async mounted() {

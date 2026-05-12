@@ -66,8 +66,8 @@
                   <td v-for="n in 3" :key="'am'+n" class="text-center">
                     <template v-if="match.maps[n-1]">
                       <div class="caption font-weight-bold">{{ mapShortName(match.maps[n-1].map) }}</div>
-                      <div class="caption">
-                        {{ match.maps[n-1].team1_score }} – {{ match.maps[n-1].team2_score }}
+                      <div class="caption" :class="match.maps[n-1].started ? '' : 'grey--text'">
+                        {{ match.maps[n-1].started ? match.maps[n-1].team1_score + ' – ' + match.maps[n-1].team2_score : '– –' }}
                       </div>
                     </template>
                     <span v-else class="grey--text">—</span>

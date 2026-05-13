@@ -167,7 +167,7 @@ export default {
         team2_name: m.player2?.local_team?.name || m.player2?.name || "?",
         team1_id: m.player1?.local_team?.id ?? null,
         team2_id: m.player2?.local_team?.id ?? null,
-        server_id: servers.length > 0 ? servers[i % servers.length].id : null
+        server_id: i < servers.length ? servers[i].id : null
       }));
     },
     close() {

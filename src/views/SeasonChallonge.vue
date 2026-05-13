@@ -61,9 +61,19 @@
                 {{ $t("Challonge.Round") }} {{ group.round }}
               </v-chip>
               <v-spacer />
-              <span class="caption grey--text">
+              <span class="caption grey--text mr-3">
                 {{ group.matches.length }} {{ $t("Challonge.Matches") }}
               </span>
+              <v-btn
+                v-if="canCreate && creatableInRound(group).length > 0"
+                x-small
+                color="primary"
+                depressed
+                @click="openBulkCreate(group)"
+              >
+                <v-icon left x-small>mdi-plus-box-multiple</v-icon>
+                Créer le round
+              </v-btn>
             </div>
 
             <v-data-table
@@ -166,14 +176,23 @@
     </v-card>
 
     <ChallongeMatchForm v-model="showForm" :prefill="prefill" />
+
+    <ChallongeRoundBulkCreate
+      v-model="showBulkCreate"
+      :round="bulkRound"
+      :matches="bulkMatches"
+      :prefill-data="bulkPrefill"
+      @matches-created="onMatchesCreated"
+    />
   </v-container>
 </template>
 
 <script>
 import ChallongeMatchForm from "@/components/ChallongeMatchForm";
+import ChallongeRoundBulkCreate from "@/components/ChallongeRoundBulkCreate";
 export default {
   name: "SeasonChallonge",
-  components: { ChallongeMatchForm },
+  components: { ChallongeMatchForm, ChallongeRoundBulkCreate },
   data() {
     return {
       user: { id: -1, admin: false, super_admin: false },
@@ -188,6 +207,10 @@ export default {
       filterCreatable: false,
       showForm: false,
       prefill: {},
+      showBulkCreate: false,
+      bulkRound: 0,
+      bulkMatches: [],
+      bulkPrefill: {}
     };
   },
   computed: {
@@ -315,6 +338,28 @@ export default {
         this.prefill = data;
         this.showForm = true;
       }
+    },
+    creatableInRound(group) {
+      return group.matches.filter(
+        m =>
+          !m.g5_match_id &&
+          m.state === "open" &&
+          m.player1?.local_team &&
+          m.player2?.local_team
+      );
+    },
+    async openBulkCreate(group) {
+      const creatable = this.creatableInRound(group);
+      if (!creatable.length) return;
+      const data = await this.GetChallongeBulkPrefill(this.seasonId);
+      if (!data || typeof data !== "object") return;
+      this.bulkRound = group.round;
+      this.bulkMatches = creatable;
+      this.bulkPrefill = data;
+      this.showBulkCreate = true;
+    },
+    onMatchesCreated() {
+      this.loadMatches();
     }
   }
 };

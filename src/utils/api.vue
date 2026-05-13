@@ -391,6 +391,24 @@ export default {
       }
       return retVal;
     },
+    async GetCastStream() {
+      let retVal;
+      try {
+        retVal = this.$sse
+          .create({
+            url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/cast/stream`,
+            format: "json",
+            withCredentials: true,
+            polyfill: true
+          })
+          .on("error", err =>
+            console.error("Cast SSE error:", err)
+          );
+      } catch (error) {
+        retVal = null;
+      }
+      return retVal;
+    },
     async GetRecentMatches(teamid) {
       let res;
       let message;
@@ -1005,6 +1023,19 @@ export default {
         res = await this.axiosCall.get(
           `${process.env?.VUE_APP_G5V_API_URL ||
             "/api"}/seasons/${seasonid}/challonge/matches/${challongeMatchId}/prefill`
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async GetChallongeBulkPrefill(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/bulk-prefill`
         );
         message = res.data;
       } catch (error) {
@@ -1760,7 +1791,7 @@ export default {
       kills = 0,
       roundsplayed = 0,
       deaths = 0,
-      k1 = 0,
+      k1 = 0, // eslint-disable-line no-unused-vars
       k2 = 0,
       k3 = 0,
       k4 = 0,
@@ -1776,7 +1807,8 @@ export default {
           roundsplayed === 0
             ? 0
             : (roundsplayed - deaths) / roundsplayed / AverageSPR;
-        let killcount = k1 + 4 * k2 + 9 * k3 + 16 * k4 + 25 * k5;
+        let computed_k1 = Math.max(0, roundsplayed - k2 - k3 - k4 - k5);
+        let killcount = computed_k1 + 4 * k2 + 9 * k3 + 16 * k4 + 25 * k5;
         let RoundsWithMultipleKillsRating =
           roundsplayed === 0 ? 0 : killcount / roundsplayed / AverageRMK;
         let rating =

@@ -209,21 +209,22 @@ export default {
 
       this.isLoading = true;
       this.progress = { total: toCreate.length, done: 0, errors: [] };
-      const created = [];
 
-      for (const row of toCreate) {
-        try {
-          const res = await this.InsertMatch(this.buildMatchPayload(row));
-          if (res && res.id != null) {
-            created.push(res.id);
-          } else {
-            this.progress.errors.push({ row, message: res?.message || "Erreur inconnue" });
-          }
-        } catch (err) {
-          this.progress.errors.push({ row, message: err.message || "Erreur inconnue" });
+      const results = await Promise.allSettled(
+        toCreate.map(row => this.InsertMatch(this.buildMatchPayload(row)))
+      );
+
+      const created = [];
+      for (let i = 0; i < results.length; i++) {
+        const r = results[i];
+        if (r.status === "fulfilled" && r.value?.id != null) {
+          created.push(r.value.id);
+        } else {
+          const msg = r.status === "rejected" ? r.reason?.message : r.value?.message;
+          this.progress.errors.push({ row: toCreate[i], message: msg || "Erreur inconnue" });
         }
-        this.progress.done++;
       }
+      this.progress.done = toCreate.length;
 
       this.isLoading = false;
 

@@ -47,6 +47,14 @@
               {{ item.admin === 1 ? "Oui" : "Non" }}
             </v-chip>
           </template>
+          <template v-slot:item.cast="{ item }">
+            <v-chip
+              small
+              :color="item.cast === 1 ? 'teal' : 'grey lighten-1'"
+            >
+              {{ item.cast === 1 ? "Oui" : "Non" }}
+            </v-chip>
+          </template>
           <template v-slot:item.actions="{ item }">
             <v-btn
               icon
@@ -84,6 +92,13 @@
                 :false-value="0"
                 label="Super Admin"
                 color="primary"
+              />
+              <v-switch
+                v-model="editUser.cast"
+                :true-value="1"
+                :false-value="0"
+                label="Cast / Observer"
+                color="teal"
               />
             </v-card-text>
             <v-card-actions>
@@ -123,6 +138,7 @@ export default {
         { text: "Steam ID", value: "steam_id" },
         { text: "Super Admin", value: "super_admin", align: "center" },
         { text: "Admin", value: "admin", align: "center" },
+        { text: "Cast", value: "cast", align: "center" },
         { text: "Actions", value: "actions", sortable: false, align: "center" }
       ],
       editDialog: false,
@@ -169,7 +185,8 @@ export default {
       this.editUser = {
         ...item,
         admin: Number(item.admin),
-        super_admin: Number(item.super_admin)
+        super_admin: Number(item.super_admin),
+        cast: Number(item.cast)
       };
       this.editError = "";
       this.editDialog = true;
@@ -186,7 +203,8 @@ export default {
               id: this.editUser.id,
               steam_id: this.editUser.steam_id,
               admin: this.editUser.admin,
-              super_admin: this.editUser.super_admin
+              super_admin: this.editUser.super_admin,
+              cast: this.editUser.cast
             }
           ]
         );
@@ -195,6 +213,7 @@ export default {
         if (idx !== -1) {
           this.users[idx].admin = this.editUser.admin;
           this.users[idx].super_admin = this.editUser.super_admin;
+          this.users[idx].cast = this.editUser.cast;
           this.users = [...this.users];
         }
         this.successMsg = `Droits de ${this.editUser.name} mis à jour.`;

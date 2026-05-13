@@ -156,6 +156,17 @@
             hint="Clé disponible sur challonge.com/settings/developer"
             persistent-hint
           />
+          <v-divider class="my-4" />
+          <div class="d-flex align-center" style="gap:16px">
+            <v-chip color="orange darken-2" dark large>
+              <v-icon left>mdi-counter</v-icon>
+              {{ settings['challonge.requestCount'] || '0' }} requêtes API
+            </v-chip>
+            <v-btn small outlined color="grey" @click="resetChallongeCounter">
+              <v-icon left small>mdi-refresh</v-icon>Remettre à zéro
+            </v-btn>
+            <span class="caption grey--text">Compteur persistant — s'incrémente à chaque appel vers l'API Challonge</span>
+          </div>
         </v-card>
 
         <!-- VPS RELAY -->
@@ -402,6 +413,18 @@ export default {
           err.response?.data?.message || "Erreur lors de la sauvegarde.";
       } finally {
         this.saving = false;
+      }
+    },
+
+    async resetChallongeCounter() {
+      try {
+        await this.axiosCall.put(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`,
+          { "challonge.requestCount": "0" }
+        );
+        this.$set(this.settings, "challonge.requestCount", "0");
+      } catch (err) {
+        this.errorMsg = "Erreur lors de la remise à zéro.";
       }
     }
   }

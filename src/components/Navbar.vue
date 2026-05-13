@@ -111,6 +111,10 @@
           </v-list-item>
         </v-list-item-group>
 
+          <v-list-item v-if="isCast || isAdmin" index="cast" :to="'/cast'">
+            <v-list-item-title>Cast / Observer</v-list-item-title>
+          </v-list-item>
+
         <!-- Menu Administration (super_admin uniquement) -->
         <template v-if="user.super_admin == 1">
           <v-divider class="my-2" />
@@ -168,6 +172,9 @@ export default {
     },
     isSuperAdmin() {
       return Number(this.user.super_admin) === 1;
+    },
+    isCast() {
+      return Number(this.user.cast) === 1;
     }
   },
   data() {

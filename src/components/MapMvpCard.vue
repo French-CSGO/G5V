@@ -61,12 +61,13 @@
         <v-col cols="3">
           <v-avatar size="56" color="grey darken-3" class="elevation-3">
             <img
+              v-if="!avatarError"
               :src="playerImageUrl"
               :alt="mvpData.name"
               @error="onAvatarError"
-              ref="playerAvatar"
               style="object-fit: cover; width: 100%; height: 100%;"
             />
+            <v-icon v-else large color="grey lighten-1">mdi-account</v-icon>
           </v-avatar>
         </v-col>
 
@@ -189,7 +190,6 @@ export default {
       return `/img/maps/${this.mvpData.map_name}.jpg`;
     },
     playerImageUrl() {
-      if (this.avatarError) return "/img/default_player.png";
       return `${this.apiUrl}/static/img/players/${this.mvpData.steam_id}.png`;
     },
     headerStyle() {

@@ -646,6 +646,27 @@
           </div>
 
           <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Logos d'équipes (position &amp; taille)
+          </v-subheader>
+          <v-row dense>
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch v-model="settings.match.team1_logo.enabled" label="Logo 1" color="primary" inset dense hide-details class="mt-0 pt-0" />
+            </v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.x" label="Logo 1 X" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.y" label="Logo 1 Y" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.size" label="Logo 1 Taille" type="number" outlined dense hide-details /></v-col>
+          </v-row>
+          <v-row dense class="mt-1">
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch v-model="settings.match.team2_logo.enabled" label="Logo 2" color="primary" inset dense hide-details class="mt-0 pt-0" />
+            </v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.x" label="Logo 2 X" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.y" label="Logo 2 Y" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.size" label="Logo 2 Taille" type="number" outlined dense hide-details /></v-col>
+          </v-row>
+
+          <v-divider class="my-3" />
           <v-subheader class="font-weight-bold"
             >Fond &amp; Police personnalisée</v-subheader
           >
@@ -1355,7 +1376,10 @@
               <v-text-field v-model.number="settings.mvp.player_image.y" label="Y (centre)" type="number" outlined dense hide-details />
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model.number="settings.mvp.player_image.size" label="Taille (px)" type="number" outlined dense hide-details />
+              <v-text-field v-model.number="settings.mvp.player_image.width" label="Largeur (px)" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field v-model.number="settings.mvp.player_image.height" label="Hauteur (px)" type="number" outlined dense hide-details />
             </v-col>
             <v-col cols="2" class="d-flex align-center">
               <v-switch v-model="settings.mvp.player_image.circle" label="Découpe circulaire" color="primary" inset dense hide-details />
@@ -1405,6 +1429,27 @@
               </tr>
             </tbody>
           </v-simple-table>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Logos d'équipes dans l'image MVP (position &amp; taille)
+          </v-subheader>
+          <v-row dense>
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch v-model="settings.mvp.team1_logo.enabled" label="Logo 1" color="primary" inset dense hide-details class="mt-0 pt-0" />
+            </v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.x" label="Logo 1 X" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.y" label="Logo 1 Y" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.size" label="Logo 1 Taille" type="number" outlined dense hide-details /></v-col>
+          </v-row>
+          <v-row dense class="mt-1">
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch v-model="settings.mvp.team2_logo.enabled" label="Logo 2" color="primary" inset dense hide-details class="mt-0 pt-0" />
+            </v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.x" label="Logo 2 X" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.y" label="Logo 2 Y" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.size" label="Logo 2 Taille" type="number" outlined dense hide-details /></v-col>
+          </v-row>
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">Fond &amp; Police personnalisée</v-subheader>
@@ -2552,6 +2597,8 @@ export default {
             deaths_label: "D",
             rating_label: "RTG"
           },
+          team1_logo: { enabled: true, x: 310, y: 302, size: 60 },
+          team2_logo: { enabled: true, x: 1610, y: 302, size: 60 },
           shapes: {
             enabled: false,
             team_pill: {
@@ -2681,7 +2728,7 @@ export default {
           rating:      defFC(true, "Arial", "#ffffff", 28, false, 1100, 620),
           hs:          defFC(true, "Arial", "#ffffff", 28, false, 1310, 620),
           clutches:    defFC(true, "Arial", "#ffffff", 28, false, 1500, 620),
-          player_image: { enabled: true, x: 960, y: 480, size: 120, circle: true }
+          player_image: { enabled: true, x: 960, y: 480, size: 120, width: 120, height: 200, circle: false }
         },
 
         team_season: {
@@ -2924,6 +2971,8 @@ export default {
           match: {
             ...def.match,
             ...sm,
+            team1_logo: { ...def.match.team1_logo, ...(sm.team1_logo || {}) },
+            team2_logo: { ...def.match.team2_logo, ...(sm.team2_logo || {}) },
             column_headers: {
               ...def.match.column_headers,
               ...(sm.column_headers || {})

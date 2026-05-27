@@ -1,6 +1,17 @@
 <template>
   <v-container class="statistics" fluid>
     <div v-if="playerstats.length > 0">
+      <div class="text-center mb-3">
+        <v-btn
+          small
+          color="warning"
+          :href="apiUrl + '/image/match/' + match_id + '/mvp'"
+          target="_blank"
+        >
+          <v-icon left small>mdi-star</v-icon>
+          MVP Match
+        </v-btn>
+      </div>
       <v-container
         v-for="(playerMapStats, index) in playerstats"
         :key="playerMapStats[0].id"

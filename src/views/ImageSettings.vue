@@ -2422,7 +2422,7 @@
           </div>
 
           <v-divider class="my-4" />
-          <v-subheader class="font-weight-bold">Image MVP</v-subheader>
+          <v-subheader class="font-weight-bold">Image MVP (par map)</v-subheader>
           <v-row align="center">
             <v-col cols="3">
               <v-text-field v-model="previewMatchId" label="ID du match" type="number" outlined dense hide-details />
@@ -2436,7 +2436,7 @@
                 target="_blank"
                 :disabled="!previewMatchId || !previewMvpMap"
                 small>
-                <v-icon left small>mdi-star</v-icon>Ouvrir
+                <v-icon left small>mdi-star</v-icon>Ouvrir map
               </v-btn>
             </v-col>
           </v-row>
@@ -2448,6 +2448,31 @@
               @load="previewMvpError = false"
             />
             <v-alert v-if="previewMvpError" type="error" dense>Impossible de charger l'image MVP.</v-alert>
+          </div>
+
+          <v-subheader class="font-weight-bold mt-2">Image MVP (match complet)</v-subheader>
+          <v-row align="center">
+            <v-col cols="3">
+              <v-text-field v-model="previewMatchId" label="ID du match" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="auto">
+              <v-btn color="warning"
+                :href="`${apiUrl}/image/match/${previewMatchId}/mvp`"
+                target="_blank"
+                :disabled="!previewMatchId"
+                small>
+                <v-icon left small>mdi-star-circle</v-icon>Ouvrir match
+              </v-btn>
+            </v-col>
+          </v-row>
+          <div v-if="previewMatchId" class="mt-3">
+            <img
+              :src="`${apiUrl}/image/match/${previewMatchId}/mvp?t=${previewTs}`"
+              style="max-width:100%;border:1px solid #ccc;"
+              @error="previewMvpMatchError = true"
+              @load="previewMvpMatchError = false"
+            />
+            <v-alert v-if="previewMvpMatchError" type="error" dense>Impossible de charger l'image MVP match.</v-alert>
           </div>
 
           <v-divider class="my-4" />
@@ -2852,6 +2877,7 @@ export default {
       previewMatchError: false,
       previewPlayerError: false,
       previewMvpError: false,
+      previewMvpMatchError: false,
       previewTeamError: false,
 
       snack: false,

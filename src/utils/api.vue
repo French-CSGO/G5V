@@ -1865,7 +1865,55 @@ export default {
     GetTeamSeasonImageUrl(seasonId, teamId) {
       return `${process.env?.VUE_APP_G5V_API_URL ||
         "/api"}/image/season/${seasonId}/team/${teamId}`;
+    },
+    // BEGIN PLAYER IMAGES
+    async GetPlayerImages() {
+      try {
+        const res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/players`
+        );
+        return res.data;
+      } catch (err) {
+        return [];
+      }
+    },
+    async UploadPlayerImage(steamId, imageFile) {
+      const formData = new FormData();
+      formData.append("file", imageFile);
+      formData.append("steam_id", steamId);
+      const res = await this.axiosCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/upload/player`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      return res.data;
+    },
+    // END PLAYER IMAGES
+    // BEGIN MAP MVP
+    async GetMapMvp(matchId, mapNumber) {
+      try {
+        const res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/mapstats/${matchId}/${mapNumber}/mvp`
+        );
+        return res.data;
+      } catch (err) {
+        return null;
+      }
+    },
+    async GetMatchMvp(matchId) {
+      try {
+        const res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/mapstats/${matchId}/mvp`
+        );
+        return res.data;
+      } catch (err) {
+        return null;
+      }
+    },
+    GetPlayerAvatarUrl(steamId) {
+      return `${process.env?.VUE_APP_G5V_API_URL || "/api"}/static/img/players/${steamId}.png`;
     }
+    // END MAP MVP
   }
 };
 </script>

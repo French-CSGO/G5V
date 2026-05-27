@@ -110,6 +110,13 @@
                       </div>
                       <div class="d-flex" style="gap:2px">
                         <v-btn
+                          x-small dark color="teal darken-2"
+                          :href="'/api/image/match/' + match.id"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-chart-bar</v-icon>Stats Match
+                        </v-btn>
+                        <v-btn
                           x-small dark color="warning"
                           :href="'/api/image/match/' + match.id + '/mvp'"
                           target="_blank"
@@ -195,13 +202,22 @@
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
                       </div>
-                      <v-btn
-                        x-small dark color="warning"
-                        :href="'/api/image/match/' + match.id + '/mvp'"
-                        target="_blank"
-                      >
-                        <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
-                      </v-btn>
+                      <div class="d-flex" style="gap:2px">
+                        <v-btn
+                          x-small dark color="teal darken-2"
+                          :href="'/api/image/match/' + match.id"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-chart-bar</v-icon>Stats Match
+                        </v-btn>
+                        <v-btn
+                          x-small dark color="warning"
+                          :href="'/api/image/match/' + match.id + '/mvp'"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
+                        </v-btn>
+                      </div>
                     </div>
                   </td>
                 </tr>

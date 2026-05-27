@@ -12,6 +12,7 @@
         <v-tabs v-model="tab" background-color="primary" dark>
           <v-tab>Image Match</v-tab>
           <v-tab>Image Joueur</v-tab>
+          <v-tab>Image MVP</v-tab>
           <v-tab>Image Équipe Saison</v-tab>
           <v-tab>Aperçu</v-tab>
         </v-tabs>
@@ -1289,9 +1290,157 @@
         </v-card>
 
         <!-- ══════════════════════════════════════════════════════════════ -->
-        <!-- Tab 2 : Image Équipe Saison                                   -->
+        <!-- Tab 2 : Image MVP                                             -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 2" flat class="pa-4">
+
+          <!-- ── Photos joueurs ─────────────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            <v-icon left small>mdi-account-circle</v-icon>
+            Photos joueurs (liées au SteamID)
+          </v-subheader>
+          <v-row align="center">
+            <v-col cols="4">
+              <v-text-field
+                v-model="playerPhotoSteamId"
+                label="SteamID (17 chiffres)"
+                outlined dense hide-details
+                prepend-icon="mdi-steam"
+              />
+            </v-col>
+            <v-col cols="4">
+              <v-file-input
+                v-model="playerPhotoFile"
+                label="Photo joueur (PNG/JPG)"
+                accept="image/png,image/jpeg,image/webp"
+                outlined dense hide-details
+                prepend-icon="mdi-account-box"
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-btn
+                :disabled="!playerPhotoFile || !playerPhotoSteamId"
+                color="secondary" small
+                @click="uploadPlayerPhoto"
+                :loading="uploadingPhoto"
+              >
+                <v-icon left>mdi-upload</v-icon>Uploader
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row v-if="playerPhotos.length > 0" class="mt-1">
+            <v-col>
+              <span class="caption grey--text mr-2">Déjà uploadé :</span>
+              <v-chip v-for="f in playerPhotos" :key="f" small class="mr-1 mb-1">{{ f }}</v-chip>
+            </v-col>
+          </v-row>
+          <v-alert v-if="uploadPhotoMsg" :type="uploadPhotoMsgType" dense class="mt-2">
+            {{ uploadPhotoMsg }}
+          </v-alert>
+
+          <v-divider class="my-3" />
+          <!-- ── Position photo joueur dans l'image MVP ─────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Position de la photo dans l'image MVP
+            <v-switch
+              v-model="settings.mvp.player_image.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <v-row dense v-if="settings.mvp.player_image.enabled">
+            <v-col cols="2">
+              <v-text-field v-model.number="settings.mvp.player_image.x" label="X (centre)" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field v-model.number="settings.mvp.player_image.y" label="Y (centre)" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field v-model.number="settings.mvp.player_image.size" label="Taille (px)" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2" class="d-flex align-center">
+              <v-switch v-model="settings.mvp.player_image.circle" label="Découpe circulaire" color="primary" inset dense hide-details />
+            </v-col>
+          </v-row>
+
+          <v-divider class="my-3" />
+          <!-- ── Éléments textuels MVP ───────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">Éléments textuels</v-subheader>
+          <v-simple-table dense class="mb-2">
+            <thead>
+              <tr>
+                <th style="width:232px">Champ</th>
+                <th style="width:52px">Actif</th>
+                <th style="width:80px">Police</th>
+                <th style="width:42px">Coul.</th>
+                <th style="width:64px">Taille</th>
+                <th style="width:48px">Gras</th>
+                <th style="width:90px">X</th>
+                <th style="width:90px">Y</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="f in mvpFields" :key="f.key">
+                <td class="caption font-weight-medium">{{ f.label }}</td>
+                <td>
+                  <v-switch v-model="settings.mvp[f.key].enabled" color="primary" inset dense hide-details class="mt-0 pt-0" />
+                </td>
+                <td>
+                  <v-combobox v-model="settings.mvp[f.key].font" :items="fontList" outlined dense hide-details />
+                </td>
+                <td>
+                  <input type="color" v-model="settings.mvp[f.key].color" class="color-input" />
+                </td>
+                <td>
+                  <v-text-field v-model.number="settings.mvp[f.key].size" type="number" outlined dense hide-details />
+                </td>
+                <td>
+                  <v-checkbox v-model="settings.mvp[f.key].bold" hide-details class="mt-0 pt-0" />
+                </td>
+                <td>
+                  <v-text-field v-model.number="settings.mvp[f.key].x" type="number" outlined dense hide-details />
+                </td>
+                <td>
+                  <v-text-field v-model.number="settings.mvp[f.key].y" type="number" outlined dense hide-details />
+                </td>
+              </tr>
+            </tbody>
+          </v-simple-table>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">Fond &amp; Police personnalisée</v-subheader>
+          <v-row align="center">
+            <v-col cols="4">
+              <v-text-field v-model="settings.mvp.background" label="Fichier de fond (public/img/)" outlined dense />
+            </v-col>
+            <v-col cols="4">
+              <v-file-input v-model="bgFile[3]" label="Uploader un fond" accept="image/png,image/jpeg" outlined dense hide-details prepend-icon="mdi-image" />
+            </v-col>
+            <v-col cols="2">
+              <v-btn :disabled="!bgFile[3]" color="secondary" small @click="uploadBg(3)" :loading="uploadingBg[3]">
+                <v-icon left>mdi-upload</v-icon>Uploader
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row align="center">
+            <v-col cols="4">
+              <v-text-field v-model="settings.mvp.fontFile" label="Fichier police (public/fonts/)" outlined dense />
+            </v-col>
+            <v-col cols="4">
+              <v-file-input v-model="fontFileInput[3]" label="Uploader une police" accept=".ttf,.otf" outlined dense hide-details prepend-icon="mdi-format-font" />
+            </v-col>
+            <v-col cols="2">
+              <v-btn :disabled="!fontFileInput[3]" color="secondary" small @click="uploadFont(3)" :loading="uploadingFont[3]">
+                <v-icon left>mdi-upload</v-icon>Uploader
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-alert v-if="uploadMsg[3]" :type="uploadMsgType[3]" dense class="mt-2">{{ uploadMsg[3] }}</v-alert>
+        </v-card>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- Tab 3 : Image Équipe Saison                                   -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <v-card v-if="tab === 3" flat class="pa-4">
           <v-simple-table dense class="mb-2">
             <thead>
               <tr>
@@ -2138,9 +2287,9 @@
         </v-card>
 
         <!-- ══════════════════════════════════════════════════════════════ -->
-        <!-- Tab 3 : Aperçu                                                -->
+        <!-- Tab 4 : Aperçu                                                -->
         <!-- ══════════════════════════════════════════════════════════════ -->
-        <v-card v-if="tab === 3" flat class="pa-4">
+        <v-card v-if="tab === 4" flat class="pa-4">
           <v-subheader class="font-weight-bold">Image Match</v-subheader>
           <v-row align="center">
             <v-col cols="4">
@@ -2228,6 +2377,35 @@
           </div>
 
           <v-divider class="my-4" />
+          <v-subheader class="font-weight-bold">Image MVP</v-subheader>
+          <v-row align="center">
+            <v-col cols="3">
+              <v-text-field v-model="previewMatchId" label="ID du match" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field v-model="previewMvpMap" label="N° de la map" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="auto">
+              <v-btn color="warning"
+                :href="`${apiUrl}/image/match/${previewMatchId}/map/${previewMvpMap}/mvp`"
+                target="_blank"
+                :disabled="!previewMatchId || !previewMvpMap"
+                small>
+                <v-icon left small>mdi-star</v-icon>Ouvrir
+              </v-btn>
+            </v-col>
+          </v-row>
+          <div v-if="previewMatchId && previewMvpMap" class="mt-3">
+            <img
+              :src="`${apiUrl}/image/match/${previewMatchId}/map/${previewMvpMap}/mvp?t=${previewTs}`"
+              style="max-width:100%;border:1px solid #ccc;"
+              @error="previewMvpError = true"
+              @load="previewMvpError = false"
+            />
+            <v-alert v-if="previewMvpError" type="error" dense>Impossible de charger l'image MVP.</v-alert>
+          </div>
+
+          <v-divider class="my-4" />
           <v-subheader class="font-weight-bold"
             >Image Équipe Saison</v-subheader
           >
@@ -2283,11 +2461,11 @@
 
         <!-- ── Actions ───────────────────────────────────────────────── -->
         <v-card-actions class="pa-4">
-          <v-btn outlined @click="exportConfig" v-if="tab < 3">
+          <v-btn outlined @click="exportConfig" v-if="tab < 4">
             <v-icon left>mdi-download</v-icon>
             Exporter
           </v-btn>
-          <v-btn outlined @click="$refs.importFile.click()" v-if="tab < 3">
+          <v-btn outlined @click="$refs.importFile.click()" v-if="tab < 4">
             <v-icon left>mdi-upload</v-icon>
             Importer
           </v-btn>
@@ -2486,6 +2664,26 @@ export default {
           }
         },
 
+        mvp: {
+          background: "marble.png",
+          fontFile: "",
+          map_name:    defFC(true, "Arial", "#ffffff", 22, false, 960, 80),
+          team1_name:  defFC(true, "Arial", "#ffffff", 32, true, 450, 200),
+          team1_score: defFC(true, "Arial", "#ffffff", 32, true, 800, 200),
+          team2_score: defFC(true, "Arial", "#ffffff", 32, true, 1120, 200),
+          team2_name:  defFC(true, "Arial", "#ffffff", 32, true, 1470, 200),
+          mvp_label:   defFC(true, "Arial", "#f4d03f", 28, true, 960, 310),
+          player_name: defFC(true, "Arial", "#ffffff", 52, true, 960, 390),
+          player_team: defFC(true, "Arial", "#cccccc", 22, false, 960, 450),
+          kills:       defFC(true, "Arial", "#ffffff", 28, false, 500, 620),
+          assists:     defFC(true, "Arial", "#ffffff", 28, false, 700, 620),
+          deaths:      defFC(true, "Arial", "#ffffff", 28, false, 900, 620),
+          rating:      defFC(true, "Arial", "#ffffff", 28, false, 1100, 620),
+          hs:          defFC(true, "Arial", "#ffffff", 28, false, 1310, 620),
+          clutches:    defFC(true, "Arial", "#ffffff", 28, false, 1500, 620),
+          player_image: { enabled: true, x: 960, y: 480, size: 120, circle: true }
+        },
+
         team_season: {
           background: "marble.png",
           fontFile: "",
@@ -2581,22 +2779,32 @@ export default {
       uploadMapMsg: "",
       uploadMapMsgType: "success",
 
-      // Upload state — index 0=match, 1=joueur, 2=équipe
-      bgFile: [null, null, null],
-      fontFileInput: [null, null, null],
-      uploadingBg: [false, false, false],
-      uploadingFont: [false, false, false],
-      uploadMsg: ["", "", ""],
-      uploadMsgType: ["success", "success", "success"],
+      // Photos joueurs (MVP)
+      playerPhotoFile: null,
+      playerPhotoSteamId: "",
+      uploadingPhoto: false,
+      uploadPhotoMsg: "",
+      uploadPhotoMsgType: "success",
+      playerPhotos: [],
+
+      // Upload state — index 0=match, 1=joueur, 2=mvp, 3=équipe
+      bgFile: [null, null, null, null],
+      fontFileInput: [null, null, null, null],
+      uploadingBg: [false, false, false, false],
+      uploadingFont: [false, false, false, false],
+      uploadMsg: ["", "", "", ""],
+      uploadMsgType: ["success", "success", "success", "success"],
 
       // Aperçu
       previewTs: Date.now(),
       previewMatchId: "",
       previewSteamId: "",
+      previewMvpMap: "",
       previewSeasonId: "",
       previewTeamId: "",
       previewMatchError: false,
       previewPlayerError: false,
+      previewMvpError: false,
       previewTeamError: false,
 
       snack: false,
@@ -2649,6 +2857,22 @@ export default {
         { key: "hs", label: "Headshot %" },
         { key: "clutches", label: "Clutches" }
       ],
+      mvpFields: [
+        { key: "map_name",    label: "Nom de la map" },
+        { key: "team1_name",  label: "Nom équipe 1" },
+        { key: "team1_score", label: "Score équipe 1" },
+        { key: "team2_score", label: "Score équipe 2" },
+        { key: "team2_name",  label: "Nom équipe 2" },
+        { key: "mvp_label",   label: "★ MVP" },
+        { key: "player_name", label: "Nom joueur" },
+        { key: "player_team", label: "Équipe joueur" },
+        { key: "kills",       label: "Kills" },
+        { key: "assists",     label: "Assists" },
+        { key: "deaths",      label: "Morts" },
+        { key: "rating",      label: "Rating" },
+        { key: "hs",          label: "Headshot %" },
+        { key: "clutches",    label: "Clutches" }
+      ],
       teamSeasonFields: [
         { key: "team_name", label: "Nom équipe" },
         { key: "team_rating", label: "Rating équipe" },
@@ -2678,20 +2902,20 @@ export default {
     async load() {
       this.loading = true;
       try {
-        const [settings, uploadedFonts, mapImages] = await Promise.all([
+        const [settings, uploadedFonts, mapImages, playerPhotos] = await Promise.all([
           this.GetImageSettings(),
           this.GetImageFonts().catch(() => []),
-          this.axiosCall
-            .get(`${this.apiUrl}/image/maps`)
-            .then(r => r.data)
-            .catch(() => [])
+          this.axiosCall.get(`${this.apiUrl}/image/maps`).then(r => r.data).catch(() => []),
+          this.axiosCall.get(`${this.apiUrl}/image/players`).then(r => r.data).catch(() => [])
         ]);
         this.mapImages = mapImages;
+        this.playerPhotos = playerPhotos;
         // Merge API response with local defaults so new fields never crash
         const def = this.settings;
         const s = settings || {};
         const sm = s.match || {};
         const sp = s.player || {};
+        const sv = s.mvp   || {};
         const st = s.team_season || {};
         // Number of player slots for the X positions
         const MAX_PLAYERS = 5;
@@ -2744,6 +2968,11 @@ export default {
                 ...(sp.shapes?.stats_bar || {})
               }
             }
+          },
+          mvp: {
+            ...def.mvp,
+            ...sv,
+            player_image: { ...def.mvp.player_image, ...(sv.player_image || {}) }
           },
           team_season: {
             ...def.team_season,
@@ -2822,7 +3051,7 @@ export default {
     },
 
     exportConfig() {
-      const sectionKey = ["match", "player", "team_season"][this.tab];
+      const sectionKey = ["match", "player", "mvp", "team_season"][this.tab];
       const data = JSON.stringify(this.settings[sectionKey], null, 2);
       const blob = new Blob([data], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -2843,7 +3072,7 @@ export default {
       const inputEl = event.target;
       const file = inputEl.files[0];
       if (!file) return;
-      const sectionKey = ["match", "player", "team_season"][this.tab];
+      const sectionKey = ["match", "player", "mvp", "team_season"][this.tab];
       const reader = new FileReader();
       reader.onload = e => {
         try {
@@ -2878,6 +3107,7 @@ export default {
         const filename = res.data.filename;
         if (idx === 0) this.settings.match.background = filename;
         else if (idx === 1) this.settings.player.background = filename;
+        else if (idx === 2) this.settings.mvp.background = filename;
         else this.settings.team_season.background = filename;
         this.$set(this.uploadMsg, idx, `Fond uploadé : ${filename}`);
         this.$set(this.uploadMsgType, idx, "success");
@@ -2911,6 +3141,9 @@ export default {
         } else if (idx === 1) {
           this.settings.player.fontFile = filename;
           this.applyFontFamily("player", family);
+        } else if (idx === 2) {
+          this.settings.mvp.fontFile = filename;
+          this.applyFontFamily("mvp", family);
         } else {
           this.settings.team_season.fontFile = filename;
           this.applyFontFamily("team_season", family);
@@ -2928,6 +3161,33 @@ export default {
         this.$set(this.uploadMsgType, idx, "error");
       } finally {
         this.$set(this.uploadingFont, idx, false);
+      }
+    },
+
+    async uploadPlayerPhoto() {
+      if (!this.playerPhotoFile || !this.playerPhotoSteamId) return;
+      this.uploadingPhoto = true;
+      this.uploadPhotoMsg = "";
+      try {
+        const form = new FormData();
+        form.append("file", this.playerPhotoFile);
+        form.append("steam_id", this.playerPhotoSteamId);
+        await this.axiosCall.post(`${this.apiUrl}/image/upload/player`, form, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+        this.uploadPhotoMsg = `Photo uploadée pour ${this.playerPhotoSteamId}`;
+        this.uploadPhotoMsgType = "success";
+        this.playerPhotoFile = null;
+        this.playerPhotoSteamId = "";
+        this.playerPhotos = await this.axiosCall
+          .get(`${this.apiUrl}/image/players`)
+          .then(r => r.data)
+          .catch(() => []);
+      } catch {
+        this.uploadPhotoMsg = "Erreur lors de l'upload";
+        this.uploadPhotoMsgType = "error";
+      } finally {
+        this.uploadingPhoto = false;
       }
     },
 

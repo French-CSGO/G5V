@@ -56,9 +56,26 @@
                   (index + 1)
               "
               target="_blank"
+              class="mr-2"
             >
               <v-icon left small>mdi-image</v-icon>
               Stat Image
+            </v-btn>
+            <v-btn
+              small
+              color="warning"
+              :href="
+                apiUrl +
+                  '/image/match/' +
+                  match_id +
+                  '/map/' +
+                  (index + 1) +
+                  '/mvp'
+              "
+              target="_blank"
+            >
+              <v-icon left small>mdi-star</v-icon>
+              MVP Image
             </v-btn>
           </div>
           <div

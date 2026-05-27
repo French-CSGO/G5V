@@ -87,18 +87,39 @@
                   </td>
                   <td class="text-center">
                     <div class="d-flex flex-column" style="gap:2px">
-                      <v-btn
+                      <div
                         v-for="(map, i) in match.maps"
                         :key="'img-a-'+match.id+'-'+i"
-                        x-small dark color="teal"
-                        :href="'/api/image/match/' + match.id + '/map/' + (map.map_number + 1)"
-                        target="_blank"
+                        class="d-flex"
+                        style="gap:2px"
                       >
-                        <v-icon x-small left>mdi-chart-bar</v-icon>Map {{ map.map_number + 1 }}
-                      </v-btn>
-                      <v-btn x-small dark color="orange darken-2" :to="'/match/' + match.id + '/veto'">
-                        <v-icon x-small left>mdi-map-marker-multiple</v-icon>Veto
-                      </v-btn>
+                        <v-btn
+                          x-small dark color="teal"
+                          :href="'/api/image/match/' + match.id + '/map/' + (map.map_number + 1)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-chart-bar</v-icon>Map {{ map.map_number + 1 }}
+                        </v-btn>
+                        <v-btn
+                          x-small dark color="amber darken-2"
+                          :href="'/api/image/match/' + match.id + '/map/' + (map.map_number + 1) + '/mvp'"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-star</v-icon>MVP
+                        </v-btn>
+                      </div>
+                      <div class="d-flex" style="gap:2px">
+                        <v-btn
+                          x-small dark color="warning"
+                          :href="'/api/image/match/' + match.id + '/mvp'"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
+                        </v-btn>
+                        <v-btn x-small dark color="orange darken-2" :to="'/match/' + match.id + '/veto'">
+                          <v-icon x-small left>mdi-map-marker-multiple</v-icon>Veto
+                        </v-btn>
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -153,14 +174,33 @@
                   </td>
                   <td class="text-center">
                     <div class="d-flex flex-column" style="gap:2px; align-items:center">
-                      <v-btn
+                      <div
                         v-for="(map, i) in match.maps"
                         :key="'img-f-'+match.id+'-'+i"
-                        x-small dark color="teal"
-                        :href="'/api/image/match/' + match.id + '/map/' + (map.map_number + 1)"
+                        class="d-flex"
+                        style="gap:2px"
+                      >
+                        <v-btn
+                          x-small dark color="teal"
+                          :href="'/api/image/match/' + match.id + '/map/' + (map.map_number + 1)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-chart-bar</v-icon>Map {{ map.map_number + 1 }}
+                        </v-btn>
+                        <v-btn
+                          x-small dark color="amber darken-2"
+                          :href="'/api/image/match/' + match.id + '/map/' + (map.map_number + 1) + '/mvp'"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-star</v-icon>MVP
+                        </v-btn>
+                      </div>
+                      <v-btn
+                        x-small dark color="warning"
+                        :href="'/api/image/match/' + match.id + '/mvp'"
                         target="_blank"
                       >
-                        <v-icon x-small left>mdi-chart-bar</v-icon>Map {{ map.map_number + 1 }}
+                        <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
                       </v-btn>
                     </div>
                   </td>

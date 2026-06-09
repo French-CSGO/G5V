@@ -1,6 +1,7 @@
 name: publish to ghcr
 permissions:
   contents: read
+  packages: write
 on:
   workflow_dispatch:
   pull_request:

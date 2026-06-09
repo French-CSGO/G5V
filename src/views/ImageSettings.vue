@@ -1387,6 +1387,17 @@
           </v-row>
 
           <v-divider class="my-3" />
+          <!-- ── Image de map en fond ───────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Image de map en fond
+            <v-switch
+              v-model="settings.mvp.map_image.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+              label="Afficher l'image de map"
+            />
+          </v-subheader>
+
+          <v-divider class="my-3" />
           <!-- ── Éléments textuels MVP ───────────────────────────────────── -->
           <v-subheader class="font-weight-bold">Éléments textuels</v-subheader>
           <v-simple-table dense class="mb-2">
@@ -2753,7 +2764,8 @@ export default {
           rating:      defFC(true, "Arial", "#ffffff", 28, false, 1100, 620),
           hs:          defFC(true, "Arial", "#ffffff", 28, false, 1310, 620),
           clutches:    defFC(true, "Arial", "#ffffff", 28, false, 1500, 620),
-          player_image: { enabled: true, x: 960, y: 480, size: 120, width: 120, height: 200, circle: false }
+          player_image: { enabled: true, x: 960, y: 480, size: 120, width: 120, height: 200, circle: false },
+          map_image: { enabled: false }
         },
 
         team_season: {
@@ -3047,6 +3059,7 @@ export default {
           mvp: {
             ...def.mvp,
             ...sv,
+            map_image:    { ...def.mvp.map_image,    ...(sv.map_image    || {}) },
             player_image: { ...def.mvp.player_image, ...(sv.player_image || {}) }
           },
           team_season: {

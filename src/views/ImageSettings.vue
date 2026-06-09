@@ -1387,6 +1387,17 @@
           </v-row>
 
           <v-divider class="my-3" />
+          <!-- ── Image de map en fond ───────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Image de map en fond
+            <v-switch
+              v-model="settings.mvp.map_image.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+              label="Afficher l'image de map"
+            />
+          </v-subheader>
+
+          <v-divider class="my-3" />
           <!-- ── Éléments textuels MVP ───────────────────────────────────── -->
           <v-subheader class="font-weight-bold">Éléments textuels</v-subheader>
           <v-simple-table dense class="mb-2">
@@ -2739,7 +2750,9 @@ export default {
         mvp: {
           background: "marble.png",
           fontFile: "",
-          map_name:    defFC(true, "Arial", "#ffffff", 22, false, 960, 80),
+          map1:        defFC(true, "Arial", "#ffffff", 20, false,  480, 130),
+          map2:        defFC(true, "Arial", "#ffffff", 20, false,  960, 130),
+          map3:        defFC(true, "Arial", "#ffffff", 20, false, 1440, 130),
           team1_name:  defFC(true, "Arial", "#ffffff", 32, true, 450, 200),
           team1_score: defFC(true, "Arial", "#ffffff", 32, true, 800, 200),
           team2_score: defFC(true, "Arial", "#ffffff", 32, true, 1120, 200),
@@ -2753,7 +2766,8 @@ export default {
           rating:      defFC(true, "Arial", "#ffffff", 28, false, 1100, 620),
           hs:          defFC(true, "Arial", "#ffffff", 28, false, 1310, 620),
           clutches:    defFC(true, "Arial", "#ffffff", 28, false, 1500, 620),
-          player_image: { enabled: true, x: 960, y: 480, size: 120, width: 120, height: 200, circle: false }
+          player_image: { enabled: true, x: 960, y: 480, size: 120, width: 120, height: 200, circle: false },
+          map_image: { enabled: false }
         },
 
         team_season: {
@@ -2931,7 +2945,9 @@ export default {
         { key: "clutches", label: "Clutches" }
       ],
       mvpFields: [
-        { key: "map_name",    label: "Nom de la map" },
+        { key: "map1",        label: "Map 1 (gauche)" },
+        { key: "map2",        label: "Map 2 (centre)" },
+        { key: "map3",        label: "Map 3 (droite)" },
         { key: "team1_name",  label: "Nom équipe 1" },
         { key: "team1_score", label: "Score équipe 1" },
         { key: "team2_score", label: "Score équipe 2" },
@@ -3047,6 +3063,10 @@ export default {
           mvp: {
             ...def.mvp,
             ...sv,
+            map1:         { ...def.mvp.map1,         ...(sv.map1         || {}) },
+            map2:         { ...def.mvp.map2,         ...(sv.map2         || {}) },
+            map3:         { ...def.mvp.map3,         ...(sv.map3         || {}) },
+            map_image:    { ...def.mvp.map_image,    ...(sv.map_image    || {}) },
             player_image: { ...def.mvp.player_image, ...(sv.player_image || {}) }
           },
           team_season: {

@@ -1174,18 +1174,12 @@
           <v-subheader class="font-weight-bold">
             Box derrière les noms de map
             <v-switch
-              v-model="settings.mvp.shapes.enabled"
+              v-model="settings.mvp.shapes.map_pill.enabled"
               color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
-              label="Formes actives"
             />
           </v-subheader>
-          <div v-if="settings.mvp.shapes.enabled">
-            <v-row dense align="center">
-              <v-col cols="auto" class="d-flex align-center">
-                <v-switch v-model="settings.mvp.shapes.map_pill.enabled" label="Box map" color="primary" inset dense hide-details class="mt-0 pt-0" />
-              </v-col>
-            </v-row>
-            <v-row dense class="mt-1" v-if="settings.mvp.shapes.map_pill.enabled">
+          <div v-if="settings.mvp.shapes.map_pill.enabled">
+            <v-row dense class="mt-1">
               <v-col cols="1" class="d-flex align-center">
                 <input type="color" v-model="settings.mvp.shapes.map_pill.fill" class="color-input" />
               </v-col>
@@ -1205,7 +1199,7 @@
                 <v-text-field v-model.number="settings.mvp.shapes.map_pill.height" label="Hauteur" type="number" outlined dense hide-details />
               </v-col>
             </v-row>
-            <v-row dense class="mt-1" v-if="settings.mvp.shapes.map_pill.enabled">
+            <v-row dense class="mt-1">
               <v-col cols="1" class="d-flex align-center">
                 <input type="color" v-model="settings.mvp.shapes.map_pill.border" class="color-input" />
               </v-col>

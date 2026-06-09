@@ -42,88 +42,8 @@
           </v-row>
 
           <v-divider class="my-3" />
-          <v-subheader class="font-weight-bold"
-            >Éléments fixes (X + Y)</v-subheader
-          >
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-                <th style="width:90px">Y</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in matchFCFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch
-                    v-model="settings.match[f.key].enabled"
-                    color="primary"
-                    inset
-                    dense
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-combobox
-                    v-model="settings.match[f.key].font"
-                    :items="fontList"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    v-model="settings.match[f.key].color"
-                    class="color-input"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].size"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-checkbox
-                    v-model="settings.match[f.key].bold"
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].x"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].y"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+          <v-subheader class="font-weight-bold">Éléments fixes (X + Y)</v-subheader>
+          <image-f-c-table :fields="matchFCFields" :section="settings.match" :font-list="fontList" />
 
           <v-subheader class="font-weight-bold mt-2"
             >Lignes joueurs — Y
@@ -174,78 +94,8 @@
             /></v-col>
           </v-row>
 
-          <v-subheader class="font-weight-bold"
-            >Colonnes joueurs (X seul, Y = ligne)</v-subheader
-          >
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in matchFXFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch
-                    v-model="settings.match[f.key].enabled"
-                    color="primary"
-                    inset
-                    dense
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-combobox
-                    v-model="settings.match[f.key].font"
-                    :items="fontList"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    v-model="settings.match[f.key].color"
-                    class="color-input"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].size"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-checkbox
-                    v-model="settings.match[f.key].bold"
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].x"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+          <v-subheader class="font-weight-bold">Colonnes joueurs (X seul, Y = ligne)</v-subheader>
+          <image-f-x-table :fields="matchFXFields" :section="settings.match" :font-list="fontList" />
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -745,85 +595,7 @@
         <!-- Tab 1 : Image Joueur                                          -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 1" flat class="pa-4">
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-                <th style="width:90px">Y</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in playerFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch
-                    v-model="settings.player[f.key].enabled"
-                    color="primary"
-                    inset
-                    dense
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-combobox
-                    v-model="settings.player[f.key].font"
-                    :items="fontList"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    v-model="settings.player[f.key].color"
-                    class="color-input"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.player[f.key].size"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-checkbox
-                    v-model="settings.player[f.key].bold"
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.player[f.key].x"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.player[f.key].y"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+          <image-f-c-table :fields="playerFields" :section="settings.player" :font-list="fontList" />
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -1398,48 +1170,58 @@
           </v-subheader>
 
           <v-divider class="my-3" />
+          <!-- ── Box derrière les noms de map ──────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Box derrière les noms de map
+            <v-switch
+              v-model="settings.mvp.shapes.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+              label="Formes actives"
+            />
+          </v-subheader>
+          <div v-if="settings.mvp.shapes.enabled">
+            <v-row dense align="center">
+              <v-col cols="auto" class="d-flex align-center">
+                <v-switch v-model="settings.mvp.shapes.map_pill.enabled" label="Box map" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1" v-if="settings.mvp.shapes.map_pill.enabled">
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.mvp.shapes.map_pill.fill" class="color-input" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.alpha" label="Opacité (autres)" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.current_alpha" label="Opacité (map en cours)" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.radius" label="Rayon" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.width" label="Largeur" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.height" label="Hauteur" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1" v-if="settings.mvp.shapes.map_pill.enabled">
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.mvp.shapes.map_pill.border" class="color-input" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.border_alpha" label="Opacité bordure" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.border_width" label="Épaisseur bordure" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
           <!-- ── Éléments textuels MVP ───────────────────────────────────── -->
           <v-subheader class="font-weight-bold">Éléments textuels</v-subheader>
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-                <th style="width:90px">Y</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in mvpFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch v-model="settings.mvp[f.key].enabled" color="primary" inset dense hide-details class="mt-0 pt-0" />
-                </td>
-                <td>
-                  <v-combobox v-model="settings.mvp[f.key].font" :items="fontList" outlined dense hide-details />
-                </td>
-                <td>
-                  <input type="color" v-model="settings.mvp[f.key].color" class="color-input" />
-                </td>
-                <td>
-                  <v-text-field v-model.number="settings.mvp[f.key].size" type="number" outlined dense hide-details />
-                </td>
-                <td>
-                  <v-checkbox v-model="settings.mvp[f.key].bold" hide-details class="mt-0 pt-0" />
-                </td>
-                <td>
-                  <v-text-field v-model.number="settings.mvp[f.key].x" type="number" outlined dense hide-details />
-                </td>
-                <td>
-                  <v-text-field v-model.number="settings.mvp[f.key].y" type="number" outlined dense hide-details />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+          <image-f-c-table :fields="mvpFields" :section="settings.mvp" :font-list="fontList" />
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -1469,10 +1251,10 @@
               <v-text-field v-model="settings.mvp.background" label="Fichier de fond (public/img/)" outlined dense />
             </v-col>
             <v-col cols="4">
-              <v-file-input v-model="bgFile[3]" label="Uploader un fond" accept="image/png,image/jpeg" outlined dense hide-details prepend-icon="mdi-image" />
+              <v-file-input v-model="bgFile[2]" label="Uploader un fond" accept="image/png,image/jpeg" outlined dense hide-details prepend-icon="mdi-image" />
             </v-col>
             <v-col cols="2">
-              <v-btn :disabled="!bgFile[3]" color="secondary" small @click="uploadBg(3)" :loading="uploadingBg[3]">
+              <v-btn :disabled="!bgFile[2]" color="secondary" small @click="uploadBg(2)" :loading="uploadingBg[2]">
                 <v-icon left>mdi-upload</v-icon>Uploader
               </v-btn>
             </v-col>
@@ -1482,100 +1264,22 @@
               <v-text-field v-model="settings.mvp.fontFile" label="Fichier police (public/fonts/)" outlined dense />
             </v-col>
             <v-col cols="4">
-              <v-file-input v-model="fontFileInput[3]" label="Uploader une police" accept=".ttf,.otf" outlined dense hide-details prepend-icon="mdi-format-font" />
+              <v-file-input v-model="fontFileInput[2]" label="Uploader une police" accept=".ttf,.otf" outlined dense hide-details prepend-icon="mdi-format-font" />
             </v-col>
             <v-col cols="2">
-              <v-btn :disabled="!fontFileInput[3]" color="secondary" small @click="uploadFont(3)" :loading="uploadingFont[3]">
+              <v-btn :disabled="!fontFileInput[2]" color="secondary" small @click="uploadFont(2)" :loading="uploadingFont[2]">
                 <v-icon left>mdi-upload</v-icon>Uploader
               </v-btn>
             </v-col>
           </v-row>
-          <v-alert v-if="uploadMsg[3]" :type="uploadMsgType[3]" dense class="mt-2">{{ uploadMsg[3] }}</v-alert>
+          <v-alert v-if="uploadMsg[2]" :type="uploadMsgType[2]" dense class="mt-2">{{ uploadMsg[2] }}</v-alert>
         </v-card>
 
         <!-- ══════════════════════════════════════════════════════════════ -->
         <!-- Tab 3 : Image Équipe Saison                                   -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 3" flat class="pa-4">
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-                <th style="width:90px">Y</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in teamSeasonFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch
-                    v-model="settings.team_season[f.key].enabled"
-                    color="primary"
-                    inset
-                    dense
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-combobox
-                    v-model="settings.team_season[f.key].font"
-                    :items="fontList"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    v-model="settings.team_season[f.key].color"
-                    class="color-input"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.team_season[f.key].size"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-checkbox
-                    v-model="settings.team_season[f.key].bold"
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.team_season[f.key].x"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.team_season[f.key].y"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+          <image-f-c-table :fields="teamSeasonFields" :section="settings.team_season" :font-list="fontList" />
           <v-row dense class="mt-2">
             <v-col cols="4">
               <v-text-field
@@ -2285,7 +1989,7 @@
             /></v-col>
             <v-col cols="4"
               ><v-file-input
-                v-model="bgFile[2]"
+                v-model="bgFile[3]"
                 label="Uploader un fond"
                 accept="image/png,image/jpeg"
                 outlined
@@ -2295,11 +1999,11 @@
             /></v-col>
             <v-col cols="2"
               ><v-btn
-                :disabled="!bgFile[2]"
+                :disabled="!bgFile[3]"
                 color="secondary"
                 small
-                @click="uploadBg(2)"
-                :loading="uploadingBg[2]"
+                @click="uploadBg(3)"
+                :loading="uploadingBg[3]"
                 ><v-icon left>mdi-upload</v-icon>Uploader</v-btn
               ></v-col
             >
@@ -2314,7 +2018,7 @@
             /></v-col>
             <v-col cols="4"
               ><v-file-input
-                v-model="fontFileInput[2]"
+                v-model="fontFileInput[3]"
                 label="Uploader une police"
                 accept=".ttf,.otf"
                 outlined
@@ -2324,18 +2028,18 @@
             /></v-col>
             <v-col cols="2"
               ><v-btn
-                :disabled="!fontFileInput[2]"
+                :disabled="!fontFileInput[3]"
                 color="secondary"
                 small
-                @click="uploadFont(2)"
-                :loading="uploadingFont[2]"
+                @click="uploadFont(3)"
+                :loading="uploadingFont[3]"
                 ><v-icon left>mdi-upload</v-icon>Uploader</v-btn
               ></v-col
             >
           </v-row>
           <v-alert
-            v-if="uploadMsg[2]"
-            :type="uploadMsgType[2]"
+            v-if="uploadMsg[3]"
+            :type="uploadMsgType[3]"
             dense
             class="mt-2"
             >{{ uploadMsg[2] }}</v-alert
@@ -2573,6 +2277,9 @@
 </template>
 
 <script>
+import ImageFCTable from "@/components/ImageFCTable.vue";
+import ImageFXTable from "@/components/ImageFXTable.vue";
+
 const defFC = (enabled, font, color, size, bold, x, y) => ({
   enabled,
   font,
@@ -2593,6 +2300,7 @@ const defFX = (enabled, font, color, size, bold, x) => ({
 
 export default {
   name: "ImageSettings",
+  components: { ImageFCTable, ImageFXTable },
   data() {
     return {
       loading: true,

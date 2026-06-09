@@ -1170,6 +1170,59 @@
           </v-subheader>
 
           <v-divider class="my-3" />
+          <!-- ── Éléments graphiques MVP ────────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Éléments graphiques
+            <v-switch v-model="settings.mvp.shapes.enabled" color="primary" inset dense hide-details class="ml-4 mt-0 pt-0" />
+          </v-subheader>
+          <div v-if="settings.mvp.shapes.enabled">
+            <!-- Team pill -->
+            <v-subheader class="caption font-weight-bold pl-0">Pilule nom d'équipe</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.mvp.shapes.team_pill.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.team_pill.fill" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.team_pill.border" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Player pill -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Pilule nom du joueur</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.mvp.shapes.player_pill.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.player_pill.fill" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.player_pill.border" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Stats bar -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Barre stats</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.mvp.shapes.stats_bar.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.stats_bar.fill" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.x" label="X" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.y" label="Y (0=auto)" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
           <!-- ── Box derrière les noms de map ──────────────────────────────── -->
           <v-subheader class="font-weight-bold">
             Box derrière les noms de map

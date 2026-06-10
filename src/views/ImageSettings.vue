@@ -496,6 +496,49 @@
           </div>
 
           <v-divider class="my-3" />
+          <!-- ── Box derrière les noms de map ──────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Box derrière les noms de map
+            <v-switch
+              v-model="settings.match.shapes.map_pill.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.match.shapes.map_pill.enabled">
+            <v-row dense class="mt-1">
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.shapes.map_pill.fill" class="color-input" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.alpha" label="Opacité (autres)" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.current_alpha" label="Opacité (map en cours)" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.radius" label="Rayon" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.width" label="Largeur" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.height" label="Hauteur" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1">
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.shapes.map_pill.border" class="color-input" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.border_alpha" label="Opacité bordure" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.border_width" label="Épaisseur bordure" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
             Logos d'équipes (position &amp; taille)
           </v-subheader>
@@ -2365,7 +2408,9 @@ export default {
           team1_score: defFC(true, "Arial", "#1a1a2e", 30, true, 806, 302),
           team2_score: defFC(true, "Arial", "#1a1a2e", 30, true, 1114, 302),
           team2_name: defFC(true, "Arial", "#1a1a2e", 30, true, 1595, 302),
-          map_name: defFC(true, "Arial", "#1a1a2e", 28, true, 960, 980),
+          map1: defFC(true, "Arial", "#1a1a2e", 24, true, 480, 980),
+          map2: defFC(true, "Arial", "#1a1a2e", 24, true, 960, 980),
+          map3: defFC(true, "Arial", "#1a1a2e", 24, true, 1440, 980),
           player_name_l: defFX(true, "Arial", "#1a1a2e", 20, true, 180),
           player_name_r: defFX(true, "Arial", "#1a1a2e", 20, true, 1450),
           kills_l: defFX(true, "Arial", "#1a1a2e", 20, false, 630),
@@ -2430,6 +2475,18 @@ export default {
               odd_alpha: 0.08,
               even_fill: "#ffffff",
               even_alpha: 0.05
+            },
+            map_pill: {
+              enabled: true,
+              fill: "#000000",
+              alpha: 0.3,
+              current_alpha: 0.7,
+              radius: 8,
+              width: 280,
+              height: 40,
+              border: "#ffffff",
+              border_alpha: 0.2,
+              border_width: 1
             }
           }
         },
@@ -2673,7 +2730,9 @@ export default {
         { key: "team1_score", label: "Score équipe 1" },
         { key: "team2_score", label: "Score équipe 2" },
         { key: "team2_name", label: "Nom équipe 2" },
-        { key: "map_name", label: "Nom de la map" }
+        { key: "map1", label: "Map 1 (gauche)" },
+        { key: "map2", label: "Map 2 (centre)" },
+        { key: "map3", label: "Map 3 (droite)" }
       ],
       matchFXFields: [
         { key: "player_name_l", label: "Nom joueur gauche" },
@@ -2788,6 +2847,10 @@ export default {
               stats_table: {
                 ...def.match.shapes.stats_table,
                 ...(sm.shapes?.stats_table || {})
+              },
+              map_pill: {
+                ...def.match.shapes.map_pill,
+                ...(sm.shapes?.map_pill || {})
               }
             }
           },

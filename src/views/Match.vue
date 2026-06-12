@@ -26,7 +26,7 @@ export default {
   components: {
     PlayerStats,
     MatchInfo,
-    VetoInfo
+    VetoInfo,
   },
   data() {
     return {
@@ -38,12 +38,12 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
-      } // should be object from JSON response
+        large_image: "",
+      }, // should be object from JSON response
     };
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>

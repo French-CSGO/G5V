@@ -13,13 +13,13 @@ export default new Vuetify({
         accent: colors.shades.black,
         error: colors.red.accent3,
         background: colors.lightBlue.lighten4,
-        footer: colors.lightBlue
+        footer: colors.lightBlue,
       },
       dark: {
         primary: colors.teal,
         background: colors.grey.darken3,
-        footer: colors.teal
-      }
-    }
-  }
+        footer: colors.teal,
+      },
+    },
+  },
 });

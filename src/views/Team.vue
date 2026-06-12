@@ -36,7 +36,7 @@ export default {
   components: {
     TeamTable,
     MatchTable,
-    PlayerLeaderboardTable
+    PlayerLeaderboardTable,
   },
   data() {
     return {
@@ -51,13 +51,13 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
-      }
+        large_image: "",
+      },
     };
   },
   async created() {
     this.user = await this.IsLoggedIn();
     if (this.$route.params.id == "create") this.newTeam = true;
-  }
+  },
 };
 </script>

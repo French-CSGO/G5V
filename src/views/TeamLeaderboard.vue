@@ -10,7 +10,7 @@ import TeamLeaderboardTable from "@/components/TeamLeaderboardTable.vue";
 export default {
   name: "TeamLeaderboard",
   components: {
-    TeamLeaderboardTable
+    TeamLeaderboardTable,
   },
   data() {
     return {
@@ -22,12 +22,12 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
-      } // should be object from JSON response
+        large_image: "",
+      }, // should be object from JSON response
     };
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>

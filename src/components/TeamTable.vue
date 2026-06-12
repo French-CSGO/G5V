@@ -12,12 +12,12 @@
     <template v-slot:item.tag="{ item }">
       <img
         :src="item.tag"
-        style="border-radius: 15px;"
+        style="border-radius: 15px"
         v-if="$vuetify.breakpoint.mdAndUp"
       />
       <img
         :src="item.tag"
-        style="border-radius: 15px; width:32px; height:32px;"
+        style="border-radius: 15px; width: 32px; height: 32px"
         v-else
       />
     </template>
@@ -47,7 +47,7 @@
             <v-icon
               v-if="
                 teamAuth
-                  .map(obj => {
+                  .map((obj) => {
                     return obj.steamid;
                   })
                   .indexOf(item.steamid) == 0
@@ -68,7 +68,7 @@
         <v-toolbar-title
           v-if="
             !(IsAnyAdmin(user) || user.id == teamInfo.owner_id) &&
-              $vuetify.breakpoint.mdAndDown
+            $vuetify.breakpoint.mdAndDown
           "
           >{{ teamInfo.name }}</v-toolbar-title
         >
@@ -91,7 +91,7 @@
           vertical
         />
         <v-toolbar-title v-if="$vuetify.breakpoint.mdAndUp">
-          <img :src="get_flag_link(teamInfo)" style="border-radius: 5px;" />
+          <img :src="get_flag_link(teamInfo)" style="border-radius: 5px" />
         </v-toolbar-title>
         <v-divider
           v-if="$vuetify.breakpoint.mdAndUp"
@@ -103,7 +103,7 @@
           <v-toolbar-title>
             <img
               :src="apiUrl + '/static/img/logos/' + teamInfo.logo + '.png'"
-              style="padding-top: 5px;; width: 32px; height: 32px;"
+              style="padding-top: 5px; width: 32px; height: 32px"
               @error="imgUrlAlt"
             />
           </v-toolbar-title>
@@ -127,8 +127,8 @@
             <div
               v-if="
                 IsAnyAdmin(user) ||
-                  user.id == teamInfo.owner_id ||
-                  (user.id != null && teamInfo.id == -1)
+                user.id == teamInfo.owner_id ||
+                (user.id != null && teamInfo.id == -1)
               "
             >
               <v-btn
@@ -168,10 +168,10 @@
                         v-model="teamInfo.name"
                         :label="$t('Team.NameLabel')"
                         :rules="[
-                          v => !!v || $t('misc.Required'),
-                          v =>
+                          (v) => !!v || $t('misc.Required'),
+                          (v) =>
                             v.length <= 40 ||
-                            $t('Team.CharacterLimit', [$t('Team.Name'), 40])
+                            $t('Team.CharacterLimit', [$t('Team.Name'), 40]),
                         ]"
                       ></v-text-field>
                     </v-col>
@@ -187,10 +187,10 @@
                         v-model="teamInfo.tag"
                         :label="$t('Team.TeamTag')"
                         :rules="[
-                          v => !!v || $t('misc.Required'),
-                          v =>
+                          (v) => !!v || $t('misc.Required'),
+                          (v) =>
                             v.length <= 40 ||
-                            $t('Team.CharacterLimit', [$t('Team.Name'), 40])
+                            $t('Team.CharacterLimit', [$t('Team.Name'), 40]),
                         ]"
                       ></v-text-field>
                     </v-col>
@@ -271,7 +271,7 @@
                         :items="steamIdList"
                         :label="$t('Team.AuthLabel')"
                         :hint="$t('Team.AuthHint')"
-                        :rules="[v => !!v || $t('misc.Required')]"
+                        :rules="[(v) => !!v || $t('misc.Required')]"
                       ></v-combobox>
                     </v-col>
                   </v-row>
@@ -335,22 +335,19 @@
 </template>
 
 <script>
-const dataURItoBlob = dataURI => {
+const dataURItoBlob = (dataURI) => {
   const bytes =
     dataURI.split(",")[0].indexOf("base64") >= 0
       ? atob(dataURI.split(",")[1])
       : unescape(dataURI.split(",")[1]);
-  const mime = dataURI
-    .split(",")[0]
-    .split(":")[1]
-    .split(";")[0];
+  const mime = dataURI.split(",")[0].split(":")[1].split(";")[0];
   const max = bytes.length;
   const ia = new Uint8Array(max);
   for (let i = 0; i < max; i += 1) ia[i] = bytes.charCodeAt(i);
   return new Blob([ia], { type: mime });
 };
 
-const resizeImage = file => {
+const resizeImage = (file) => {
   const reader = new FileReader();
   const image = new Image();
   const canvas = document.createElement("canvas");
@@ -371,7 +368,7 @@ const resizeImage = file => {
       return;
     }
 
-    reader.onload = readerEvent => {
+    reader.onload = (readerEvent) => {
       image.onload = () => ok(resize());
       image.src = readerEvent.target.result;
     };
@@ -379,18 +376,18 @@ const resizeImage = file => {
     reader.readAsDataURL(file);
   });
 };
-const file2Base64 = file => {
+const file2Base64 = (file) => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result.toString());
-    reader.onerror = error => reject(error);
+    reader.onerror = (error) => reject(error);
   });
 };
 export default {
   props: {
     user: Object,
-    newTeam: Boolean
+    newTeam: Boolean,
   },
   data() {
     return {
@@ -407,7 +404,7 @@ export default {
         public: false,
         owner: "",
         owner_id: -1,
-        id: -1
+        id: -1,
       },
       isLoading: true,
       isDisabled: true,
@@ -422,7 +419,7 @@ export default {
       logoFile: null,
       logoPreview: null,
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
-      imageLoaded: true
+      imageLoaded: true,
     };
   },
   computed: {
@@ -440,25 +437,25 @@ export default {
         {
           text: "",
           value: "tag",
-          sortable: false
+          sortable: false,
         },
         {
           text: this.$t("Team.Username"),
-          value: "username"
+          value: "username",
         },
         {
           text: this.$t("Team.SteamIDTitle"),
           align: "start",
           sortable: true,
-          value: "steamid"
+          value: "steamid",
         },
         {
           text: "",
           value: "actions",
-          sortable: false
-        }
+          sortable: false,
+        },
       ];
-    }
+    },
   },
   watch: {
     dialog(val) {
@@ -494,7 +491,7 @@ export default {
           }
         }
       },
-      deep: true
+      deep: true,
     },
     editInfo(val) {
       if (val) this.formIndTitle = this.$t("Team.EditPlayer");
@@ -502,7 +499,7 @@ export default {
     },
     teamDeleted(val) {
       if (val) this.$router.push({ name: `Home` });
-    }
+    },
   },
   mounted() {
     if (this.$route.params.id != "create") {
@@ -518,7 +515,7 @@ export default {
         tag: this.$t("Team.NewTag"),
         public: 0,
         owner: this.user.name,
-        owner_id: this.user.id
+        owner_id: this.user.id,
       };
     }
     this.flags = this.GetFlags();
@@ -540,19 +537,19 @@ export default {
           tag: res.tag,
           public: res.public_team,
           owner: userData.name,
-          owner_id: userData.id
+          owner_id: userData.id,
         };
         if (this.teamAuth.length == 0) {
           let mainTeamInfo = res.auth_name;
           this.isLoading = true;
           if (mainTeamInfo != null) {
-            await Object.keys(mainTeamInfo).map(async steam_id => {
+            await Object.keys(mainTeamInfo).map(async (steam_id) => {
               let indTeamMember = {
                 tag: mainTeamInfo[steam_id].image,
                 username: mainTeamInfo[steam_id].name,
                 steamid: steam_id,
                 captain: mainTeamInfo[steam_id].captain,
-                coach: mainTeamInfo[steam_id].coach
+                coach: mainTeamInfo[steam_id].coach,
               };
               this.steamIdList.push(steam_id);
               this.teamAuth.push(indTeamMember);
@@ -594,8 +591,8 @@ export default {
               flag: this.teamInfo.flag,
               tag: this.teamInfo.tag,
               public_team: this.teamInfo.public === true ? 1 : 0,
-              logo_file: this.logoFile
-            }
+              logo_file: this.logoFile,
+            },
           ];
           await this.UpdateTeamInfo(updatedTeam);
         } else {
@@ -606,8 +603,8 @@ export default {
               logo: null,
               tag: this.teamInfo.tag,
               public_team: this.teamInfo.public === true ? 1 : 0,
-              logo_file: this.logoFile
-            }
+              logo_file: this.logoFile,
+            },
           ];
           let newTeamId = await this.InsertTeamInfo(newTeam);
           this.$router.push({ name: `Team`, params: { id: newTeamId.id } });
@@ -621,14 +618,14 @@ export default {
           [this.newAuth.steam.toString()]: {
             name: this.newAuth.name == null ? "" : this.newAuth.name,
             captain: this.newAuth.captain == null ? 0 : this.newAuth.captain,
-            coach: this.newAuth.coach == null ? 0 : this.newAuth.coach
-          }
+            coach: this.newAuth.coach == null ? 0 : this.newAuth.coach,
+          },
         };
         let updatedTeam = [
           {
             id: this.teamInfo.id,
-            auth_name: newTeamMember
-          }
+            auth_name: newTeamMember,
+          },
         ];
         await this.UpdateTeamInfo(updatedTeam);
         // Reset state to force a reload on the table.
@@ -650,8 +647,8 @@ export default {
       let memberData = [
         {
           team_id: this.teamInfo.id,
-          steam_id: this.removeAuth.steamid
-        }
+          steam_id: this.removeAuth.steamid,
+        },
       ];
       await this.DeleteFromTeam(memberData);
       this.teamAuth.splice(this.removeIndex, 1);
@@ -676,7 +673,7 @@ export default {
         this.logoFile = await file2Base64(await resizeImage(file));
         this.logoPreview = URL.createObjectURL(await resizeImage(file));
       }
-    }
-  }
+    },
+  },
 };
 </script>

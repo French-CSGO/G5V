@@ -41,7 +41,7 @@
               clearable
               dense
               hide-details
-              style="min-width: 220px;"
+              style="min-width: 220px"
             >
               <template v-slot:item="{ item: opt }">
                 <span>{{ opt.name }}</span>
@@ -86,7 +86,7 @@ export default {
       loading: false,
       saving: false,
       error: "",
-      successMsg: ""
+      successMsg: "",
     };
   },
   computed: {
@@ -97,24 +97,24 @@ export default {
         {
           text: this.$t("ServerPteroLink.ColPterodactyl"),
           value: "pterodactyl_id",
-          sortable: false
-        }
+          sortable: false,
+        },
       ];
     },
     pteroOptions() {
-      return this.pteroServers.map(s => ({
+      return this.pteroServers.map((s) => ({
         ...s,
-        label: `${s.name} (${s.identifier})`
+        label: `${s.name} (${s.identifier})`,
       }));
-    }
+    },
   },
   async created() {
     this.loading = true;
     const [servers, ptero] = await Promise.all([
       this.GetAllServers(),
-      this.GetPterodactylServers()
+      this.GetPterodactylServers(),
     ]);
-    this.servers = Array.isArray(servers) ? servers.map(s => ({ ...s })) : [];
+    this.servers = Array.isArray(servers) ? servers.map((s) => ({ ...s })) : [];
     this.pteroServers = Array.isArray(ptero) ? ptero : [];
     this.loading = false;
   },
@@ -131,8 +131,8 @@ export default {
           await this.UpdateServer([
             {
               server_id: server.id,
-              pterodactyl_id: server.pterodactyl_id || null
-            }
+              pterodactyl_id: server.pterodactyl_id || null,
+            },
           ]);
           updated++;
         } catch {
@@ -143,15 +143,15 @@ export default {
       this.saving = false;
       if (failed === 0) {
         this.successMsg = this.$t("ServerPteroLink.SaveSuccess", {
-          n: updated
+          n: updated,
         });
       } else {
         this.error = this.$t("ServerPteroLink.SavePartial", {
           updated,
-          failed
+          failed,
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>

@@ -99,9 +99,7 @@
     <v-dialog v-model="addDialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
-          <span class="headline">
-            Add Player to Team or Spectator
-          </span>
+          <span class="headline"> Add Player to Team or Spectator </span>
         </v-card-title>
         <v-card-text>
           <v-form ref="addPlayerForm">
@@ -116,7 +114,7 @@
                     v-model="steamID"
                     required
                     :rules="[
-                      () => !!steamID || $t('MatchAdmin.SteamRuleRequired')
+                      () => !!steamID || $t('MatchAdmin.SteamRuleRequired'),
                     ]"
                   />
                 </v-col>
@@ -128,7 +126,7 @@
                     v-model="nickname"
                     :rules="[
                       () =>
-                        nickname.length <= 40 || $t('MatchAdmin.SteamNickRule')
+                        nickname.length <= 40 || $t('MatchAdmin.SteamNickRule'),
                     ]"
                     counter="40"
                   />
@@ -258,7 +256,7 @@
                   <v-select
                     v-model="selectedBackup"
                     :items="backups"
-                    :rules="[v => !!v || $t('misc.Required')]"
+                    :rules="[(v) => !!v || $t('misc.Required')]"
                     :label="$t('MatchAdmin.Backup')"
                     required
                     ref="currentBackup"
@@ -301,7 +299,7 @@
                     :items="servers"
                     item-text="display_name"
                     item-value="id"
-                    :rules="[v => !!v || $t('misc.Required')]"
+                    :rules="[(v) => !!v || $t('misc.Required')]"
                     :label="$t('CreateMatch.ServerLabel')"
                     required
                     ref="newServer"
@@ -313,7 +311,7 @@
                     :items="formattedBackups"
                     item-text="text"
                     item-value="value"
-                    :rules="[v => !!v || $t('misc.Required')]"
+                    :rules="[(v) => !!v || $t('misc.Required')]"
                     :label="$t('MatchAdmin.Backup')"
                     required
                     ref="currentBackup"
@@ -340,7 +338,7 @@
 export default {
   props: {
     matchInfo: Object,
-    user: Object
+    user: Object,
   },
   data() {
     return {
@@ -360,7 +358,7 @@ export default {
       selectedBackup: "",
       selectedServer: "",
       servers: [],
-      isLoading: false
+      isLoading: false,
     };
   },
 
@@ -389,18 +387,23 @@ export default {
         this.selectedServer = "";
         this.$refs.serverForm.resetValidation();
       });
-    }
+    },
   },
   computed: {
     formattedBackups() {
-      return this.backups.map(b => {
+      return this.backups.map((b) => {
         if (typeof b === "object" && b.file) {
-          const map   = b.mapNum  !== undefined ? `Map ${b.mapNum}`   : "";
-          const round = b.round   !== undefined ? `Round ${b.round}`  : "";
-          const score = (b.team1Score !== undefined && b.team2Score !== undefined)
-            ? `  ${b.team1Score}–${b.team2Score}` : "";
+          const map = b.mapNum !== undefined ? `Map ${b.mapNum}` : "";
+          const round = b.round !== undefined ? `Round ${b.round}` : "";
+          const score =
+            b.team1Score !== undefined && b.team2Score !== undefined
+              ? `  ${b.team1Score}–${b.team2Score}`
+              : "";
           const label = [map, round].filter(Boolean).join(" · ") + score;
-          return { text: label ? `${label}  (${b.file})` : b.file, value: b.file };
+          return {
+            text: label ? `${label}  (${b.file})` : b.file,
+            value: b.file,
+          };
         }
         // fallback: plain string (old format)
         const m = b.match && b.match(/match\d+_map(\d+)_round(\d+)/i);
@@ -417,7 +420,7 @@ export default {
             this.response = await this.PauseMatch(this.matchInfo.id);
             this.responseSheet = true;
             this.isLoading = false;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.UnpauseMatch"),
@@ -426,13 +429,13 @@ export default {
             this.response = await this.UnpauseMatch(this.matchInfo.id);
             this.isLoading = false;
             this.responseSheet = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.AddPlayerToServer"),
           apiCall: () => {
             this.addDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.ListBackups"),
@@ -445,25 +448,25 @@ export default {
               this.response = res.message;
               this.responseSheet = true;
             }
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.MatchRestart"),
           apiCall: () => {
             this.restartDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.CancelMatch"),
           apiCall: () => {
             this.cancelDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.ForfeitMatch"),
           apiCall: () => {
             this.forfeitDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.ChangeServer"),
@@ -487,8 +490,8 @@ export default {
             } finally {
               this.serverChangeDialog = true;
             }
-          }
-        }
+          },
+        },
       ];
     },
     superAdminItems() {
@@ -500,7 +503,7 @@ export default {
             this.response = await this.PauseMatch(this.matchInfo.id);
             this.responseSheet = true;
             this.isLoading = false;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.UnpauseMatch"),
@@ -509,13 +512,13 @@ export default {
             this.response = await this.UnpauseMatch(this.matchInfo.id);
             this.isLoading = false;
             this.responseSheet = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.AddPlayerToServer"),
           apiCall: () => {
             this.addDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.ListBackups"),
@@ -528,31 +531,31 @@ export default {
               this.response = res.message;
               this.responseSheet = true;
             }
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.CancelMatch"),
           apiCall: () => {
             this.cancelDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.ForfeitMatch"),
           apiCall: () => {
             this.forfeitDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.MatchRestart"),
           apiCall: () => {
             this.restartDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.SendRCON"),
           apiCall: () => {
             this.rconDialog = true;
-          }
+          },
         },
         {
           title: this.$t("MatchAdmin.ChangeServer"),
@@ -576,10 +579,10 @@ export default {
             } finally {
               this.serverChangeDialog = true;
             }
-          }
-        }
+          },
+        },
       ];
-    }
+    },
   },
   methods: {
     async cancelCurrentMatch() {
@@ -599,13 +602,13 @@ export default {
           {
             steam_id: this.steamID,
             nickname: this.nickname,
-            team_id: teamChoice
-          }
+            team_id: teamChoice,
+          },
         ];
         if (teamChoice == "spec") {
           addRes = await this.AddUserToSpectator(
             this.matchInfo.id,
-            matchObject
+            matchObject,
           );
           this.response =
             addRes.response == null ? addRes.message : addRes.response;
@@ -634,12 +637,12 @@ export default {
         let addRes;
         let matchObject = [
           {
-            rcon_command: this.rconCommand
-          }
+            rcon_command: this.rconCommand,
+          },
         ];
         addRes = await this.SendRconCommandToMatch(
           this.matchInfo.id,
-          matchObject
+          matchObject,
         );
         this.response =
           addRes.response == null ? addRes.message : addRes.response;
@@ -654,12 +657,12 @@ export default {
         let backupRes;
         let backupObject = [
           {
-            backup_name: this.selectedBackup
-          }
+            backup_name: this.selectedBackup,
+          },
         ];
         backupRes = await this.RestoreFromBackup(
           this.matchInfo.id,
-          backupObject
+          backupObject,
         );
         this.response = backupRes.message;
         this.backupDialog = false;
@@ -673,13 +676,13 @@ export default {
         let backupObject = [
           {
             server_id: this.selectedServer,
-            backup_file: this.selectedBackup
-          }
+            backup_file: this.selectedBackup,
+          },
         ];
         this.serverChangeDialog = false;
         let serverRes = await this.RestoreFromRemoteBackup(
           this.matchInfo.id,
-          backupObject
+          backupObject,
         );
         this.response = serverRes.message;
         this.isLoading = false;
@@ -694,7 +697,7 @@ export default {
       this.responseSheet = true;
       this.isLoading = false;
       return;
-    }
-  }
+    },
+  },
 };
 </script>

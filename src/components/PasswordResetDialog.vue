@@ -7,9 +7,7 @@
             {{ title }}
           </span>
           <v-spacer></v-spacer>
-          <button type="button" class="close" @click="show = false">
-            X
-          </button>
+          <button type="button" class="close" @click="show = false">X</button>
         </v-card-title>
         <v-card-text>
           <v-form ref="loginForm">
@@ -23,7 +21,7 @@
                       ref="Username"
                       required
                       :rules="[
-                        () => !!userInfo.old_password || $t('misc.Required')
+                        () => !!userInfo.old_password || $t('misc.Required'),
                       ]"
                     />
                   </v-col>
@@ -35,7 +33,7 @@
                       :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                       :type="showPass ? 'text' : 'password'"
                       :rules="[
-                        () => !!userInfo.password || $t('misc.Required')
+                        () => !!userInfo.password || $t('misc.Required'),
                       ]"
                       @click:append="showPass = !showPass"
                     />
@@ -84,7 +82,7 @@
 export default {
   props: {
     value: Boolean,
-    title: String
+    title: String,
   },
   computed: {
     show: {
@@ -99,8 +97,8 @@ export default {
           });
         }
         this.$emit("input", value);
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -108,7 +106,7 @@ export default {
       response: "",
       responseSheet: false,
       userLoading: false,
-      userInfo: Object
+      userInfo: Object,
     };
   },
   methods: {
@@ -121,8 +119,8 @@ export default {
             old_password: this.userInfo.old_password,
             password: this.userInfo.password,
             steam_id: this.user.steam_id,
-            force_reset: true
-          }
+            force_reset: true,
+          },
         ];
         userResponse = await this.UpdateUserInfo(userObject);
         if (!userResponse.message.includes("successfully")) {
@@ -133,10 +131,10 @@ export default {
           window.location.reload();
         }
       }
-    }
+    },
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>

@@ -48,12 +48,12 @@ export default {
   name: "PlayerLeaderboard",
   props: {
     seasonId: Number,
-    teamId: Number
+    teamId: Number,
   },
   data() {
     return {
       players: [],
-      isLoading: true
+      isLoading: true,
     };
   },
   created() {
@@ -67,91 +67,91 @@ export default {
           align: "start",
           sortable: true,
           value: "name",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("misc.TWins"),
           sortable: true,
           value: "wins",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.Kills"),
           value: "kills",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.Deaths"),
           value: "deaths",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.Assists"),
           value: "assists",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.FlashbangAssists"),
           value: "fba",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.TotalRoundsPlayed"),
-          value: "trp"
+          value: "trp",
         },
         {
           text: this.$t("PlayerStats.Rating"),
           value: "average_rating",
-          groupable: false
+          groupable: false,
         },
         {
           text: "",
           value: "data-table-expand",
           groupable: false,
-          align: "end"
-        }
+          align: "end",
+        },
       ];
     },
     additionalHeaders() {
       return [
         {
           text: this.$t("PlayerStats.ADR"),
-          value: "adr"
+          value: "adr",
         },
         {
           text: this.$t("PlayerStats.Headshot") + "%",
-          value: "hsp"
+          value: "hsp",
         },
         {
           text: this.$t("PlayerStats.5kill"),
-          value: "k5"
+          value: "k5",
         },
         {
           text: this.$t("PlayerStats.4kill"),
-          value: "k4"
+          value: "k4",
         },
         {
           text: this.$t("PlayerStats.3kill"),
-          value: "k3"
+          value: "k3",
         },
         {
           text: this.$t("PlayerStats.2kill"),
-          value: "k2"
+          value: "k2",
         },
         {
           text: this.$t("PlayerStats.1kill"),
-          value: "k1"
+          value: "k1",
         },
         {
           text: this.$t("PlayerStats.v5"),
-          value: "v5"
+          value: "v5",
         },
         {
           text: this.$t("PlayerStats.v4"),
-          value: "v4"
-        }
+          value: "v4",
+        },
       ];
-    }
+    },
   },
   methods: {
     async GetLeaderboard() {
@@ -160,7 +160,7 @@ export default {
         if (this.seasonId && this.teamId)
           res = await this.GetSeasonTeamPlayerLeaderboard(
             this.seasonId,
-            this.teamId
+            this.teamId,
           );
         else if (this.seasonId)
           res = await this.GetSeasonPlayerLeaderboard(this.seasonId);
@@ -168,7 +168,7 @@ export default {
           res = await this.GetTeamPlayerLeaderboard(this.teamId);
         else res = await this.GetTotalPlayerLeaderboard();
         if (typeof res == "string") return;
-        res.forEach(player => {
+        res.forEach((player) => {
           player.adr =
             player.roundsplayed === 0
               ? 0.0
@@ -181,7 +181,7 @@ export default {
         this.isLoading = false;
       }
       return;
-    }
-  }
+    },
+  },
 };
 </script>

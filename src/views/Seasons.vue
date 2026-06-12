@@ -14,7 +14,7 @@ import SeasonsTable from "@/components/SeasonsTable";
 export default {
   name: "Seasons",
   components: {
-    SeasonsTable
+    SeasonsTable,
   },
   data() {
     return {
@@ -26,8 +26,8 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
-      }
+        large_image: "",
+      },
     };
   },
   computed: {
@@ -36,10 +36,10 @@ export default {
     },
     isSuperAdmin() {
       return Number(this.user.super_admin) === 1;
-    }
+    },
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>

@@ -66,7 +66,7 @@
                   item-text="display_name"
                   item-value="id"
                   :label="$t('CreateMatch.ServerLabel')"
-                  :rules="[v => !!v || $t('misc.Required')]"
+                  :rules="[(v) => !!v || $t('misc.Required')]"
                   outlined
                   dense
                   required
@@ -106,13 +106,13 @@
                   <span
                     v-if="
                       prefill.toornament_match &&
-                        prefill.toornament_match.scheduled_datetime
+                      prefill.toornament_match.scheduled_datetime
                     "
                   >
                     —
                     {{
                       new Date(
-                        prefill.toornament_match.scheduled_datetime
+                        prefill.toornament_match.scheduled_datetime,
                       ).toLocaleString()
                     }}
                   </span>
@@ -192,8 +192,8 @@ export default {
     value: Boolean,
     prefill: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -202,12 +202,12 @@ export default {
       formData: {
         maps_to_win: 1,
         spectators: [],
-        cvars: []
+        cvars: [],
       },
       isLoading: false,
       snackbar: false,
       snackbarMessage: "",
-      snackbarColor: "success"
+      snackbarColor: "success",
     };
   },
   computed: {
@@ -217,13 +217,13 @@ export default {
       },
       set(val) {
         this.$emit("input", val);
-      }
+      },
     },
     currentTitle() {
       return this.step === 1
         ? this.$t("Toornament.StepVerify")
         : this.$t("Toornament.StepDetails");
-    }
+    },
   },
   watch: {
     value(val) {
@@ -239,7 +239,7 @@ export default {
       if (val && val.available_servers && val.available_servers.length > 0) {
         this.selectedServer = val.available_servers[0].id;
       }
-    }
+    },
   },
   methods: {
     reset() {
@@ -268,7 +268,7 @@ export default {
         "map_pool",
         "side_type",
         "spectators",
-        "map_sides"
+        "map_sides",
       ];
       return Object.entries(cvars)
         .filter(([k]) => !reserved.includes(k))
@@ -301,7 +301,7 @@ export default {
 
       const cvars = Object.assign(
         {},
-        ...this.formData.cvars.map(this.splitCvar)
+        ...this.formData.cvars.map(this.splitCvar),
       );
       const sc = this.prefill.season_cvars || {};
       const matchObj = [
@@ -311,10 +311,7 @@ export default {
           team2_id: this.prefill.team2.id,
           season_id: this.prefill.season_id,
           toornament_id: this.prefill.toornament_match_id ?? null,
-          start_time: new Date()
-            .toISOString()
-            .slice(0, 19)
-            .replace("T", " "),
+          start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
           max_maps: this.formData.maps_to_win,
           spectator_auths: this.formData.spectators.length
             ? this.formData.spectators
@@ -325,10 +322,7 @@ export default {
           side_type: sc.side_type || "standard",
           veto_mappool: sc.map_pool || null,
           map_sides: sc.map_sides
-            ? sc.map_sides
-                .trim()
-                .split(/\s+/)
-                .join(",")
+            ? sc.map_sides.trim().split(/\s+/).join(",")
             : null,
           min_players_to_ready:
             sc.min_players_to_ready != null
@@ -340,8 +334,8 @@ export default {
               : null,
           players_per_team:
             sc.players_per_team != null ? parseInt(sc.players_per_team) : null,
-          wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null
-        }
+          wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null,
+        },
       ];
 
       try {
@@ -362,7 +356,7 @@ export default {
         this.snackbar = true;
       }
       this.isLoading = false;
-    }
-  }
+    },
+  },
 };
 </script>

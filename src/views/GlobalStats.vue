@@ -13,7 +13,7 @@
           hide-details
           dark
           class="mt-0 pt-0"
-          style="max-width:250px"
+          style="max-width: 250px"
         />
       </v-card-title>
       <v-data-table
@@ -59,7 +59,7 @@ export default {
     return {
       players: [],
       search: "",
-      isLoading: true
+      isLoading: true,
     };
   },
   async created() {
@@ -80,50 +80,50 @@ export default {
         {
           text: this.$t("PlayerStats.User"),
           value: "name",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("GlobalStats.Maps"),
           value: "total_maps",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("PlayerStats.Kills"),
           value: "kills",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("PlayerStats.Deaths"),
           value: "deaths",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("PlayerStats.Assists"),
           value: "assists",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("PlayerStats.KDR"),
           value: "kd",
-          sortable: false
+          sortable: false,
         },
         {
           text: this.$t("PlayerStats.Headshot") + "%",
           value: "hsp",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("PlayerStats.ADR"),
           value: "adr",
-          sortable: false
+          sortable: false,
         },
         {
           text: this.$t("PlayerStats.Rating"),
           value: "average_rating",
-          sortable: true
-        }
+          sortable: true,
+        },
       ];
-    }
-  }
+    },
+  },
 };
 </script>

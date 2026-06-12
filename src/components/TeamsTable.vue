@@ -28,7 +28,7 @@
         </router-link>
       </template>
       <template v-slot:item.flag="{ item }">
-        <img :src="get_flag_link(item)" style="border-radius: 5px;" />
+        <img :src="get_flag_link(item)" style="border-radius: 5px" />
       </template>
     </v-data-table>
     <v-dialog
@@ -95,7 +95,7 @@
 <script>
 export default {
   props: {
-    user: Object
+    user: Object,
   },
   data() {
     return {
@@ -103,12 +103,12 @@ export default {
       isLoading: true,
       newImportDialog: false,
       challongeInfo: {
-        tournament_id: ""
+        tournament_id: "",
       },
       responseSheet: false,
       response: "",
       options: {},
-      totalTeams: -1
+      totalTeams: -1,
     };
   },
   watch: {
@@ -116,7 +116,7 @@ export default {
       if (!val) {
         this.$refs.newImportForm.resetValidation();
         this.challongeInfo = {
-          tournament_id: ""
+          tournament_id: "",
         };
       }
     },
@@ -124,8 +124,8 @@ export default {
       handler() {
         this.GetTeams();
       },
-      deep: true
-    }
+      deep: true,
+    },
   },
   computed: {
     headers() {
@@ -134,27 +134,27 @@ export default {
           text: this.$t("Team.ID"),
           align: "start",
           sortable: true,
-          value: "id"
+          value: "id",
         },
         {
           text: this.$t("Team.Name"),
-          value: "name"
+          value: "name",
         },
         {
           text: this.$t("Team.TeamTag"),
           value: "tag",
-          sortable: false
+          sortable: false,
         },
         {
           text: this.$t("Team.Flag"),
-          value: "flag"
+          value: "flag",
         },
         {
           text: this.$t("Team.Owner"),
-          value: "owner"
-        }
+          value: "owner",
+        },
       ];
-    }
+    },
   },
   methods: {
     async GetTeams() {
@@ -186,7 +186,7 @@ export default {
       // Filter based on what the user is. Maybe swap this over to the API?
       if (!this.user.id || !this.IsAnyAdmin(this.user)) {
         count = count.filter(
-          team => team.public_team == 1 || team.user_id == this.user.id
+          (team) => team.public_team == 1 || team.user_id == this.user.id,
         );
       }
       this.totalTeams = count.length;
@@ -211,12 +211,12 @@ export default {
         this.responseSheet = true;
         this.$nextTick(() => {
           this.challongeInfo = {
-            tournament_id: ""
+            tournament_id: "",
           };
         });
       }
       return;
-    }
-  }
+    },
+  },
 };
 </script>

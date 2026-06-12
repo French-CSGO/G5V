@@ -4,15 +4,13 @@
       <v-card-title v-if="retrievedUser.steam_id != 0">
         {{ retrievedUser.name }}
         <a
-          :href="
-            `https://steamcommunity.com/profiles/${retrievedUser.steam_id}`
-          "
+          :href="`https://steamcommunity.com/profiles/${retrievedUser.steam_id}`"
           target="_blank"
         >
           <v-icon>mdi-steam</v-icon>
         </a>
         <v-spacer />
-        <img style="border-radius: 15px;" :src="retrievedUser.medium_image" />
+        <img style="border-radius: 15px" :src="retrievedUser.medium_image" />
       </v-card-title>
       <v-card-title v-else>
         {{ $t("User.ClaimUser") }}
@@ -144,7 +142,7 @@ export default {
     MatchesTable,
     PlayerStats,
     MapList,
-    PasswordResetDialog
+    PasswordResetDialog,
   },
   data() {
     return {
@@ -156,7 +154,7 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
+        large_image: "",
       },
       retrievedUser: {
         admin: false,
@@ -166,7 +164,7 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
+        large_image: "",
       }, // should be object from JSON response
       userStats: [],
       showAPI: false,
@@ -174,7 +172,7 @@ export default {
       apiResetLoading: false,
       showPass: false,
       passwordResetDialog: false,
-      challongeApiResetLoading: false
+      challongeApiResetLoading: false,
     };
   },
   async created() {
@@ -188,7 +186,7 @@ export default {
       this.retrievedUser.steam_id = this.userStats[0].steam_id;
     } else
       this.userStats = await this.GetUserPlayerStats(
-        this.retrievedUser.steam_id
+        this.retrievedUser.steam_id,
       );
     if (typeof this.userStats == "string") this.userStats = [];
   },
@@ -198,8 +196,8 @@ export default {
       let renewKey = [
         {
           steam_id: this.retrievedUser.steam_id,
-          new_api: 1
-        }
+          new_api: 1,
+        },
       ];
       await this.UpdateUserInfo(renewKey);
       this.retrievedUser = await this.GetUserData(this.retrievedUser.id);
@@ -211,13 +209,13 @@ export default {
         {
           steam_id: this.retrievedUser.steam_id,
           id: this.retrievedUser.id,
-          challonge_api_key: this.retrievedUser.challonge_api_key
-        }
+          challonge_api_key: this.retrievedUser.challonge_api_key,
+        },
       ];
       await this.UpdateUserInfo(updateData);
       this.retrievedUser = await this.GetUserData(this.retrievedUser.id);
       this.challongeApiResetLoading = false;
-    }
-  }
+    },
+  },
 };
 </script>

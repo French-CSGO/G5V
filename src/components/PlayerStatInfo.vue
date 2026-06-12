@@ -82,13 +82,13 @@
 <script>
 export default {
   props: {
-    statArray: Array
+    statArray: Array,
   },
   computed: {
     totalKills() {
       let allKills = 0;
       if (this.statArray.length > 0)
-        this.statArray.forEach(stat => {
+        this.statArray.forEach((stat) => {
           allKills += stat.kills;
         });
       return allKills;
@@ -96,7 +96,7 @@ export default {
     totalDeaths() {
       let allDeaths = 0;
       if (this.statArray.length > 0)
-        this.statArray.forEach(stat => {
+        this.statArray.forEach((stat) => {
           allDeaths += stat.deaths;
         });
       return allDeaths;
@@ -104,7 +104,7 @@ export default {
     totalRoundsPlayed() {
       let allRounds = 0;
       if (this.statArray.length > 0)
-        this.statArray.forEach(stat => {
+        this.statArray.forEach((stat) => {
           allRounds += stat.roundsplayed;
         });
       return allRounds;
@@ -113,7 +113,7 @@ export default {
       let allKills = 0;
       let headshotKills = 0;
       if (this.statArray.length > 0)
-        this.statArray.forEach(stat => {
+        this.statArray.forEach((stat) => {
           allKills += stat.kills;
           headshotKills += stat.headshot_kills;
         });
@@ -123,7 +123,7 @@ export default {
     averageRating() {
       let totalRating = 0;
       if (this.statArray.length > 0)
-        this.statArray.forEach(stat => {
+        this.statArray.forEach((stat) => {
           totalRating += Number(
             this.GetRating(
               stat.kills,
@@ -133,8 +133,8 @@ export default {
               stat.k2,
               stat.k3,
               stat.k4,
-              stat.k5
-            )
+              stat.k5,
+            ),
           );
         });
       if (totalRating > 0)
@@ -160,7 +160,7 @@ export default {
     isRatingLoading() {
       if (this.averageRating >= 0) return false;
       else return true;
-    }
-  }
+    },
+  },
 };
 </script>

@@ -6,22 +6,22 @@ export default {
     return {
       axiosCall: axios.create({
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
         },
-        withCredentials: true
+        withCredentials: true,
       }),
-      languageAlert: false
+      languageAlert: false,
     };
   },
   methods: {
-    ChangeLanguage: function(lang) {
+    ChangeLanguage: function (lang) {
       localStorage.setItem("language", lang);
       this.$i18n.locale = lang;
     },
     // BEGIN USER CALLS
     async IsLoggedIn() {
       const res = await this.axiosCall.get(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/isLoggedIn`
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/isLoggedIn`,
       );
       if (res.data === false) {
         return {
@@ -32,7 +32,7 @@ export default {
           name: "",
           small_image: "",
           medium_image: "",
-          large_image: ""
+          large_image: "",
         };
       }
       return res.data;
@@ -42,7 +42,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/${userid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/${userid}`,
         );
         message = res.data.user;
       } catch (err) {
@@ -51,7 +51,7 @@ export default {
           steam_id: "",
           name: "ERROR",
           admin: 0,
-          super_admin: 0
+          super_admin: 0,
         };
       }
       return message;
@@ -61,7 +61,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/${userid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/${userid}`,
         );
         message = res.data.maplist;
       } catch (err) {
@@ -74,7 +74,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/${userid}/enabled`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/${userid}/enabled`,
         );
         message = res.data.maplist;
       } catch (err) {
@@ -88,14 +88,14 @@ export default {
       try {
         res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/`,
-          mapdata
+          mapdata,
         );
         message = res.data;
       } catch (err) {
         message = {
           error: true,
           message: err?.response?.data?.message || "Failed to update map",
-          data: err?.response?.data || null
+          data: err?.response?.data || null,
         };
       }
       return message;
@@ -106,7 +106,7 @@ export default {
       try {
         res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/`,
-          { data: mapdata }
+          { data: mapdata },
         );
         message = res.data;
       } catch (error) {
@@ -120,7 +120,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/maps/`,
-          mapdata
+          mapdata,
         );
         message = res.data;
       } catch (error) {
@@ -133,7 +133,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/${userid}/recent`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/${userid}/recent`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -146,7 +146,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/`,
         );
         message = res.data.users;
       } catch (error) {
@@ -160,7 +160,7 @@ export default {
       try {
         res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users/`,
-          userInfo
+          userInfo,
         );
         message = res.data;
       } catch (error) {
@@ -175,7 +175,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}`,
         );
         message = res.data.team;
       } catch (err) {
@@ -187,7 +187,7 @@ export default {
           flag: "",
           logo: "",
           auth_name: {},
-          public_team: false
+          public_team: false,
         };
       }
       return message;
@@ -197,7 +197,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/basic`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/basic`,
         );
         message = res.data.team.name;
       } catch (err) {
@@ -209,7 +209,7 @@ export default {
           flag: "",
           logo: "",
           auth_name: {},
-          public_team: false
+          public_team: false,
         };
       }
       return message;
@@ -219,7 +219,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/basic`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/basic`,
         );
         message = res.data.team;
       } catch (err) {
@@ -231,7 +231,7 @@ export default {
           flag: "",
           logo: "",
           auth_name: {},
-          public_team: false
+          public_team: false,
         };
       }
       return message;
@@ -241,7 +241,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams`,
         );
         message = res.data.teams;
       } catch (error) {
@@ -254,7 +254,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/public`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/public`,
         );
         message = res.data.teams;
       } catch (error) {
@@ -268,7 +268,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/myteams`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/myteams`,
         );
         message = res.data.teams;
       } catch (error) {
@@ -281,7 +281,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/recent`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/recent`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -295,7 +295,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/`,
-          teamInfo
+          teamInfo,
         );
         message = res.data;
       } catch (error) {
@@ -309,7 +309,7 @@ export default {
       try {
         res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/`,
-          teamInfo
+          teamInfo,
         );
         message = res.data;
       } catch (error) {
@@ -323,7 +323,7 @@ export default {
       try {
         res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/`,
-          { data: member }
+          { data: member },
         );
         message = res.data;
       } catch (error) {
@@ -337,7 +337,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/challonge`,
-          tournamentInfo
+          tournamentInfo,
         );
         message = res.data;
       } catch (error) {
@@ -352,7 +352,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/${matchid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/${matchid}`,
         );
         message = res.data.match;
       } catch (err) {
@@ -367,7 +367,7 @@ export default {
           team1_score: 0,
           team2_score: null,
           cancelled: 0,
-          title: "ERROR"
+          title: "ERROR",
         };
       }
       return message;
@@ -377,14 +377,15 @@ export default {
       try {
         retVal = this.$sse
           .create({
-            url: `${process.env?.VUE_APP_G5V_API_URL ||
-              "/api"}/matches/${matchid}/stream`,
+            url: `${
+              process.env?.VUE_APP_G5V_API_URL || "/api"
+            }/matches/${matchid}/stream`,
             format: "json",
             withCredentials: true,
-            polyfill: true
+            polyfill: true,
           })
-          .on("error", err =>
-            console.error("Failed to parse or lost connection:", err)
+          .on("error", (err) =>
+            console.error("Failed to parse or lost connection:", err),
           );
       } catch (error) {
         retVal = error.response.data.message;
@@ -399,11 +400,9 @@ export default {
             url: `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/cast/stream`,
             format: "json",
             withCredentials: true,
-            polyfill: true
+            polyfill: true,
           })
-          .on("error", err =>
-            console.error("Cast SSE error:", err)
-          );
+          .on("error", (err) => console.error("Cast SSE error:", err));
       } catch (error) {
         retVal = null;
       }
@@ -414,7 +413,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/recent`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/teams/${teamid}/recent`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -427,8 +426,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/teams/${team}/result/${match}`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/teams/${team}/result/${match}`,
         );
         message = res.data.result;
       } catch (error) {
@@ -441,7 +441,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -454,7 +454,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/limit/${limit}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/limit/${limit}`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -467,8 +467,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/page/${offset}&${limit}`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/page/${offset}&${limit}`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -481,7 +482,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/mymatches`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/mymatches`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -495,7 +496,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/`,
-          matchInfo
+          matchInfo,
         );
         message = res.data;
       } catch (error) {
@@ -509,7 +510,7 @@ export default {
       try {
         res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/`,
-          matchInfo
+          matchInfo,
         );
         message = res.data;
       } catch (error) {
@@ -523,7 +524,7 @@ export default {
       try {
         res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/`,
-          { data: [{ all_cancelled: true }] }
+          { data: [{ all_cancelled: true }] },
         );
         message = res.data;
       } catch (error) {
@@ -538,7 +539,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/${serverid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/${serverid}`,
         );
         message = res.data.server;
       } catch (err) {
@@ -551,7 +552,7 @@ export default {
           rcon_password: null,
           display_name: "ERROR RETRIEVING SERVER",
           public_server: 0,
-          name: "ERROR"
+          name: "ERROR",
         };
       }
       return message;
@@ -561,7 +562,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers`,
         );
         return res.data.servers;
       } catch (error) {
@@ -574,7 +575,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/publiccount`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/publiccount`,
         );
         return res.data.servers;
       } catch (error) {
@@ -587,7 +588,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/myservers`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/myservers`,
         );
         return res.data.servers;
       } catch (error) {
@@ -601,7 +602,7 @@ export default {
       try {
         res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/`,
-          { data: serverData }
+          { data: serverData },
         );
         message = res.data.message;
       } catch (error) {
@@ -614,7 +615,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/available`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/available`,
         );
         return res.data.servers;
       } catch (error) {
@@ -628,7 +629,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/`,
-          serverInfo
+          serverInfo,
         );
         message = res.data.message;
       } catch (error) {
@@ -641,8 +642,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/servers/${serverId}/status`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/servers/${serverId}/status`,
         );
         message = res.data.message;
       } catch (error) {
@@ -656,7 +658,7 @@ export default {
       try {
         res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/servers/`,
-          serverInfo
+          serverInfo,
         );
         message = res.data.message;
       } catch (error) {
@@ -669,8 +671,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/servers/pterodactyl-list`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/servers/pterodactyl-list`,
         );
         message = res.data.servers;
       } catch (error) {
@@ -685,7 +688,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons`,
         );
         message = res.data.seasons;
       } catch (error) {
@@ -698,7 +701,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -711,7 +714,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/myseasons`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/myseasons`,
         );
         message = res.data.seasons;
       } catch (error) {
@@ -724,7 +727,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/myavailable`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/myavailable`,
         );
         message = res.data.seasons;
       } catch (error) {
@@ -737,7 +740,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`,
         );
         message = res.data.season;
       } catch (error) {
@@ -748,7 +751,7 @@ export default {
     async GetSeasonData(seasonid) {
       try {
         const res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}`,
         );
         return { season: res.data.season, matches: res.data.matches || [] };
       } catch (error) {
@@ -760,8 +763,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/cvar`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/cvar`,
         );
         message = res.data.cvars;
       } catch (error) {
@@ -775,7 +779,7 @@ export default {
       try {
         res = await this.axiosCall.delete(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/`,
-          { data: seasonData }
+          { data: seasonData },
         );
         message = res.data.message;
       } catch (error) {
@@ -789,7 +793,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/`,
-          seasonInfo
+          seasonInfo,
         );
         message = res.data;
       } catch (error) {
@@ -803,7 +807,7 @@ export default {
       try {
         res = await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/`,
-          seasonInfo
+          seasonInfo,
         );
         message = res.data;
       } catch (error) {
@@ -817,7 +821,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/challonge`,
-          challongeInfo
+          challongeInfo,
         );
         message = res.data;
       } catch (error) {
@@ -830,8 +834,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/teams`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/teams`,
         );
         message = res.data.teams;
       } catch (error) {
@@ -844,9 +849,10 @@ export default {
       let message;
       try {
         res = await this.axiosCall.post(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/teams`,
-          { team_ids: teamIds }
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/teams`,
+          { team_ids: teamIds },
         );
         message = res.data;
       } catch (error) {
@@ -859,8 +865,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.delete(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/teams/${teamid}`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/teams/${teamid}`,
         );
         message = res.data;
       } catch (error) {
@@ -873,9 +880,10 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/toornament/matches`,
-          { params: filters }
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/toornament/matches`,
+          { params: filters },
         );
         message = res.data.matches;
       } catch (error) {
@@ -888,8 +896,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/toornament/stages`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/toornament/stages`,
         );
         message = res.data.stages;
       } catch (error) {
@@ -902,8 +911,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/toornament/rounds`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/toornament/rounds`,
         );
         message = res.data.rounds;
       } catch (error) {
@@ -915,7 +925,7 @@ export default {
       try {
         const res = await this.axiosCall.patch(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/matches/${matchId}/schedule`,
-          { scheduled_datetime }
+          { scheduled_datetime },
         );
         return res.data;
       } catch (error) {
@@ -926,7 +936,7 @@ export default {
       try {
         const res = await this.axiosCall.patch(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/rounds/${roundId}/schedule`,
-          { scheduled_datetime }
+          { scheduled_datetime },
         );
         return res.data;
       } catch (error) {
@@ -938,8 +948,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/toornament/matches/${toornamentMatchId}/prefill`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/toornament/matches/${toornamentMatchId}/prefill`,
         );
         message = res.data;
       } catch (error) {
@@ -952,8 +963,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/toornament/groups`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/toornament/groups`,
         );
         message = res.data.groups;
       } catch (error) {
@@ -966,7 +978,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments`,
         );
         message = res.data.tournaments;
       } catch (error) {
@@ -980,7 +992,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments`,
-          { challonge_slug, label }
+          { challonge_slug, label },
         );
         message = res.data;
       } catch (error) {
@@ -993,7 +1005,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.delete(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments/${tournamentId}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments/${tournamentId}`,
         );
         message = res.data;
       } catch (error) {
@@ -1006,9 +1018,10 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/challonge/matches`,
-          { params: filters }
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/challonge/matches`,
+          { params: filters },
         );
         message = res.data.matches;
       } catch (error) {
@@ -1021,8 +1034,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/seasons/${seasonid}/challonge/matches/${challongeMatchId}/prefill`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/challonge/matches/${challongeMatchId}/prefill`,
         );
         message = res.data;
       } catch (error) {
@@ -1035,7 +1049,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/bulk-prefill`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/bulk-prefill`,
         );
         message = res.data;
       } catch (error) {
@@ -1050,7 +1064,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/${steamid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/${steamid}`,
         );
         message = res.data.playerstats;
       } catch (error) {
@@ -1063,7 +1077,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/unique`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/unique`,
         );
         message = res.data.count;
       } catch (error) {
@@ -1076,8 +1090,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/playerstats/match/${matchid}`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/playerstats/match/${matchid}`,
         );
         message = res.data.playerstats;
       } catch (error) {
@@ -1088,14 +1103,15 @@ export default {
     async GetEventPlayerStats(matchid) {
       return this.$sse
         .create({
-          url: `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/playerstats/match/${matchid}/stream`,
+          url: `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/playerstats/match/${matchid}/stream`,
           format: "json",
           withCredentials: true,
-          polyfill: true
+          polyfill: true,
         })
-        .on("error", err =>
-          console.error("Failed to parse or lost connection:", err)
+        .on("error", (err) =>
+          console.error("Failed to parse or lost connection:", err),
         );
     },
     async GetPlayerStatRecentMatches(steamid) {
@@ -1103,8 +1119,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/playerstats/${steamid}/recent`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/playerstats/${steamid}/recent`,
         );
         message = res.data.matches;
       } catch (error) {
@@ -1119,7 +1136,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/mapstats/`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/mapstats/`,
         );
         message = res.data.mapstats;
       } catch (error) {
@@ -1132,8 +1149,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/mapstats/${matchid}/${mapnumber}`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/mapstats/${matchid}/${mapnumber}`,
         );
         message = res.data.mapstat;
       } catch (error) {
@@ -1146,7 +1164,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/mapstats/${matchid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/mapstats/${matchid}`,
         );
         message = res.data.mapstats;
       } catch (error) {
@@ -1157,14 +1175,15 @@ export default {
     async GetEventMapStats(matchid) {
       return this.$sse
         .create({
-          url: `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/mapstats/${matchid}/stream`,
+          url: `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/mapstats/${matchid}/stream`,
           format: "json",
           withCredentials: true,
-          polyfill: true
+          polyfill: true,
         })
-        .on("error", err =>
-          console.error("Failed to parse or lost connection:", err)
+        .on("error", (err) =>
+          console.error("Failed to parse or lost connection:", err),
         );
     },
     // END MAP STATS
@@ -1174,8 +1193,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/pause`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/pause`,
         );
         message = res.data.message;
       } catch (error) {
@@ -1188,8 +1208,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/unpause`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/unpause`,
         );
         message = res.data.message;
       } catch (error) {
@@ -1202,8 +1223,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/backup`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/backup`,
         );
         message = res.data;
       } catch (error) {
@@ -1216,8 +1238,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/cancel`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/cancel`,
         );
         message = res.data.message;
       } catch (error) {
@@ -1230,9 +1253,10 @@ export default {
       let message;
       try {
         res = await this.axiosCall.put(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/addspec`,
-          matchObject
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/addspec`,
+          matchObject,
         );
         message = res.data;
       } catch (error) {
@@ -1245,9 +1269,10 @@ export default {
       let message;
       try {
         res = await this.axiosCall.put(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/adduser`,
-          matchObject
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/adduser`,
+          matchObject,
         );
         message = res.data;
       } catch (error) {
@@ -1260,8 +1285,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/forfeit/${winner}`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/forfeit/${winner}`,
         );
         message = res.data.message;
       } catch (error) {
@@ -1274,9 +1300,10 @@ export default {
       let message;
       try {
         res = await this.axiosCall.put(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/rcon/`,
-          rconBody
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/rcon/`,
+          rconBody,
         );
         message = res.data;
       } catch (error) {
@@ -1289,8 +1316,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/backup/remote`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/backup/remote`,
         );
         message = res.data;
       } catch (error) {
@@ -1303,9 +1331,10 @@ export default {
       let message;
       try {
         res = await this.axiosCall.post(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/backup/`,
-          backupBody
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/backup/`,
+          backupBody,
         );
         message = res.data;
       } catch (error) {
@@ -1318,9 +1347,10 @@ export default {
       let message;
       try {
         res = await this.axiosCall.post(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/backup/remote`,
-          backupBody
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/backup/remote`,
+          backupBody,
         );
         message = res.data;
       } catch (error) {
@@ -1333,8 +1363,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/matches/${matchid}/restart/`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/matches/${matchid}/restart/`,
         );
         message = res.data;
       } catch (error) {
@@ -1351,20 +1382,20 @@ export default {
       let combinedVetoInfo = [];
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/vetoes/${matchid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/vetoes/${matchid}`,
         );
         vetoMessage = res.data.vetoes;
         try {
           res = await this.axiosCall.get(
-            `${process.env?.VUE_APP_G5V_API_URL || "/api"}/vetosides/${matchid}`
+            `${process.env?.VUE_APP_G5V_API_URL || "/api"}/vetosides/${matchid}`,
           );
           vetoSideMessage = res.data.vetoes;
         } catch (ignored) {
           // ignore errors
         }
-        vetoMessage.forEach(vetoData => {
+        vetoMessage.forEach((vetoData) => {
           if (vetoSideMessage) {
-            let combinedFind = vetoSideMessage.find(vetoSideChoice => {
+            let combinedFind = vetoSideMessage.find((vetoSideChoice) => {
               return (
                 vetoData["id"] === vetoSideChoice["veto_id"] &&
                 vetoData["map"] === vetoSideChoice["map"]
@@ -1378,14 +1409,14 @@ export default {
                   map: vetoData.map,
                   pick_or_veto: vetoData.pick_or_veto,
                   team_name_side: combinedFind.team_name,
-                  side: combinedFind.side
+                  side: combinedFind.side,
                 })
               : combinedVetoInfo.push({
                   id: vetoData.id,
                   match_id: vetoData.match_id,
                   team_name: vetoData.team_name,
                   map: vetoData.map,
-                  pick_or_veto: vetoData.pick_or_veto
+                  pick_or_veto: vetoData.pick_or_veto,
                 });
           } else {
             combinedVetoInfo.push({
@@ -1393,7 +1424,7 @@ export default {
               match_id: vetoData.match_id,
               team_name: vetoData.team_name,
               map: vetoData.map,
-              pick_or_veto: vetoData.pick_or_veto
+              pick_or_veto: vetoData.pick_or_veto,
             });
           }
         });
@@ -1408,14 +1439,15 @@ export default {
       try {
         combinedVetoInfo = await this.$sse
           .create({
-            url: `${process.env?.VUE_APP_G5V_API_URL ||
-              "/api"}/vetoes/${matchid}/stream`,
+            url: `${
+              process.env?.VUE_APP_G5V_API_URL || "/api"
+            }/vetoes/${matchid}/stream`,
             format: "json",
             withCredentials: true,
-            polyfill: true
+            polyfill: true,
           })
-          .on("error", err =>
-            console.error("Failed to parse or lost connection:", err)
+          .on("error", (err) =>
+            console.error("Failed to parse or lost connection:", err),
           );
       } catch (error) {
         combinedVetoInfo = error.response.data.message;
@@ -1426,11 +1458,12 @@ export default {
       let retVal;
       try {
         retVal = await this.$sse.create({
-          url: `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/vetosides/${matchid}/stream`,
+          url: `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/vetosides/${matchid}/stream`,
           format: "json",
           withCredentials: true,
-          polyfill: true
+          polyfill: true,
         });
       } catch (error) {
         retVal = error.response.data.message;
@@ -1444,7 +1477,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/players`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/players`,
         );
         return res.data.leaderboard;
       } catch (error) {
@@ -1457,7 +1490,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard`,
         );
         return res.data.leaderboard;
       } catch (error) {
@@ -1470,8 +1503,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/leaderboard/players/${seasonid}`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/leaderboard/players/${seasonid}`,
         );
         return res.data.leaderboard;
       } catch (error) {
@@ -1484,8 +1518,9 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/leaderboard/${seasonid}`
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/leaderboard/${seasonid}`,
         );
         return res.data.leaderboard;
       } catch (error) {
@@ -1498,7 +1533,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}`,
         );
         return res.data.leaderboard;
       } catch (error) {
@@ -1511,7 +1546,7 @@ export default {
       let message;
       try {
         res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}/${seasonid}`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/teams/${teamid}/${seasonid}`,
         );
         return res.data.leaderboard;
       } catch (error) {
@@ -1524,7 +1559,7 @@ export default {
     async GetQueues() {
       try {
         const res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`,
         );
         return res.data;
       } catch (error) {
@@ -1533,14 +1568,14 @@ export default {
     },
     async GetQueue(slug) {
       const res = await this.axiosCall.get(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
       );
       return res.data;
     },
     async GetQueuePlayers(slug) {
       try {
         const res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/players`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/players`,
         );
         return res.data;
       } catch (error) {
@@ -1550,52 +1585,53 @@ export default {
     GetEventQueueData(slug) {
       return this.$sse
         .create({
-          url: `${process.env?.VUE_APP_G5V_API_URL ||
-            "/api"}/queue/${slug}/stream`,
+          url: `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/queue/${slug}/stream`,
           format: "json",
           withCredentials: true,
-          polyfill: true
+          polyfill: true,
         })
-        .on("error", err => console.error("Queue SSE error:", err));
+        .on("error", (err) => console.error("Queue SSE error:", err));
     },
     async CreateQueue(maxPlayers = 10, isPrivate = false, manualTeams = false) {
       const res = await this.axiosCall.post(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`,
-        [{ maxPlayers, private: isPrivate, manualTeams }]
+        [{ maxPlayers, private: isPrivate, manualTeams }],
       );
       return res.data;
     },
     async JoinQueue(slug) {
       const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
-        [{ action: "join" }]
+        [{ action: "join" }],
       );
       return res.data;
     },
     async LeaveQueue(slug) {
       const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}`,
-        [{ action: "leave" }]
+        [{ action: "leave" }],
       );
       return res.data;
     },
     async SetQueueTeams(slug, team1, team2) {
       const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/teams`,
-        { team1, team2 }
+        { team1, team2 },
       );
       return res.data;
     },
     async StartManualQueue(slug) {
       const res = await this.axiosCall.post(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/start`
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue/${slug}/start`,
       );
       return res.data;
     },
     async DeleteQueue(slug) {
       const res = await this.axiosCall.delete(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/queue`,
-        { data: [{ slug }] }
+        { data: [{ slug }] },
       );
       return res.data;
     },
@@ -1607,7 +1643,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/login`,
-          userinfo
+          userinfo,
         );
         return res.data.message;
       } catch (error) {
@@ -1621,7 +1657,7 @@ export default {
       try {
         res = await this.axiosCall.post(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/register`,
-          userinfo
+          userinfo,
         );
         return res.data.message;
       } catch (error) {
@@ -1630,10 +1666,10 @@ export default {
       return message;
     },
     // END REGISTRATION CALLS
-    GetSteamURL: function(steamid) {
+    GetSteamURL: function (steamid) {
       return `https://steamcommunity.com/profiles/${steamid}`;
     },
-    get_logo_or_flag_link: function(team1, team2) {
+    get_logo_or_flag_link: function (team1, team2) {
       // get_logo_or_flag_link(team1)
       if (team1.logo && team2.logo) {
         return {
@@ -1643,11 +1679,11 @@ export default {
       } else {
         return {
           team1: this.get_flag_link(team1),
-          team2: this.get_flag_link(team2)
+          team2: this.get_flag_link(team2),
         };
       }
     },
-    get_loser: function(matchdata) {
+    get_loser: function (matchdata) {
       // returns loser's teamname
       if (matchdata.team1_score > matchdata.team2_score) {
         return matchdata.team2_name;
@@ -1657,37 +1693,37 @@ export default {
         return "";
       }
     },
-    get_flag_link: function(team) {
+    get_flag_link: function (team) {
       if (team.flag === null || team.flag === undefined || team.flag === "") {
         return `/img/_unknown.png`;
       }
       return `/img/valve_flags/${team.flag.toLowerCase()}.png`;
     },
-    GetKDR: function(playerstat) {
+    GetKDR: function (playerstat) {
       if (playerstat.deaths === 0) {
         return playerstat.kills;
       }
       return (playerstat.kills / playerstat.deaths).toFixed(2);
     },
-    GetHSP: function(playerstat) {
+    GetHSP: function (playerstat) {
       if (playerstat.kills === 0) {
         return playerstat.kills;
       }
       return ((playerstat.headshot_kills / playerstat.kills) * 100).toFixed(2);
     },
-    GetADR: function(playerstat) {
+    GetADR: function (playerstat) {
       if (playerstat.roundsplayed === 0) {
         return 0.0;
       }
       return (playerstat.damage / playerstat.roundsplayed).toFixed(2);
     },
-    GetFPR: function(playerstat) {
+    GetFPR: function (playerstat) {
       if (playerstat.roundsplayed === 0) {
         return 0.0;
       }
       return (playerstat.kills / playerstat.roundsplayed).toFixed(2);
     },
-    AdminToolsAvailable: function(match) {
+    AdminToolsAvailable: function (match) {
       if (
         (this.user.id === match.user_id || this.IsAnyAdmin(this.user)) &&
         (match.end_time == null || match.end_time == "") &&
@@ -1697,7 +1733,7 @@ export default {
         return true;
       return false;
     },
-    IsAnyAdmin: function(user) {
+    IsAnyAdmin: function (user) {
       let adminCheck = user.admin + user.super_admin;
       if (adminCheck > 0) {
         return true;
@@ -1705,12 +1741,12 @@ export default {
         return false;
       }
     },
-    GetScoreSymbol: function(score1, score2) {
+    GetScoreSymbol: function (score1, score2) {
       if (score1 > score2) return ">";
       else if (score1 < score2) return "<";
       else return "==";
     },
-    GetFlags: function() {
+    GetFlags: function () {
       return [
         "AE",
         "AR",
@@ -1784,10 +1820,10 @@ export default {
         "US",
         "VE",
         "VN",
-        "ZA"
+        "ZA",
       ];
     },
-    GetRating: function(
+    GetRating: function (
       kills = 0,
       roundsplayed = 0,
       deaths = 0,
@@ -1795,7 +1831,7 @@ export default {
       k2 = 0,
       k3 = 0,
       k4 = 0,
-      k5 = 0
+      k5 = 0,
     ) {
       try {
         let AverageKPR = 0.679;
@@ -1824,29 +1860,30 @@ export default {
     // IMAGE SETTINGS
     async GetImageFonts() {
       const res = await this.axiosCall.get(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/fonts`
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/fonts`,
       );
       return res.data;
     },
     async GetImageSettings() {
       const res = await this.axiosCall.get(
-        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings`
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings`,
       );
       return res.data;
     },
     async SaveImageSettings(settings) {
       const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings`,
-        settings
+        settings,
       );
       return res.data;
     },
     async UploadImageBackground(formData) {
       const res = await this.axiosCall.post(
-        `${process.env?.VUE_APP_G5V_API_URL ||
-          "/api"}/image/settings/background`,
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/image/settings/background`,
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        { headers: { "Content-Type": "multipart/form-data" } },
       );
       return res.data;
     },
@@ -1854,18 +1891,20 @@ export default {
       const res = await this.axiosCall.post(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings/font`,
         formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
+        { headers: { "Content-Type": "multipart/form-data" } },
       );
       return res.data;
     },
     GetPlayerImageUrl(matchId, steamId) {
-      return `${process.env?.VUE_APP_G5V_API_URL ||
-        "/api"}/image/match/${matchId}/player/${steamId}`;
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/image/match/${matchId}/player/${steamId}`;
     },
     GetTeamSeasonImageUrl(seasonId, teamId) {
-      return `${process.env?.VUE_APP_G5V_API_URL ||
-        "/api"}/image/season/${seasonId}/team/${teamId}`;
-    }
-  }
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/image/season/${seasonId}/team/${teamId}`;
+    },
+  },
 };
 </script>

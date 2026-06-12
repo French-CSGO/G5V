@@ -10,7 +10,9 @@
       <v-card-text class="pt-4">
         <!-- Format global -->
         <div class="mb-3">
-          <span class="caption text--secondary">Format pour tous les matchs</span>
+          <span class="caption text--secondary"
+            >Format pour tous les matchs</span
+          >
           <v-btn-toggle v-model="globalFormat" mandatory dense class="ml-3">
             <v-btn :value="1" small>BO1</v-btn>
             <v-btn :value="3" small>BO3</v-btn>
@@ -22,10 +24,10 @@
         <v-simple-table dense>
           <thead>
             <tr>
-              <th style="width:30px">#</th>
+              <th style="width: 30px">#</th>
               <th>Équipe 1</th>
               <th>Équipe 2</th>
-              <th style="width:280px">Serveur</th>
+              <th style="width: 280px">Serveur</th>
             </tr>
           </thead>
           <tbody>
@@ -34,7 +36,7 @@
               :key="row.challonge_id"
               :class="row.server_id ? '' : 'grey--text'"
             >
-              <td class="caption">{{ row.suggested_play_order || '—' }}</td>
+              <td class="caption">{{ row.suggested_play_order || "—" }}</td>
               <td>{{ row.team1_name }}</td>
               <td>{{ row.team2_name }}</td>
               <td>
@@ -49,7 +51,7 @@
                   clearable
                   placeholder="(ne sera pas créé)"
                   class="my-1"
-                  style="font-size:12px"
+                  style="font-size: 12px"
                 />
               </td>
             </tr>
@@ -58,15 +60,31 @@
 
         <!-- Résumé -->
         <div class="mt-3 caption">
-          <v-icon small :color="createCount > 0 ? 'success' : 'grey'">mdi-information-outline</v-icon>
+          <v-icon small :color="createCount > 0 ? 'success' : 'grey'"
+            >mdi-information-outline</v-icon
+          >
           <span class="ml-1">
-            <strong>{{ createCount }}</strong> match{{ createCount !== 1 ? 's' : '' }} sera{{ createCount !== 1 ? 'ont' : '' }} créé{{ createCount !== 1 ? 's' : '' }}
-            <span v-if="skipCount" class="grey--text ml-1">({{ skipCount }} ignoré{{ skipCount !== 1 ? 's' : '' }} — pas de serveur)</span>
+            <strong>{{ createCount }}</strong> match{{
+              createCount !== 1 ? "s" : ""
+            }}
+            sera{{ createCount !== 1 ? "ont" : "" }} créé{{
+              createCount !== 1 ? "s" : ""
+            }}
+            <span v-if="skipCount" class="grey--text ml-1"
+              >({{ skipCount }} ignoré{{ skipCount !== 1 ? "s" : "" }} — pas de
+              serveur)</span
+            >
           </span>
         </div>
 
         <!-- Progression -->
-        <v-alert v-if="progress.total > 0" type="info" text dense class="mt-3 mb-0">
+        <v-alert
+          v-if="progress.total > 0"
+          type="info"
+          text
+          dense
+          class="mt-3 mb-0"
+        >
           <v-progress-linear
             :value="(progress.done / progress.total) * 100"
             height="6"
@@ -92,7 +110,7 @@
           @click="createAll"
         >
           <v-icon left small>mdi-plus</v-icon>
-          Créer {{ createCount }} match{{ createCount !== 1 ? 's' : '' }}
+          Créer {{ createCount }} match{{ createCount !== 1 ? "s" : "" }}
         </v-btn>
       </v-card-actions>
 
@@ -113,7 +131,7 @@ export default {
     value: Boolean,
     round: { type: Number, default: 0 },
     matches: { type: Array, default: () => [] },
-    prefillData: { type: Object, default: () => ({}) }
+    prefillData: { type: Object, default: () => ({}) },
   },
   data() {
     return {
@@ -123,23 +141,27 @@ export default {
       progress: { total: 0, done: 0, errors: [] },
       snackbar: false,
       snackbarMessage: "",
-      snackbarColor: "success"
+      snackbarColor: "success",
     };
   },
   computed: {
     dialog: {
-      get() { return this.value; },
-      set(val) { this.$emit("input", val); }
+      get() {
+        return this.value;
+      },
+      set(val) {
+        this.$emit("input", val);
+      },
     },
     serverItems() {
       return this.prefillData.available_servers || [];
     },
     createCount() {
-      return this.rows.filter(r => r.server_id).length;
+      return this.rows.filter((r) => r.server_id).length;
     },
     skipCount() {
-      return this.rows.filter(r => !r.server_id).length;
-    }
+      return this.rows.filter((r) => !r.server_id).length;
+    },
   },
   watch: {
     value(val) {
@@ -147,7 +169,7 @@ export default {
     },
     prefillData() {
       if (this.value) this.init();
-    }
+    },
   },
   methods: {
     init() {
@@ -167,7 +189,7 @@ export default {
         team2_name: m.player2?.local_team?.name || m.player2?.name || "?",
         team1_id: m.player1?.local_team?.id ?? null,
         team2_id: m.player2?.local_team?.id ?? null,
-        server_id: i < servers.length ? servers[i].id : null
+        server_id: i < servers.length ? servers[i].id : null,
       }));
     },
     close() {
@@ -176,42 +198,60 @@ export default {
     buildMatchPayload(row) {
       const sc = this.prefillData.season_cvars || {};
       const reserved = [
-        "min_players_to_ready", "min_spectators_to_ready", "players_per_team",
-        "maps_to_win", "wingman", "skip_veto", "map_pool", "side_type",
-        "spectators", "map_sides"
+        "min_players_to_ready",
+        "min_spectators_to_ready",
+        "players_per_team",
+        "maps_to_win",
+        "wingman",
+        "skip_veto",
+        "map_pool",
+        "side_type",
+        "spectators",
+        "map_sides",
       ];
       const cvars = Object.fromEntries(
-        Object.entries(sc).filter(([k]) => !reserved.includes(k))
+        Object.entries(sc).filter(([k]) => !reserved.includes(k)),
       );
-      return [{
-        server_id: row.server_id,
-        team1_id: row.team1_id,
-        team2_id: row.team2_id,
-        season_id: this.prefillData.season_id,
-        challonge_id: row.challonge_id,
-        start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
-        max_maps: this.globalFormat,
-        skip_veto: sc.skip_veto != null ? !!parseInt(sc.skip_veto) : false,
-        veto_first: "team1",
-        side_type: sc.side_type || "standard",
-        veto_mappool: sc.map_pool || null,
-        map_sides: sc.map_sides ? sc.map_sides.trim().split(/\s+/).join(",") : null,
-        min_players_to_ready: sc.min_players_to_ready != null ? parseInt(sc.min_players_to_ready) : null,
-        min_spectators_to_ready: sc.min_spectators_to_ready != null ? parseInt(sc.min_spectators_to_ready) : null,
-        players_per_team: sc.players_per_team != null ? parseInt(sc.players_per_team) : null,
-        wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null,
-        match_cvars: Object.keys(cvars).length ? cvars : null
-      }];
+      return [
+        {
+          server_id: row.server_id,
+          team1_id: row.team1_id,
+          team2_id: row.team2_id,
+          season_id: this.prefillData.season_id,
+          challonge_id: row.challonge_id,
+          start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
+          max_maps: this.globalFormat,
+          skip_veto: sc.skip_veto != null ? !!parseInt(sc.skip_veto) : false,
+          veto_first: "team1",
+          side_type: sc.side_type || "standard",
+          veto_mappool: sc.map_pool || null,
+          map_sides: sc.map_sides
+            ? sc.map_sides.trim().split(/\s+/).join(",")
+            : null,
+          min_players_to_ready:
+            sc.min_players_to_ready != null
+              ? parseInt(sc.min_players_to_ready)
+              : null,
+          min_spectators_to_ready:
+            sc.min_spectators_to_ready != null
+              ? parseInt(sc.min_spectators_to_ready)
+              : null,
+          players_per_team:
+            sc.players_per_team != null ? parseInt(sc.players_per_team) : null,
+          wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null,
+          match_cvars: Object.keys(cvars).length ? cvars : null,
+        },
+      ];
     },
     async createAll() {
-      const toCreate = this.rows.filter(r => r.server_id);
+      const toCreate = this.rows.filter((r) => r.server_id);
       if (!toCreate.length) return;
 
       this.isLoading = true;
       this.progress = { total: toCreate.length, done: 0, errors: [] };
 
       const results = await Promise.allSettled(
-        toCreate.map(row => this.InsertMatch(this.buildMatchPayload(row)))
+        toCreate.map((row) => this.InsertMatch(this.buildMatchPayload(row))),
       );
 
       const created = [];
@@ -220,8 +260,12 @@ export default {
         if (r.status === "fulfilled" && r.value?.id != null) {
           created.push(r.value.id);
         } else {
-          const msg = r.status === "rejected" ? r.reason?.message : r.value?.message;
-          this.progress.errors.push({ row: toCreate[i], message: msg || "Erreur inconnue" });
+          const msg =
+            r.status === "rejected" ? r.reason?.message : r.value?.message;
+          this.progress.errors.push({
+            row: toCreate[i],
+            message: msg || "Erreur inconnue",
+          });
         }
       }
       this.progress.done = toCreate.length;
@@ -237,7 +281,7 @@ export default {
         this.snackbar = true;
         if (created.length > 0) this.$emit("matches-created", created);
       }
-    }
-  }
+    },
+  },
 };
 </script>

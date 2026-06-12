@@ -7,9 +7,7 @@
             {{ title }}
           </span>
           <v-spacer></v-spacer>
-          <button type="button" class="close" @click="show = false">
-            X
-          </button>
+          <button type="button" class="close" @click="show = false">X</button>
         </v-card-title>
         <v-card-text>
           <v-form ref="loginForm">
@@ -40,7 +38,7 @@
                       ref="Username"
                       required
                       :rules="[
-                        () => !!userInfo.username || $t('misc.Required')
+                        () => !!userInfo.username || $t('misc.Required'),
                       ]"
                     />
                   </v-col>
@@ -52,7 +50,7 @@
                       :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
                       :type="showPass ? 'text' : 'password'"
                       :rules="[
-                        () => !!userInfo.password || $t('misc.Required')
+                        () => !!userInfo.password || $t('misc.Required'),
                       ]"
                       @click:append="showPass = !showPass"
                     />
@@ -109,7 +107,7 @@
 export default {
   props: {
     value: Boolean,
-    title: String
+    title: String,
   },
   computed: {
     show: {
@@ -124,8 +122,8 @@ export default {
           });
         }
         this.$emit("input", value);
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -133,7 +131,7 @@ export default {
       response: "",
       responseSheet: false,
       userLoading: false,
-      userInfo: Object
+      userInfo: Object,
     };
   },
   methods: {
@@ -143,7 +141,7 @@ export default {
         let userResponse;
         let userObject = {
           username: this.userInfo.username,
-          password: this.userInfo.password
+          password: this.userInfo.password,
         };
         userResponse = await this.login(userObject);
         if (!userResponse.includes("Success")) {
@@ -169,7 +167,7 @@ export default {
         let userObject = {
           username: this.userInfo.username,
           password: this.userInfo.password,
-          steam_id: this.userInfo.steam_id
+          steam_id: this.userInfo.steam_id,
         };
         userResponse = await this.registerUser(userObject);
         if (!userResponse.includes("Success")) {
@@ -180,10 +178,10 @@ export default {
           window.location.reload();
         }
       }
-    }
+    },
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>

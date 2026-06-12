@@ -13,7 +13,7 @@ import PlayerLeaderboardTable from "@/components/PlayerLeaderboardTable.vue";
 export default {
   name: "PlayerLeaderboard",
   components: {
-    PlayerLeaderboardTable
+    PlayerLeaderboardTable,
   },
   data() {
     return {
@@ -25,12 +25,12 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
-      } // should be object from JSON response
+        large_image: "",
+      }, // should be object from JSON response
     };
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>

@@ -42,7 +42,7 @@
               :items="[
                 { text: $t('Toornament.StatusPending'), value: 'pending' },
                 { text: $t('Toornament.StatusRunning'), value: 'running' },
-                { text: $t('Toornament.StatusCompleted'), value: 'completed' }
+                { text: $t('Toornament.StatusCompleted'), value: 'completed' },
               ]"
               :label="$t('Toornament.FilterStatus')"
               clearable
@@ -95,11 +95,7 @@
 
       <!-- Grouped by round -->
       <v-card-text v-if="!loading && groupedByRound.length">
-        <div
-          v-for="group in groupedByRound"
-          :key="group.roundKey"
-          class="mb-6"
-        >
+        <div v-for="group in groupedByRound" :key="group.roundKey" class="mb-6">
           <!-- Round header -->
           <div class="d-flex align-center mb-2">
             <v-chip small color="secondary" class="mr-2 font-weight-bold">
@@ -143,8 +139,8 @@
                   item.status === 'completed'
                     ? 'success'
                     : item.status === 'running'
-                    ? 'warning'
-                    : 'default'
+                      ? 'warning'
+                      : 'default'
                 "
               >
                 {{ $t("Toornament.Status_" + item.status) }}
@@ -175,8 +171,8 @@
                 <v-btn
                   v-if="
                     item.status === 'pending' &&
-                      item.opponents[0].local_team &&
-                      item.opponents[1].local_team
+                    item.opponents[0].local_team &&
+                    item.opponents[1].local_team
                   "
                   x-small
                   color="primary"
@@ -234,7 +230,7 @@ export default {
       filterGroup: null,
       filterCreatable: false,
       showForm: false,
-      prefill: {}
+      prefill: {},
     };
   },
   computed: {
@@ -249,27 +245,27 @@ export default {
     },
     availableGroups() {
       if (!this.filterStage) return [];
-      return this.groups.filter(g => g.stage_id === this.filterStage);
+      return this.groups.filter((g) => g.stage_id === this.filterStage);
     },
     filteredMatches() {
       let list = this.matches;
       if (this.filterCreatable) {
         list = list.filter(
-          m =>
+          (m) =>
             !m.g5_match_id &&
             m.status === "pending" &&
             m.opponents[0] &&
             m.opponents[0].local_team &&
             m.opponents[1] &&
-            m.opponents[1].local_team
+            m.opponents[1].local_team,
         );
       }
       return list;
     },
     groupedByRound() {
-      const stageMap = new Map(this.stages.map(s => [s.id, s.name]));
-      const groupMap = new Map(this.groups.map(g => [g.id, g.name]));
-      const roundMap = new Map(this.rounds.map(r => [r.id, r]));
+      const stageMap = new Map(this.stages.map((s) => [s.id, s.name]));
+      const groupMap = new Map(this.groups.map((g) => [g.id, g.name]));
+      const roundMap = new Map(this.rounds.map((r) => [r.id, r]));
 
       const byRound = new Map();
       for (const match of this.filteredMatches) {
@@ -280,11 +276,11 @@ export default {
             roundKey: key,
             stageName: stageMap.get(match.stage_id) || match.stage_id || "",
             groupName: groupMap.get(match.group_id) || "",
-            roundName: round ? round.name : (match.round_id || ""),
+            roundName: round ? round.name : match.round_id || "",
             roundNumber: round ? round.number : 0,
             stageId: match.stage_id,
             groupId: match.group_id,
-            matches: []
+            matches: [],
           });
         }
         byRound.get(key).matches.push(match);
@@ -300,21 +296,53 @@ export default {
     tableHeaders() {
       return [
         { text: "#", value: "number", width: "50px" },
-        { text: this.$t("Toornament.ColTeam1"), value: "team1", sortable: false },
-        { text: this.$t("Toornament.ColTeam2"), value: "team2", sortable: false },
-        { text: this.$t("Toornament.ColFormat"), value: "format", sortable: false },
-        { text: this.$t("Toornament.ColStatus"), value: "status", sortable: false },
+        {
+          text: this.$t("Toornament.ColTeam1"),
+          value: "team1",
+          sortable: false,
+        },
+        {
+          text: this.$t("Toornament.ColTeam2"),
+          value: "team2",
+          sortable: false,
+        },
+        {
+          text: this.$t("Toornament.ColFormat"),
+          value: "format",
+          sortable: false,
+        },
+        {
+          text: this.$t("Toornament.ColStatus"),
+          value: "status",
+          sortable: false,
+        },
         { text: this.$t("Toornament.ColDate"), value: "scheduled_datetime" },
-        { text: "", value: "actions", sortable: false, align: "end", width: "200px" }
+        {
+          text: "",
+          value: "actions",
+          sortable: false,
+          align: "end",
+          width: "200px",
+        },
       ];
-    }
+    },
   },
   watch: {
-    filterTeam() { this.pushQuery(); },
-    filterStatus() { this.pushQuery(); },
-    filterStage() { this.pushQuery(); },
-    filterGroup() { this.pushQuery(); },
-    filterCreatable() { this.pushQuery(); }
+    filterTeam() {
+      this.pushQuery();
+    },
+    filterStatus() {
+      this.pushQuery();
+    },
+    filterStage() {
+      this.pushQuery();
+    },
+    filterGroup() {
+      this.pushQuery();
+    },
+    filterCreatable() {
+      this.pushQuery();
+    },
   },
   async created() {
     this.user = await this.IsLoggedIn();
@@ -327,7 +355,7 @@ export default {
       this.GetSeasonTeams(this.seasonId),
       this.GetToornamentStages(this.seasonId),
       this.GetToornamentGroups(this.seasonId),
-      this.GetToornamentRounds(this.seasonId)
+      this.GetToornamentRounds(this.seasonId),
     ]);
     this.seasonTeams = Array.isArray(teams) ? teams : [];
     this.stages = Array.isArray(stages) ? stages : [];
@@ -358,7 +386,7 @@ export default {
         team_id: this.filterTeam || undefined,
         status: this.filterStatus || undefined,
         stage_id: this.filterStage || undefined,
-        group_id: this.filterGroup || undefined
+        group_id: this.filterGroup || undefined,
       });
       if (!Array.isArray(this.matches)) this.matches = [];
       this.loading = false;
@@ -370,7 +398,7 @@ export default {
     async openCreate(match) {
       const data = await this.GetToornamentMatchPrefill(
         this.seasonId,
-        match.id
+        match.id,
       );
       if (data) {
         this.prefill = data;
@@ -380,7 +408,7 @@ export default {
     matchFormat(match) {
       let fmt = match.settings && match.settings.format;
       if (!fmt) {
-        const stage = this.stages.find(s => s.id === match.stage_id);
+        const stage = this.stages.find((s) => s.id === match.stage_id);
         fmt =
           (stage && stage.match_settings && stage.match_settings.format) ||
           (stage &&
@@ -399,7 +427,7 @@ export default {
       return opp.participant
         ? opp.participant.name
         : this.$t("Toornament.TeamTBD");
-    }
-  }
+    },
+  },
 };
 </script>

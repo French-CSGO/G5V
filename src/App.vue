@@ -23,17 +23,17 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
-      } // should be object from JSON response
+        large_image: "",
+      }, // should be object from JSON response
     };
   },
   components: {
     Navbar,
-    Footer
+    Footer,
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>
 

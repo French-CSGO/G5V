@@ -67,14 +67,14 @@
 export default {
   props: {
     user: Object,
-    propMatches: { type: Array, default: null }
+    propMatches: { type: Array, default: null },
   },
   data() {
     return {
       matches: [],
       isLoading: true,
       deletePending: false,
-      isThereCancelledMatches: false
+      isThereCancelledMatches: false,
     };
   },
   created() {
@@ -97,26 +97,26 @@ export default {
           text: this.$t("Matches.MatchID"),
           align: "start",
           sortable: true,
-          value: "id"
+          value: "id",
         },
         {
           text: this.$t("Matches.Team1"),
-          value: "team1_string"
+          value: "team1_string",
         },
         {
           text: this.$t("Matches.Team2"),
-          value: "team2_string"
+          value: "team2_string",
         },
         {
           text: this.$t("Matches.Status"),
-          value: "match_status"
+          value: "match_status",
         },
         {
           text: this.$t("Matches.Owner"),
-          value: "owner"
-        }
+          value: "owner",
+        },
       ];
-    }
+    },
   },
   methods: {
     async GetMatches() {
@@ -149,28 +149,28 @@ export default {
         if (typeof res == "string") res = [];
         // If matches come from season endpoint, owner and match_status are already embedded
         if (this.propMatches !== null) {
-          this.matches = res.map(match => {
+          this.matches = res.map((match) => {
             if (match.cancelled == 1) this.isThereCancelledMatches = true;
             return match;
           });
         } else {
           const userCache = new Map();
-          const getUserCached = id => {
+          const getUserCached = (id) => {
             if (!userCache.has(id)) userCache.set(id, this.GetUserData(id));
             return userCache.get(id);
           };
           this.matches = await Promise.all(
-            res.map(async match => {
+            res.map(async (match) => {
               const teamId = match.team1_id ?? match.team2_id;
               const [ownerRes, statusRes] = await Promise.all([
                 getUserCached(match.user_id),
-                this.GetMatchResult(teamId, match.id)
+                this.GetMatchResult(teamId, match.id),
               ]);
               match.owner = ownerRes.name;
               match.match_status = statusRes;
               if (match.cancelled == 1) this.isThereCancelledMatches = true;
               return match;
-            })
+            }),
           );
         }
       } catch (error) {
@@ -187,7 +187,7 @@ export default {
       this.isLoading = true;
       this.isThereCancelledMatches = false;
       await this.GetMatches();
-    }
-  }
+    },
+  },
 };
 </script>

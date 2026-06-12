@@ -396,7 +396,7 @@
           <v-card
             outlined
             :class="{
-              'primary lighten-5': myQueue && myQueue.name === queue.name
+              'primary lighten-5': myQueue && myQueue.name === queue.name,
             }"
           >
             <v-card-title class="subtitle-1">
@@ -517,7 +517,7 @@ export default {
         steam_id: "",
         id: null,
         super_admin: false,
-        name: ""
+        name: "",
       },
       queues: [],
       myQueue: null,
@@ -542,7 +542,7 @@ export default {
       manualTeam1: [],
       manualTeam2: [],
       assignDialog: false,
-      assigningPlayer: null
+      assigningPlayer: null,
     };
   },
   computed: {
@@ -560,7 +560,7 @@ export default {
     },
     publicQueues() {
       if (!this.myQueue) return this.queues;
-      return this.queues.filter(q => q.name !== this.myQueue.name);
+      return this.queues.filter((q) => q.name !== this.myQueue.name);
     },
     emptySlots() {
       if (!this.myQueue) return 0;
@@ -571,10 +571,10 @@ export default {
     },
     manualUnassigned() {
       const assigned = new Set([
-        ...this.manualTeam1.map(p => p.steamId),
-        ...this.manualTeam2.map(p => p.steamId)
+        ...this.manualTeam1.map((p) => p.steamId),
+        ...this.manualTeam2.map((p) => p.steamId),
       ]);
-      return this.queuePlayers.filter(p => !assigned.has(p.steamId));
+      return this.queuePlayers.filter((p) => !assigned.has(p.steamId));
     },
     teamsValid() {
       return (
@@ -582,7 +582,7 @@ export default {
         this.manualTeam1.length > 0 &&
         this.manualTeam2.length > 0
       );
-    }
+    },
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
@@ -605,7 +605,7 @@ export default {
         // Check if I'm already in a queue
         for (const q of this.queues) {
           const players = await this.GetQueuePlayers(q.name);
-          const me = players.find(p => p.steamId === this.user.steam_id);
+          const me = players.find((p) => p.steamId === this.user.steam_id);
           if (me) {
             this.myQueue = q;
             this.queuePlayers = players;
@@ -656,7 +656,7 @@ export default {
         const result = await this.CreateQueue(
           this.newQueueSize,
           this.newQueuePrivate,
-          this.newQueueManual
+          this.newQueueManual,
         );
         this.createDialog = false;
         if (result.matchId) {
@@ -716,43 +716,43 @@ export default {
       try {
         this.sseClient = await this.GetEventQueueData(slug);
 
-        this.sseClient.on("queueInit", data => {
+        this.sseClient.on("queueInit", (data) => {
           if (data.players) this.queuePlayers = data.players;
           if (data.meta) this.myQueue = data.meta;
         });
 
-        this.sseClient.on("playerJoined", data => {
+        this.sseClient.on("playerJoined", (data) => {
           this.queuePlayers = [...(this.queuePlayers || [])];
           if (
             data.player &&
-            !this.queuePlayers.find(p => p.steamId === data.player.steamId)
+            !this.queuePlayers.find((p) => p.steamId === data.player.steamId)
           ) {
             this.queuePlayers.push(data.player);
           }
           if (this.myQueue) {
             this.myQueue = {
               ...this.myQueue,
-              currentPlayers: data.currentPlayers
+              currentPlayers: data.currentPlayers,
             };
           }
           // Update in main list too
-          const idx = this.queues.findIndex(q => q.name === data.slug);
+          const idx = this.queues.findIndex((q) => q.name === data.slug);
           if (idx !== -1) {
             this.$set(this.queues, idx, {
               ...this.queues[idx],
-              currentPlayers: data.currentPlayers
+              currentPlayers: data.currentPlayers,
             });
           }
         });
 
-        this.sseClient.on("playerLeft", data => {
+        this.sseClient.on("playerLeft", (data) => {
           this.queuePlayers = this.queuePlayers.filter(
-            p => p.steamId !== data.steamId
+            (p) => p.steamId !== data.steamId,
           );
           if (this.myQueue) {
             this.myQueue = {
               ...this.myQueue,
-              currentPlayers: data.currentPlayers
+              currentPlayers: data.currentPlayers,
             };
           }
         });
@@ -761,7 +761,7 @@ export default {
           this.serverStarting = true;
         });
 
-        this.sseClient.on("queueFull", data => {
+        this.sseClient.on("queueFull", (data) => {
           this.serverStarting = false;
           this.createdMatchId = data.matchId;
           this.myQueue = null;
@@ -869,11 +869,11 @@ export default {
     moveToUnassigned(player, fromTeam) {
       if (fromTeam === 1) {
         this.manualTeam1 = this.manualTeam1.filter(
-          p => p.steamId !== player.steamId
+          (p) => p.steamId !== player.steamId,
         );
       } else {
         this.manualTeam2 = this.manualTeam2.filter(
-          p => p.steamId !== player.steamId
+          (p) => p.steamId !== player.steamId,
         );
       }
     },
@@ -893,8 +893,8 @@ export default {
       if (!this.myQueue || !this.teamsValid) return;
       this.starting = true;
       try {
-        const team1Ids = this.manualTeam1.map(p => p.steamId);
-        const team2Ids = this.manualTeam2.map(p => p.steamId);
+        const team1Ids = this.manualTeam1.map((p) => p.steamId);
+        const team2Ids = this.manualTeam2.map((p) => p.steamId);
         await this.SetQueueTeams(this.myQueue.name, team1Ids, team2Ids);
         const result = await this.StartManualQueue(this.myQueue.name);
         if (result.matchId) {
@@ -915,8 +915,8 @@ export default {
 
     showSnack(text, color = "success") {
       this.snackbar = { show: true, text, color };
-    }
-  }
+    },
+  },
 };
 </script>
 

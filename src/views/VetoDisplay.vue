@@ -38,8 +38,8 @@
                 'waiting-side':
                   card.state === 'pick' &&
                   !card.side &&
-                  card.team_name !== 'Decider'
-              }
+                  card.team_name !== 'Decider',
+              },
             ]"
           >
             <img class="map-bg" :src="mapImg(card.map)" @error="imgFallback" />
@@ -62,8 +62,8 @@
               <div
                 v-if="
                   card.state !== 'standby' &&
-                    card.team_name &&
-                    card.team_name !== 'Decider'
+                  card.team_name &&
+                  card.team_name !== 'Decider'
                 "
                 class="team-name"
               >
@@ -101,7 +101,7 @@ const MAP_NAMES = {
   de_tuscan: "Tuscan",
   de_basalt: "Basalt",
   cs_office: "Office",
-  cs_agency: "Agency"
+  cs_agency: "Agency",
 };
 
 export default {
@@ -117,19 +117,19 @@ export default {
       matchData: null,
       mapPool: [], // ex: ['de_mirage', 'de_nuke', ...]
       vetoList: [], // [{id, map, team_name, pick_or_veto}]
-      vetoSideList: [] // [{veto_id, team_name, side}]
+      vetoSideList: [], // [{veto_id, team_name, side}]
     };
   },
   computed: {
     // Decider en standby si des bans ne sont pas encore arrivés
     deciderStandby() {
-      const decidedMaps = new Set(this.vetoList.map(v => v.map));
-      return this.mapPool.some(m => !decidedMaps.has(m));
+      const decidedMaps = new Set(this.vetoList.map((v) => v.map));
+      return this.mapPool.some((m) => !decidedMaps.has(m));
     },
     // Ligne bas : maps pending + decider si standby
     pendingMaps() {
-      return this.mapPool.filter(m => {
-        const veto = this.vetoList.find(v => v.map === m);
+      return this.mapPool.filter((m) => {
+        const veto = this.vetoList.find((v) => v.map === m);
         if (!veto) return true;
         return veto.team_name === "Decider" && this.deciderStandby;
       });
@@ -137,20 +137,22 @@ export default {
     // Ligne haut : maps décidées (decider exclu si standby)
     decidedCards() {
       return [...this.vetoList]
-        .filter(veto => !(veto.team_name === "Decider" && this.deciderStandby))
+        .filter(
+          (veto) => !(veto.team_name === "Decider" && this.deciderStandby),
+        )
         .sort((a, b) => a.id - b.id)
-        .map(veto => {
-          const side = this.vetoSideList.find(s => s.veto_id === veto.id);
+        .map((veto) => {
+          const side = this.vetoSideList.find((s) => s.veto_id === veto.id);
           return {
             id: veto.id,
             map: veto.map,
             state: veto.pick_or_veto === "pick" ? "pick" : "ban",
             team_name: veto.team_name,
             side_team: side ? side.team_name : null,
-            side: side ? side.side : null
+            side: side ? side.side : null,
           };
         });
-    }
+    },
   },
   async mounted() {
     const id = Number(this.$route.params.id);
@@ -161,18 +163,18 @@ export default {
     // Charger l'état existant (page ouverte en cours de veto)
     const combined = await this.GetVetoesOfMatch(id);
     if (Array.isArray(combined)) {
-      this.vetoList = combined.map(v => ({
+      this.vetoList = combined.map((v) => ({
         id: v.id,
         map: v.map,
         team_name: v.team_name,
-        pick_or_veto: v.pick_or_veto
+        pick_or_veto: v.pick_or_veto,
       }));
       this.vetoSideList = combined
-        .filter(v => v.side)
-        .map(v => ({
+        .filter((v) => v.side)
+        .map((v) => ({
           veto_id: v.id,
           team_name: v.team_name_side,
-          side: v.side
+          side: v.side,
         }));
     }
     // Streaming si match en cours
@@ -185,23 +187,23 @@ export default {
       try {
         this.vetoSSE = await this.GetStreamedVetoesOfMatch(matchId);
         await this.vetoSSE
-          .on("vetodata", arr => {
-            this.vetoList = arr.map(v => ({
+          .on("vetodata", (arr) => {
+            this.vetoList = arr.map((v) => ({
               id: v.id,
               map: v.map,
               team_name: v.team_name,
-              pick_or_veto: v.pick_or_veto
+              pick_or_veto: v.pick_or_veto,
             }));
           })
           .connect();
 
         this.vetoSideSSE = await this.GetStreamedVetoSidesOfMatch(matchId);
         await this.vetoSideSSE
-          .on("vetosidedata", arr => {
-            this.vetoSideList = arr.map(s => ({
+          .on("vetosidedata", (arr) => {
+            this.vetoSideList = arr.map((s) => ({
               veto_id: s.veto_id,
               team_name: s.team_name,
-              side: s.side
+              side: s.side,
             }));
           })
           .connect();
@@ -223,7 +225,7 @@ export default {
         map
           .replace(/^(de_|cs_|ar_)/, "")
           .replace(/_/g, " ")
-          .replace(/\b\w/g, c => c.toUpperCase())
+          .replace(/\b\w/g, (c) => c.toUpperCase())
       );
     },
     actionLabel(card) {
@@ -236,8 +238,8 @@ export default {
       return pickerName === this.matchData.team1_string
         ? this.matchData.team2_string
         : this.matchData.team1_string;
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -289,7 +291,9 @@ export default {
   border-radius: 8px;
   height: 165px;
   border: 2px solid rgba(255, 255, 255, 0.15);
-  transition: box-shadow 0.35s ease, border-color 0.35s ease;
+  transition:
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
   background: #1a1a1a;
 }
 
@@ -388,17 +392,23 @@ export default {
 /* ── Halos selon l'état ─────────────────────────────── */
 .map-card.ban {
   border-color: #e53935;
-  box-shadow: 0 0 0 2px #e53935, 0 0 22px 5px rgba(229, 57, 53, 0.55);
+  box-shadow:
+    0 0 0 2px #e53935,
+    0 0 22px 5px rgba(229, 57, 53, 0.55);
 }
 
 .map-card.pick {
   border-color: #43a047;
-  box-shadow: 0 0 0 2px #43a047, 0 0 22px 5px rgba(67, 160, 71, 0.55);
+  box-shadow:
+    0 0 0 2px #43a047,
+    0 0 22px 5px rgba(67, 160, 71, 0.55);
 }
 
 .map-card.pick.decider {
   border-color: #fb8c00;
-  box-shadow: 0 0 0 2px #fb8c00, 0 0 22px 5px rgba(251, 140, 0, 0.55);
+  box-shadow:
+    0 0 0 2px #fb8c00,
+    0 0 22px 5px rgba(251, 140, 0, 0.55);
 }
 
 /* Carte pending : légère lueur blanche */
@@ -415,17 +425,23 @@ export default {
 /* Pick en attente du side : pulse gris */
 .map-card.pick.waiting-side {
   border-color: #888;
-  box-shadow: 0 0 0 2px #888, 0 0 22px 5px rgba(150, 150, 150, 0.4);
+  box-shadow:
+    0 0 0 2px #888,
+    0 0 22px 5px rgba(150, 150, 150, 0.4);
   animation: pulse-waiting 1.5s ease-in-out infinite;
 }
 
 @keyframes pulse-waiting {
   0%,
   100% {
-    box-shadow: 0 0 0 2px #888, 0 0 18px 4px rgba(150, 150, 150, 0.35);
+    box-shadow:
+      0 0 0 2px #888,
+      0 0 18px 4px rgba(150, 150, 150, 0.35);
   }
   50% {
-    box-shadow: 0 0 0 2px #aaa, 0 0 30px 10px rgba(180, 180, 180, 0.65);
+    box-shadow:
+      0 0 0 2px #aaa,
+      0 0 30px 10px rgba(180, 180, 180, 0.65);
   }
 }
 </style>

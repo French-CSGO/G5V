@@ -22,9 +22,7 @@
         <v-menu top offset-y open-on-hover>
           <template v-slot:activator="{ on, attrs }">
             <v-btn class="mx-4" icon small v-bind="attrs" v-on="on">
-              <v-icon size="24px">
-                mdi-translate
-              </v-icon>
+              <v-icon size="24px"> mdi-translate </v-icon>
             </v-btn>
           </template>
           <v-list>
@@ -47,9 +45,7 @@
               v-on="on"
               :to="'/metrics'"
             >
-              <v-icon size="24px">
-                mdi-information
-              </v-icon>
+              <v-icon size="24px"> mdi-information </v-icon>
             </v-btn>
           </template>
           <span>{{ $t("Footer.metrics") }}</span>
@@ -72,28 +68,28 @@ export default {
       languages: [
         {
           Language: "English",
-          Code: "en"
+          Code: "en",
         },
         {
           Language: "Français",
-          Code: "fr"
+          Code: "fr",
         },
         {
           Language: "日本語",
-          Code: "jp"
-        }
-      ]
+          Code: "jp",
+        },
+      ],
     };
   },
   methods: {
-    handleLanguage: function(command) {
+    handleLanguage: function (command) {
       this.ChangeLanguage(command);
       // Bottom bar with timeout.
     },
     darkMode() {
       this.$vuetify.theme.dark = !this.$vuetify.theme.dark;
       localStorage.setItem("theme", this.$vuetify.theme.dark.toString());
-    }
+    },
   },
   mounted() {
     const language = localStorage.getItem("language");
@@ -106,6 +102,6 @@ export default {
         this.$vuetify.theme.dark = false;
       }
     }
-  }
+  },
 };
 </script>

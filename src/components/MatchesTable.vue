@@ -1,4 +1,5 @@
 <template>
+  <div>
   <v-data-table
     item-key="name"
     class="elevation-1"
@@ -64,9 +65,34 @@
           </v-toolbar-title>
         </v-toolbar>
       </div>
+      <div v-else-if="isAdmin">
+        <v-toolbar flat>
+          <v-toolbar-title>
+            <v-btn
+              color="warning"
+              class="mr-2"
+              @click="pauseAllLive"
+              :loading="pausePending"
+            >
+              {{ $t("Matches.PauseAllLive") }}
+            </v-btn>
+            <v-btn
+              color="success"
+              @click="unpauseAllLive"
+              :loading="unpausePending"
+            >
+              {{ $t("Matches.UnpauseAllLive") }}
+            </v-btn>
+          </v-toolbar-title>
+        </v-toolbar>
+      </div>
       <div v-else />
     </template>
   </v-data-table>
+  <v-snackbar v-model="actionSnackbar" timeout="4000">
+    {{ actionMessage }}
+  </v-snackbar>
+  </div>
 </template>
 
 <script>
@@ -81,7 +107,11 @@ export default {
       isThereCancelledMatches: false,
       totalMatches: -1,
       options: {},
-      deletePending: false
+      deletePending: false,
+      pausePending: false,
+      unpausePending: false,
+      actionSnackbar: false,
+      actionMessage: ""
     };
   },
   computed: {
@@ -114,6 +144,12 @@ export default {
     },
     isMyMatches() {
       return this.$route.path == "/mymatches";
+    },
+    isAdmin() {
+      return (
+        Number(this.user?.admin) === 1 ||
+        Number(this.user?.super_admin) === 1
+      );
     }
   },
   watch: {
@@ -206,6 +242,40 @@ export default {
       this.isLoading = true;
       this.isThereCancelledMatches = false;
       await this.pageUpdate();
+    },
+    async getLiveMatches() {
+      let matches = await this.GetAllMatches();
+      if (typeof matches == "string") matches = [];
+      return matches.filter(
+        match =>
+          match.end_time == null &&
+          (match.cancelled == 0 || match.cancelled == null) &&
+          match.start_time != null
+      );
+    },
+    async pauseAllLive() {
+      this.pausePending = true;
+      const liveMatches = await this.getLiveMatches();
+      await Promise.all(
+        liveMatches.map(match => this.PauseMatch(match.id))
+      );
+      this.pausePending = false;
+      this.actionMessage = this.$t("Matches.PauseAllLiveDone", {
+        count: liveMatches.length
+      });
+      this.actionSnackbar = true;
+    },
+    async unpauseAllLive() {
+      this.unpausePending = true;
+      const liveMatches = await this.getLiveMatches();
+      await Promise.all(
+        liveMatches.map(match => this.UnpauseMatch(match.id))
+      );
+      this.unpausePending = false;
+      this.actionMessage = this.$t("Matches.UnpauseAllLiveDone", {
+        count: liveMatches.length
+      });
+      this.actionSnackbar = true;
     }
   }
 };

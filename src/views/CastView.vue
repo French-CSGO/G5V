@@ -85,13 +85,13 @@
                       </v-btn>
                     </div>
                   </td>
-                  <td class="text-center">
-                    <div class="d-flex flex-column" style="gap:2px">
+                  <td class="text-center py-2">
+                    <div class="d-flex flex-column" style="gap:5px">
                       <div
                         v-for="(map, i) in match.maps"
                         :key="'img-a-'+match.id+'-'+i"
                         class="d-flex"
-                        style="gap:2px"
+                        style="gap:3px"
                       >
                         <v-btn
                           x-small dark color="teal"
@@ -108,7 +108,7 @@
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
                       </div>
-                      <div class="d-flex" style="gap:2px">
+                      <div class="d-flex" style="gap:3px">
                         <v-btn
                           x-small dark color="teal darken-2"
                           :href="'/api/image/match/' + match.id"
@@ -179,13 +179,13 @@
                     </template>
                     <span v-else class="grey--text">—</span>
                   </td>
-                  <td class="text-center">
-                    <div class="d-flex flex-column" style="gap:2px; align-items:center">
+                  <td class="text-center py-2">
+                    <div class="d-flex flex-column" style="gap:5px; align-items:center">
                       <div
                         v-for="(map, i) in match.maps"
                         :key="'img-f-'+match.id+'-'+i"
                         class="d-flex"
-                        style="gap:2px"
+                        style="gap:3px"
                       >
                         <v-btn
                           x-small dark color="teal"
@@ -202,7 +202,7 @@
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
                       </div>
-                      <div class="d-flex" style="gap:2px">
+                      <div class="d-flex" style="gap:3px">
                         <v-btn
                           x-small dark color="teal darken-2"
                           :href="'/api/image/match/' + match.id"

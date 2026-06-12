@@ -34,7 +34,7 @@ jobs:
         uses: Saionaro/extract-package-version@v1.4.0
       - uses: actions/setup-node@v6.4.0
         with:
-          node-version: 18
+          node-version: 20
           cache: 'yarn'
       - run: yarn install
       - run: yarn build

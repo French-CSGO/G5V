@@ -92,7 +92,7 @@ export default {
         if (typeof res == "string") return;
         this.teams = res;
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }

@@ -1853,7 +1853,7 @@ export default {
 
         return rating.toFixed(2);
       } catch (err) {
-        console.log("HELPER GetRating Failed -- " + err);
+        console.error("HELPER GetRating Failed:", err);
         return 0;
       }
     },

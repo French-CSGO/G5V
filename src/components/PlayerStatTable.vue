@@ -383,7 +383,7 @@ export default {
           await this.retrieveStatsHelper(message, matchData);
         });
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }
@@ -394,7 +394,7 @@ export default {
         let res = await this.GetPlayerStats(this.match_id);
         await this.retrieveStatsHelper(res, matchData);
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }
@@ -408,7 +408,7 @@ export default {
           await this.retrieveMapStatsHelper(message, matchData);
         });
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }
@@ -419,7 +419,7 @@ export default {
         let res = await this.GetMapStats(this.match_id);
         await this.retrieveMapStatsHelper(res, matchData);
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }

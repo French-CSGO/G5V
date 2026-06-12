@@ -46,7 +46,7 @@ export default {
       matches: [],
       isLoading: true,
       deletePending: false,
-      isThereCancelledMatches: false
+      isThereCancelledMatches: false,
     };
   },
   async mounted() {
@@ -59,7 +59,7 @@ export default {
         res = await this.GetLimitMatches(3);
         if (typeof res == "string") return;
         else {
-          res.forEach(async match => {
+          res.forEach(async (match) => {
             let mapStats = await this.GetSingleMapStat(match.id, 0);
             if (match.max_maps == 1) {
               match.team1_score =
@@ -89,14 +89,14 @@ export default {
     imageError(matchIdx) {
       this.matches[matchIdx].map_name = "_unknown";
       return;
-    }
+    },
   },
   computed: {
     gradientCalc() {
       if (!this.$vuetify.theme.dark)
         return "to bottom, rgba(255,255,255,.4), rgba(255,255,255,1)";
       else return "to bottom, rgba(0,0,0,.4), rgba(0,0,0,1)";
-    }
-  }
+    },
+  },
 };
 </script>

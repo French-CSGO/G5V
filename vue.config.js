@@ -7,10 +7,10 @@ module.exports = {
         changeOrigin: true,
         ws: true,
         pathRewrite: {
-          "^/api": ""
-        }
-      }
+          "^/api": "",
+        },
+      },
     },
-    compress: false
-  }
+    compress: false,
+  },
 };

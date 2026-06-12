@@ -42,8 +42,14 @@
           </v-row>
 
           <v-divider class="my-3" />
-          <v-subheader class="font-weight-bold">Éléments fixes (X + Y)</v-subheader>
-          <image-f-c-table :fields="matchFCFields" :section="settings.match" :font-list="fontList" />
+          <v-subheader class="font-weight-bold"
+            >Éléments fixes (X + Y)</v-subheader
+          >
+          <image-f-c-table
+            :fields="matchFCFields"
+            :section="settings.match"
+            :font-list="fontList"
+          />
 
           <v-subheader class="font-weight-bold mt-2"
             >Lignes joueurs — Y
@@ -94,8 +100,14 @@
             /></v-col>
           </v-row>
 
-          <v-subheader class="font-weight-bold">Colonnes joueurs (X seul, Y = ligne)</v-subheader>
-          <image-f-x-table :fields="matchFXFields" :section="settings.match" :font-list="fontList" />
+          <v-subheader class="font-weight-bold"
+            >Colonnes joueurs (X seul, Y = ligne)</v-subheader
+          >
+          <image-f-x-table
+            :fields="matchFXFields"
+            :section="settings.match"
+            :font-list="fontList"
+          />
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -501,39 +513,103 @@
             Box derrière les noms de map
             <v-switch
               v-model="settings.match.shapes.map_pill.enabled"
-              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
             />
           </v-subheader>
           <div v-if="settings.match.shapes.map_pill.enabled">
             <v-row dense class="mt-1">
               <v-col cols="1" class="d-flex align-center">
-                <input type="color" v-model="settings.match.shapes.map_pill.fill" class="color-input" />
+                <input
+                  type="color"
+                  v-model="settings.match.shapes.map_pill.fill"
+                  class="color-input"
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.match.shapes.map_pill.alpha" label="Opacité (autres)" type="number" step="0.05" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.match.shapes.map_pill.alpha"
+                  label="Opacité (autres)"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.match.shapes.map_pill.current_alpha" label="Opacité (map en cours)" type="number" step="0.05" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.match.shapes.map_pill.current_alpha"
+                  label="Opacité (map en cours)"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.match.shapes.map_pill.radius" label="Rayon" type="number" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.match.shapes.map_pill.radius"
+                  label="Rayon"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.match.shapes.map_pill.width" label="Largeur" type="number" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.match.shapes.map_pill.width"
+                  label="Largeur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.match.shapes.map_pill.height" label="Hauteur" type="number" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.match.shapes.map_pill.height"
+                  label="Hauteur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
             </v-row>
             <v-row dense class="mt-1">
               <v-col cols="1" class="d-flex align-center">
-                <input type="color" v-model="settings.match.shapes.map_pill.border" class="color-input" />
+                <input
+                  type="color"
+                  v-model="settings.match.shapes.map_pill.border"
+                  class="color-input"
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.match.shapes.map_pill.border_alpha" label="Opacité bordure" type="number" step="0.05" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.match.shapes.map_pill.border_alpha"
+                  label="Opacité bordure"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.match.shapes.map_pill.border_width" label="Épaisseur bordure" type="number" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.match.shapes.map_pill.border_width"
+                  label="Épaisseur bordure"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
             </v-row>
           </div>
@@ -544,19 +620,83 @@
           </v-subheader>
           <v-row dense>
             <v-col cols="1" class="d-flex align-center">
-              <v-switch v-model="settings.match.team1_logo.enabled" label="Logo 1" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              <v-switch
+                v-model="settings.match.team1_logo.enabled"
+                label="Logo 1"
+                color="primary"
+                inset
+                dense
+                hide-details
+                class="mt-0 pt-0"
+              />
             </v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.x" label="Logo 1 X" type="number" outlined dense hide-details /></v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.y" label="Logo 1 Y" type="number" outlined dense hide-details /></v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.size" label="Logo 1 Taille" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.match.team1_logo.x"
+                label="Logo 1 X"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.match.team1_logo.y"
+                label="Logo 1 Y"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.match.team1_logo.size"
+                label="Logo 1 Taille"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
           </v-row>
           <v-row dense class="mt-1">
             <v-col cols="1" class="d-flex align-center">
-              <v-switch v-model="settings.match.team2_logo.enabled" label="Logo 2" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              <v-switch
+                v-model="settings.match.team2_logo.enabled"
+                label="Logo 2"
+                color="primary"
+                inset
+                dense
+                hide-details
+                class="mt-0 pt-0"
+              />
             </v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.x" label="Logo 2 X" type="number" outlined dense hide-details /></v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.y" label="Logo 2 Y" type="number" outlined dense hide-details /></v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.size" label="Logo 2 Taille" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.match.team2_logo.x"
+                label="Logo 2 X"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.match.team2_logo.y"
+                label="Logo 2 Y"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.match.team2_logo.size"
+                label="Logo 2 Taille"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
           </v-row>
 
           <v-divider class="my-3" />
@@ -638,7 +778,11 @@
         <!-- Tab 1 : Image Joueur                                          -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 1" flat class="pa-4">
-          <image-f-c-table :fields="playerFields" :section="settings.player" :font-list="fontList" />
+          <image-f-c-table
+            :fields="playerFields"
+            :section="settings.player"
+            :font-list="fontList"
+          />
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -1129,7 +1273,6 @@
         <!-- Tab 2 : Image MVP                                             -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 2" flat class="pa-4">
-
           <!-- ── Photos joueurs ─────────────────────────────────────────── -->
           <v-subheader class="font-weight-bold">
             <v-icon left small>mdi-account-circle</v-icon>
@@ -1140,7 +1283,9 @@
               <v-text-field
                 v-model="playerPhotoSteamId"
                 label="SteamID (17 chiffres)"
-                outlined dense hide-details
+                outlined
+                dense
+                hide-details
                 prepend-icon="mdi-steam"
               />
             </v-col>
@@ -1149,14 +1294,17 @@
                 v-model="playerPhotoFile"
                 label="Photo joueur (PNG/JPG)"
                 accept="image/png,image/jpeg,image/webp"
-                outlined dense hide-details
+                outlined
+                dense
+                hide-details
                 prepend-icon="mdi-account-box"
               />
             </v-col>
             <v-col cols="2">
               <v-btn
                 :disabled="!playerPhotoFile || !playerPhotoSteamId"
-                color="secondary" small
+                color="secondary"
+                small
                 @click="uploadPlayerPhoto"
                 :loading="uploadingPhoto"
               >
@@ -1167,10 +1315,21 @@
           <v-row v-if="playerPhotos.length > 0" class="mt-1">
             <v-col>
               <span class="caption grey--text mr-2">Déjà uploadé :</span>
-              <v-chip v-for="f in playerPhotos" :key="f" small class="mr-1 mb-1">{{ f }}</v-chip>
+              <v-chip
+                v-for="f in playerPhotos"
+                :key="f"
+                small
+                class="mr-1 mb-1"
+                >{{ f }}</v-chip
+              >
             </v-col>
           </v-row>
-          <v-alert v-if="uploadPhotoMsg" :type="uploadPhotoMsgType" dense class="mt-2">
+          <v-alert
+            v-if="uploadPhotoMsg"
+            :type="uploadPhotoMsgType"
+            dense
+            class="mt-2"
+          >
             {{ uploadPhotoMsg }}
           </v-alert>
 
@@ -1180,24 +1339,63 @@
             Position de la photo dans l'image MVP
             <v-switch
               v-model="settings.mvp.player_image.enabled"
-              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
             />
           </v-subheader>
           <v-row dense v-if="settings.mvp.player_image.enabled">
             <v-col cols="2">
-              <v-text-field v-model.number="settings.mvp.player_image.x" label="X (centre)" type="number" outlined dense hide-details />
+              <v-text-field
+                v-model.number="settings.mvp.player_image.x"
+                label="X (centre)"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model.number="settings.mvp.player_image.y" label="Y (centre)" type="number" outlined dense hide-details />
+              <v-text-field
+                v-model.number="settings.mvp.player_image.y"
+                label="Y (centre)"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model.number="settings.mvp.player_image.width" label="Largeur (px)" type="number" outlined dense hide-details />
+              <v-text-field
+                v-model.number="settings.mvp.player_image.width"
+                label="Largeur (px)"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model.number="settings.mvp.player_image.height" label="Hauteur (px)" type="number" outlined dense hide-details />
+              <v-text-field
+                v-model.number="settings.mvp.player_image.height"
+                label="Hauteur (px)"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
             </v-col>
             <v-col cols="2" class="d-flex align-center">
-              <v-switch v-model="settings.mvp.player_image.circle" label="Découpe circulaire" color="primary" inset dense hide-details />
+              <v-switch
+                v-model="settings.mvp.player_image.circle"
+                label="Découpe circulaire"
+                color="primary"
+                inset
+                dense
+                hide-details
+              />
             </v-col>
           </v-row>
 
@@ -1207,7 +1405,11 @@
             Image de map en fond
             <v-switch
               v-model="settings.mvp.map_image.enabled"
-              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
               label="Afficher l'image de map"
             />
           </v-subheader>
@@ -1216,52 +1418,263 @@
           <!-- ── Éléments graphiques MVP ────────────────────────────────────── -->
           <v-subheader class="font-weight-bold">
             Éléments graphiques
-            <v-switch v-model="settings.mvp.shapes.enabled" color="primary" inset dense hide-details class="ml-4 mt-0 pt-0" />
+            <v-switch
+              v-model="settings.mvp.shapes.enabled"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
           </v-subheader>
           <div v-if="settings.mvp.shapes.enabled">
             <!-- Team pill -->
-            <v-subheader class="caption font-weight-bold pl-0">Pilule nom d'équipe</v-subheader>
+            <v-subheader class="caption font-weight-bold pl-0"
+              >Pilule nom d'équipe</v-subheader
+            >
             <v-row dense>
               <v-col cols="1" class="d-flex align-center">
-                <v-switch v-model="settings.mvp.shapes.team_pill.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+                <v-switch
+                  v-model="settings.mvp.shapes.team_pill.enabled"
+                  label="Actif"
+                  color="primary"
+                  inset
+                  dense
+                  hide-details
+                  class="mt-0 pt-0"
+                />
               </v-col>
-              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.team_pill.fill" class="color-input" /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.team_pill.border" class="color-input" /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center"
+                ><input
+                  type="color"
+                  v-model="settings.mvp.shapes.team_pill.fill"
+                  class="color-input"
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.team_pill.alpha"
+                  label="Opacité"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.team_pill.radius"
+                  label="Rayon"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.team_pill.width"
+                  label="Largeur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.team_pill.height"
+                  label="Hauteur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1" class="d-flex align-center"
+                ><input
+                  type="color"
+                  v-model="settings.mvp.shapes.team_pill.border"
+                  class="color-input"
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.team_pill.border_alpha"
+                  label="Op. bord."
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.team_pill.border_width"
+                  label="Ép. bord."
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
             </v-row>
             <!-- Player pill -->
-            <v-subheader class="caption font-weight-bold pl-0 mt-2">Pilule nom du joueur</v-subheader>
+            <v-subheader class="caption font-weight-bold pl-0 mt-2"
+              >Pilule nom du joueur</v-subheader
+            >
             <v-row dense>
               <v-col cols="1" class="d-flex align-center">
-                <v-switch v-model="settings.mvp.shapes.player_pill.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+                <v-switch
+                  v-model="settings.mvp.shapes.player_pill.enabled"
+                  label="Actif"
+                  color="primary"
+                  inset
+                  dense
+                  hide-details
+                  class="mt-0 pt-0"
+                />
               </v-col>
-              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.player_pill.fill" class="color-input" /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.player_pill.border" class="color-input" /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center"
+                ><input
+                  type="color"
+                  v-model="settings.mvp.shapes.player_pill.fill"
+                  class="color-input"
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.player_pill.alpha"
+                  label="Opacité"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.player_pill.radius"
+                  label="Rayon"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.player_pill.width"
+                  label="Largeur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.player_pill.height"
+                  label="Hauteur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1" class="d-flex align-center"
+                ><input
+                  type="color"
+                  v-model="settings.mvp.shapes.player_pill.border"
+                  class="color-input"
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.player_pill.border_alpha"
+                  label="Op. bord."
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.player_pill.border_width"
+                  label="Ép. bord."
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
             </v-row>
             <!-- Stats bar -->
-            <v-subheader class="caption font-weight-bold pl-0 mt-2">Barre stats</v-subheader>
+            <v-subheader class="caption font-weight-bold pl-0 mt-2"
+              >Barre stats</v-subheader
+            >
             <v-row dense>
               <v-col cols="1" class="d-flex align-center">
-                <v-switch v-model="settings.mvp.shapes.stats_bar.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+                <v-switch
+                  v-model="settings.mvp.shapes.stats_bar.enabled"
+                  label="Actif"
+                  color="primary"
+                  inset
+                  dense
+                  hide-details
+                  class="mt-0 pt-0"
+                />
               </v-col>
-              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.stats_bar.fill" class="color-input" /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.x" label="X" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.y" label="Y (0=auto)" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
-              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center"
+                ><input
+                  type="color"
+                  v-model="settings.mvp.shapes.stats_bar.fill"
+                  class="color-input"
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.stats_bar.alpha"
+                  label="Opacité"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.stats_bar.radius"
+                  label="Rayon"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.stats_bar.x"
+                  label="X"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.stats_bar.y"
+                  label="Y (0=auto)"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.stats_bar.width"
+                  label="Largeur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="1"
+                ><v-text-field
+                  v-model.number="settings.mvp.shapes.stats_bar.height"
+                  label="Hauteur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
             </v-row>
           </div>
 
@@ -1271,39 +1684,103 @@
             Box derrière les noms de map
             <v-switch
               v-model="settings.mvp.shapes.map_pill.enabled"
-              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
             />
           </v-subheader>
           <div v-if="settings.mvp.shapes.map_pill.enabled">
             <v-row dense class="mt-1">
               <v-col cols="1" class="d-flex align-center">
-                <input type="color" v-model="settings.mvp.shapes.map_pill.fill" class="color-input" />
+                <input
+                  type="color"
+                  v-model="settings.mvp.shapes.map_pill.fill"
+                  class="color-input"
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.mvp.shapes.map_pill.alpha" label="Opacité (autres)" type="number" step="0.05" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.mvp.shapes.map_pill.alpha"
+                  label="Opacité (autres)"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.mvp.shapes.map_pill.current_alpha" label="Opacité (map en cours)" type="number" step="0.05" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.mvp.shapes.map_pill.current_alpha"
+                  label="Opacité (map en cours)"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.mvp.shapes.map_pill.radius" label="Rayon" type="number" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.mvp.shapes.map_pill.radius"
+                  label="Rayon"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.mvp.shapes.map_pill.width" label="Largeur" type="number" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.mvp.shapes.map_pill.width"
+                  label="Largeur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.mvp.shapes.map_pill.height" label="Hauteur" type="number" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.mvp.shapes.map_pill.height"
+                  label="Hauteur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
             </v-row>
             <v-row dense class="mt-1">
               <v-col cols="1" class="d-flex align-center">
-                <input type="color" v-model="settings.mvp.shapes.map_pill.border" class="color-input" />
+                <input
+                  type="color"
+                  v-model="settings.mvp.shapes.map_pill.border"
+                  class="color-input"
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.mvp.shapes.map_pill.border_alpha" label="Opacité bordure" type="number" step="0.05" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.mvp.shapes.map_pill.border_alpha"
+                  label="Opacité bordure"
+                  type="number"
+                  step="0.05"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
               <v-col cols="2">
-                <v-text-field v-model.number="settings.mvp.shapes.map_pill.border_width" label="Épaisseur bordure" type="number" outlined dense hide-details />
+                <v-text-field
+                  v-model.number="settings.mvp.shapes.map_pill.border_width"
+                  label="Épaisseur bordure"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
               </v-col>
             </v-row>
           </div>
@@ -1311,7 +1788,11 @@
           <v-divider class="my-3" />
           <!-- ── Éléments textuels MVP ───────────────────────────────────── -->
           <v-subheader class="font-weight-bold">Éléments textuels</v-subheader>
-          <image-f-c-table :fields="mvpFields" :section="settings.mvp" :font-list="fontList" />
+          <image-f-c-table
+            :fields="mvpFields"
+            :section="settings.mvp"
+            :font-list="fontList"
+          />
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -1319,57 +1800,171 @@
           </v-subheader>
           <v-row dense>
             <v-col cols="1" class="d-flex align-center">
-              <v-switch v-model="settings.mvp.team1_logo.enabled" label="Logo 1" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              <v-switch
+                v-model="settings.mvp.team1_logo.enabled"
+                label="Logo 1"
+                color="primary"
+                inset
+                dense
+                hide-details
+                class="mt-0 pt-0"
+              />
             </v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.x" label="Logo 1 X" type="number" outlined dense hide-details /></v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.y" label="Logo 1 Y" type="number" outlined dense hide-details /></v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.size" label="Logo 1 Taille" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.mvp.team1_logo.x"
+                label="Logo 1 X"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.mvp.team1_logo.y"
+                label="Logo 1 Y"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.mvp.team1_logo.size"
+                label="Logo 1 Taille"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
           </v-row>
           <v-row dense class="mt-1">
             <v-col cols="1" class="d-flex align-center">
-              <v-switch v-model="settings.mvp.team2_logo.enabled" label="Logo 2" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              <v-switch
+                v-model="settings.mvp.team2_logo.enabled"
+                label="Logo 2"
+                color="primary"
+                inset
+                dense
+                hide-details
+                class="mt-0 pt-0"
+              />
             </v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.x" label="Logo 2 X" type="number" outlined dense hide-details /></v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.y" label="Logo 2 Y" type="number" outlined dense hide-details /></v-col>
-            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.size" label="Logo 2 Taille" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.mvp.team2_logo.x"
+                label="Logo 2 X"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.mvp.team2_logo.y"
+                label="Logo 2 Y"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.mvp.team2_logo.size"
+                label="Logo 2 Taille"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
           </v-row>
 
           <v-divider class="my-3" />
-          <v-subheader class="font-weight-bold">Fond &amp; Police personnalisée</v-subheader>
+          <v-subheader class="font-weight-bold"
+            >Fond &amp; Police personnalisée</v-subheader
+          >
           <v-row align="center">
             <v-col cols="4">
-              <v-text-field v-model="settings.mvp.background" label="Fichier de fond (public/img/)" outlined dense />
+              <v-text-field
+                v-model="settings.mvp.background"
+                label="Fichier de fond (public/img/)"
+                outlined
+                dense
+              />
             </v-col>
             <v-col cols="4">
-              <v-file-input v-model="bgFile[2]" label="Uploader un fond" accept="image/png,image/jpeg" outlined dense hide-details prepend-icon="mdi-image" />
+              <v-file-input
+                v-model="bgFile[2]"
+                label="Uploader un fond"
+                accept="image/png,image/jpeg"
+                outlined
+                dense
+                hide-details
+                prepend-icon="mdi-image"
+              />
             </v-col>
             <v-col cols="2">
-              <v-btn :disabled="!bgFile[2]" color="secondary" small @click="uploadBg(2)" :loading="uploadingBg[2]">
+              <v-btn
+                :disabled="!bgFile[2]"
+                color="secondary"
+                small
+                @click="uploadBg(2)"
+                :loading="uploadingBg[2]"
+              >
                 <v-icon left>mdi-upload</v-icon>Uploader
               </v-btn>
             </v-col>
           </v-row>
           <v-row align="center">
             <v-col cols="4">
-              <v-text-field v-model="settings.mvp.fontFile" label="Fichier police (public/fonts/)" outlined dense />
+              <v-text-field
+                v-model="settings.mvp.fontFile"
+                label="Fichier police (public/fonts/)"
+                outlined
+                dense
+              />
             </v-col>
             <v-col cols="4">
-              <v-file-input v-model="fontFileInput[2]" label="Uploader une police" accept=".ttf,.otf" outlined dense hide-details prepend-icon="mdi-format-font" />
+              <v-file-input
+                v-model="fontFileInput[2]"
+                label="Uploader une police"
+                accept=".ttf,.otf"
+                outlined
+                dense
+                hide-details
+                prepend-icon="mdi-format-font"
+              />
             </v-col>
             <v-col cols="2">
-              <v-btn :disabled="!fontFileInput[2]" color="secondary" small @click="uploadFont(2)" :loading="uploadingFont[2]">
+              <v-btn
+                :disabled="!fontFileInput[2]"
+                color="secondary"
+                small
+                @click="uploadFont(2)"
+                :loading="uploadingFont[2]"
+              >
                 <v-icon left>mdi-upload</v-icon>Uploader
               </v-btn>
             </v-col>
           </v-row>
-          <v-alert v-if="uploadMsg[2]" :type="uploadMsgType[2]" dense class="mt-2">{{ uploadMsg[2] }}</v-alert>
+          <v-alert
+            v-if="uploadMsg[2]"
+            :type="uploadMsgType[2]"
+            dense
+            class="mt-2"
+            >{{ uploadMsg[2] }}</v-alert
+          >
         </v-card>
 
         <!-- ══════════════════════════════════════════════════════════════ -->
         <!-- Tab 3 : Image Équipe Saison                                   -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 3" flat class="pa-4">
-          <image-f-c-table :fields="teamSeasonFields" :section="settings.team_season" :font-list="fontList" />
+          <image-f-c-table
+            :fields="teamSeasonFields"
+            :section="settings.team_season"
+            :font-list="fontList"
+          />
           <v-row dense class="mt-2">
             <v-col cols="4">
               <v-text-field
@@ -2167,7 +2762,7 @@
           <div v-if="previewMatchId" class="mt-3">
             <img
               :src="`${apiUrl}/image/match/${previewMatchId}?t=${previewTs}`"
-              style="max-width:100%;border:1px solid #ccc;"
+              style="max-width: 100%; border: 1px solid #ccc"
               @error="previewMatchError = true"
               @load="previewMatchError = false"
             />
@@ -2201,9 +2796,7 @@
             <v-col cols="auto">
               <v-btn
                 color="primary"
-                :href="
-                  `${apiUrl}/image/match/${previewMatchId}/player/${previewSteamId}`
-                "
+                :href="`${apiUrl}/image/match/${previewMatchId}/player/${previewSteamId}`"
                 target="_blank"
                 :disabled="!previewMatchId || !previewSteamId"
                 small
@@ -2214,10 +2807,8 @@
           </v-row>
           <div v-if="previewMatchId && previewSteamId" class="mt-3">
             <img
-              :src="
-                `${apiUrl}/image/match/${previewMatchId}/player/${previewSteamId}?t=${previewTs}`
-              "
-              style="max-width:100%;border:1px solid #ccc;"
+              :src="`${apiUrl}/image/match/${previewMatchId}/player/${previewSteamId}?t=${previewTs}`"
+              style="max-width: 100%; border: 1px solid #ccc"
               @error="previewPlayerError = true"
               @load="previewPlayerError = false"
             />
@@ -2227,20 +2818,38 @@
           </div>
 
           <v-divider class="my-4" />
-          <v-subheader class="font-weight-bold">Image MVP (par map)</v-subheader>
+          <v-subheader class="font-weight-bold"
+            >Image MVP (par map)</v-subheader
+          >
           <v-row align="center">
             <v-col cols="3">
-              <v-text-field v-model="previewMatchId" label="ID du match" type="number" outlined dense hide-details />
+              <v-text-field
+                v-model="previewMatchId"
+                label="ID du match"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
             </v-col>
             <v-col cols="2">
-              <v-text-field v-model="previewMvpMap" label="N° de la map" type="number" outlined dense hide-details />
+              <v-text-field
+                v-model="previewMvpMap"
+                label="N° de la map"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
             </v-col>
             <v-col cols="auto">
-              <v-btn color="warning"
+              <v-btn
+                color="warning"
                 :href="`${apiUrl}/image/match/${previewMatchId}/map/${previewMvpMap}/mvp`"
                 target="_blank"
                 :disabled="!previewMatchId || !previewMvpMap"
-                small>
+                small
+              >
                 <v-icon left small>mdi-star</v-icon>Ouvrir map
               </v-btn>
             </v-col>
@@ -2248,24 +2857,37 @@
           <div v-if="previewMatchId && previewMvpMap" class="mt-3">
             <img
               :src="`${apiUrl}/image/match/${previewMatchId}/map/${previewMvpMap}/mvp?t=${previewTs}`"
-              style="max-width:100%;border:1px solid #ccc;"
+              style="max-width: 100%; border: 1px solid #ccc"
               @error="previewMvpError = true"
               @load="previewMvpError = false"
             />
-            <v-alert v-if="previewMvpError" type="error" dense>Impossible de charger l'image MVP.</v-alert>
+            <v-alert v-if="previewMvpError" type="error" dense
+              >Impossible de charger l'image MVP.</v-alert
+            >
           </div>
 
-          <v-subheader class="font-weight-bold mt-2">Image MVP (match complet)</v-subheader>
+          <v-subheader class="font-weight-bold mt-2"
+            >Image MVP (match complet)</v-subheader
+          >
           <v-row align="center">
             <v-col cols="3">
-              <v-text-field v-model="previewMatchId" label="ID du match" type="number" outlined dense hide-details />
+              <v-text-field
+                v-model="previewMatchId"
+                label="ID du match"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
             </v-col>
             <v-col cols="auto">
-              <v-btn color="warning"
+              <v-btn
+                color="warning"
                 :href="`${apiUrl}/image/match/${previewMatchId}/mvp`"
                 target="_blank"
                 :disabled="!previewMatchId"
-                small>
+                small
+              >
                 <v-icon left small>mdi-star-circle</v-icon>Ouvrir match
               </v-btn>
             </v-col>
@@ -2273,11 +2895,13 @@
           <div v-if="previewMatchId" class="mt-3">
             <img
               :src="`${apiUrl}/image/match/${previewMatchId}/mvp?t=${previewTs}`"
-              style="max-width:100%;border:1px solid #ccc;"
+              style="max-width: 100%; border: 1px solid #ccc"
               @error="previewMvpMatchError = true"
               @load="previewMvpMatchError = false"
             />
-            <v-alert v-if="previewMvpMatchError" type="error" dense>Impossible de charger l'image MVP match.</v-alert>
+            <v-alert v-if="previewMvpMatchError" type="error" dense
+              >Impossible de charger l'image MVP match.</v-alert
+            >
           </div>
 
           <v-divider class="my-4" />
@@ -2308,9 +2932,7 @@
             <v-col cols="auto">
               <v-btn
                 color="primary"
-                :href="
-                  `${apiUrl}/image/season/${previewSeasonId}/team/${previewTeamId}`
-                "
+                :href="`${apiUrl}/image/season/${previewSeasonId}/team/${previewTeamId}`"
                 target="_blank"
                 :disabled="!previewSeasonId || !previewTeamId"
                 small
@@ -2321,10 +2943,8 @@
           </v-row>
           <div v-if="previewSeasonId && previewTeamId" class="mt-3">
             <img
-              :src="
-                `${apiUrl}/image/season/${previewSeasonId}/team/${previewTeamId}?t=${previewTs}`
-              "
-              style="max-width:100%;border:1px solid #ccc;"
+              :src="`${apiUrl}/image/season/${previewSeasonId}/team/${previewTeamId}?t=${previewTs}`"
+              style="max-width: 100%; border: 1px solid #ccc"
               @error="previewTeamError = true"
               @load="previewTeamError = false"
             />
@@ -2348,7 +2968,7 @@
             ref="importFile"
             type="file"
             accept=".json"
-            style="display:none"
+            style="display: none"
             @change="importConfig"
           />
           <v-spacer />
@@ -2377,7 +2997,7 @@ const defFC = (enabled, font, color, size, bold, x, y) => ({
   size,
   bold,
   x,
-  y
+  y,
 });
 const defFX = (enabled, font, color, size, bold, x) => ({
   enabled,
@@ -2385,7 +3005,7 @@ const defFX = (enabled, font, color, size, bold, x) => ({
   color,
   size,
   bold,
-  x
+  x,
 });
 
 export default {
@@ -2431,7 +3051,7 @@ export default {
             kills_label: "K",
             assists_label: "A",
             deaths_label: "D",
-            rating_label: "RTG"
+            rating_label: "RTG",
           },
           team1_logo: { enabled: true, x: 310, y: 302, size: 60 },
           team2_logo: { enabled: true, x: 1610, y: 302, size: 60 },
@@ -2446,7 +3066,7 @@ export default {
               height: 70,
               border: "#ffffff",
               border_alpha: 0.2,
-              border_width: 2
+              border_width: 2,
             },
             player_pill: {
               enabled: true,
@@ -2459,7 +3079,7 @@ export default {
               border_alpha: 0.3,
               border_width: 1.5,
               l_x: 60,
-              r_x: 1440
+              r_x: 1440,
             },
             stats_table: {
               enabled: true,
@@ -2474,7 +3094,7 @@ export default {
               odd_fill: "#000000",
               odd_alpha: 0.08,
               even_fill: "#ffffff",
-              even_alpha: 0.05
+              even_alpha: 0.05,
             },
             map_pill: {
               enabled: true,
@@ -2486,9 +3106,9 @@ export default {
               height: 40,
               border: "#ffffff",
               border_alpha: 0.2,
-              border_width: 1
-            }
-          }
+              border_width: 1,
+            },
+          },
         },
 
         player: {
@@ -2517,7 +3137,7 @@ export default {
             deaths_label: "Deaths",
             rating_label: "Rating",
             hs_label: "HS%",
-            clutches_label: "Clutches"
+            clutches_label: "Clutches",
           },
           shapes: {
             enabled: false,
@@ -2530,7 +3150,7 @@ export default {
               height: 65,
               border: "#ffffff",
               border_alpha: 0.2,
-              border_width: 2
+              border_width: 2,
             },
             player_pill: {
               enabled: true,
@@ -2541,7 +3161,7 @@ export default {
               height: 75,
               border: "#ffffff",
               border_alpha: 0.2,
-              border_width: 2
+              border_width: 2,
             },
             stats_bar: {
               enabled: true,
@@ -2554,32 +3174,40 @@ export default {
               height: 70,
               border: "#ffffff",
               border_alpha: 0.1,
-              border_width: 1
-            }
-          }
+              border_width: 1,
+            },
+          },
         },
 
         mvp: {
           background: "marble.png",
           fontFile: "",
-          map1:        defFC(true, "Arial", "#ffffff", 20, false,  480, 130),
-          map2:        defFC(true, "Arial", "#ffffff", 20, false,  960, 130),
-          map3:        defFC(true, "Arial", "#ffffff", 20, false, 1440, 130),
-          team1_name:  defFC(true, "Arial", "#ffffff", 32, true, 450, 200),
+          map1: defFC(true, "Arial", "#ffffff", 20, false, 480, 130),
+          map2: defFC(true, "Arial", "#ffffff", 20, false, 960, 130),
+          map3: defFC(true, "Arial", "#ffffff", 20, false, 1440, 130),
+          team1_name: defFC(true, "Arial", "#ffffff", 32, true, 450, 200),
           team1_score: defFC(true, "Arial", "#ffffff", 32, true, 800, 200),
           team2_score: defFC(true, "Arial", "#ffffff", 32, true, 1120, 200),
-          team2_name:  defFC(true, "Arial", "#ffffff", 32, true, 1470, 200),
-          mvp_label:   defFC(true, "Arial", "#f4d03f", 28, true, 960, 310),
+          team2_name: defFC(true, "Arial", "#ffffff", 32, true, 1470, 200),
+          mvp_label: defFC(true, "Arial", "#f4d03f", 28, true, 960, 310),
           player_name: defFC(true, "Arial", "#ffffff", 52, true, 960, 390),
           player_team: defFC(true, "Arial", "#cccccc", 22, false, 960, 450),
-          kills:       defFC(true, "Arial", "#ffffff", 28, false, 500, 620),
-          assists:     defFC(true, "Arial", "#ffffff", 28, false, 700, 620),
-          deaths:      defFC(true, "Arial", "#ffffff", 28, false, 900, 620),
-          rating:      defFC(true, "Arial", "#ffffff", 28, false, 1100, 620),
-          hs:          defFC(true, "Arial", "#ffffff", 28, false, 1310, 620),
-          clutches:    defFC(true, "Arial", "#ffffff", 28, false, 1500, 620),
-          player_image: { enabled: true, x: 960, y: 480, size: 120, width: 120, height: 200, circle: false },
-          map_image: { enabled: false }
+          kills: defFC(true, "Arial", "#ffffff", 28, false, 500, 620),
+          assists: defFC(true, "Arial", "#ffffff", 28, false, 700, 620),
+          deaths: defFC(true, "Arial", "#ffffff", 28, false, 900, 620),
+          rating: defFC(true, "Arial", "#ffffff", 28, false, 1100, 620),
+          hs: defFC(true, "Arial", "#ffffff", 28, false, 1310, 620),
+          clutches: defFC(true, "Arial", "#ffffff", 28, false, 1500, 620),
+          player_image: {
+            enabled: true,
+            x: 960,
+            y: 480,
+            size: 120,
+            width: 120,
+            height: 200,
+            circle: false,
+          },
+          map_image: { enabled: false },
         },
 
         team_season: {
@@ -2589,7 +3217,7 @@ export default {
           team_rating: defFC(true, "Arial", "#1a1a2e", 24, true, 960, 460),
           best_map_label: {
             ...defFC(true, "Arial", "#1a1a2e", 22, false, 960, 510),
-            text: "Meilleure Map"
+            text: "Meilleure Map",
           },
           players: {
             enabled: true,
@@ -2604,7 +3232,7 @@ export default {
             rating_color: "#1a1a2e",
             rating_size: 20,
             rating_bold: false,
-            rating_y: 380
+            rating_y: 380,
           },
           kills: defFC(true, "Arial", "#1a1a2e", 24, false, 400, 620),
           deaths: defFC(true, "Arial", "#1a1a2e", 24, false, 640, 620),
@@ -2629,7 +3257,7 @@ export default {
             rounds_won_label: "Rounds gagnés",
             rounds_lost_label: "Rounds perdus",
             wins_label: "Victoires",
-            losses_label: "Défaites"
+            losses_label: "Défaites",
           },
           map_image: { enabled: true, x: 760, y: 390, width: 400, height: 225 },
           shapes: {
@@ -2643,7 +3271,7 @@ export default {
               height: 75,
               border: "#ffffff",
               border_alpha: 0.2,
-              border_width: 2
+              border_width: 2,
             },
             player_pill: {
               enabled: true,
@@ -2654,7 +3282,7 @@ export default {
               height: 55,
               border: "#ffffff",
               border_alpha: 0.2,
-              border_width: 1.5
+              border_width: 1.5,
             },
             stats_background: {
               enabled: true,
@@ -2664,10 +3292,10 @@ export default {
               x: 220,
               y: 580,
               width: 1480,
-              height: 240
-            }
-          }
-        }
+              height: 240,
+            },
+          },
+        },
       },
 
       // Upload map images
@@ -2722,7 +3350,7 @@ export default {
         "Times New Roman",
         "Courier New",
         "Impact",
-        "Comic Sans MS"
+        "Comic Sans MS",
       ],
 
       matchFCFields: [
@@ -2732,7 +3360,7 @@ export default {
         { key: "team2_name", label: "Nom équipe 2" },
         { key: "map1", label: "Map 1 (gauche)" },
         { key: "map2", label: "Map 2 (centre)" },
-        { key: "map3", label: "Map 3 (droite)" }
+        { key: "map3", label: "Map 3 (droite)" },
       ],
       matchFXFields: [
         { key: "player_name_l", label: "Nom joueur gauche" },
@@ -2744,7 +3372,7 @@ export default {
         { key: "kills_r", label: "Kills droite" },
         { key: "assists_r", label: "Assists droite" },
         { key: "deaths_r", label: "Morts droite" },
-        { key: "rating_r", label: "Rating droite" }
+        { key: "rating_r", label: "Rating droite" },
       ],
       playerFields: [
         { key: "team1_name", label: "Nom équipe 1" },
@@ -2756,25 +3384,25 @@ export default {
         { key: "deaths", label: "Morts" },
         { key: "rating", label: "Rating" },
         { key: "hs", label: "Headshot %" },
-        { key: "clutches", label: "Clutches" }
+        { key: "clutches", label: "Clutches" },
       ],
       mvpFields: [
-        { key: "map1",        label: "Map 1 (gauche)" },
-        { key: "map2",        label: "Map 2 (centre)" },
-        { key: "map3",        label: "Map 3 (droite)" },
-        { key: "team1_name",  label: "Nom équipe 1" },
+        { key: "map1", label: "Map 1 (gauche)" },
+        { key: "map2", label: "Map 2 (centre)" },
+        { key: "map3", label: "Map 3 (droite)" },
+        { key: "team1_name", label: "Nom équipe 1" },
         { key: "team1_score", label: "Score équipe 1" },
         { key: "team2_score", label: "Score équipe 2" },
-        { key: "team2_name",  label: "Nom équipe 2" },
-        { key: "mvp_label",   label: "★ MVP" },
+        { key: "team2_name", label: "Nom équipe 2" },
+        { key: "mvp_label", label: "★ MVP" },
         { key: "player_name", label: "Nom joueur" },
         { key: "player_team", label: "Équipe joueur" },
-        { key: "kills",       label: "Kills" },
-        { key: "assists",     label: "Assists" },
-        { key: "deaths",      label: "Morts" },
-        { key: "rating",      label: "Rating" },
-        { key: "hs",          label: "Headshot %" },
-        { key: "clutches",    label: "Clutches" }
+        { key: "kills", label: "Kills" },
+        { key: "assists", label: "Assists" },
+        { key: "deaths", label: "Morts" },
+        { key: "rating", label: "Rating" },
+        { key: "hs", label: "Headshot %" },
+        { key: "clutches", label: "Clutches" },
       ],
       teamSeasonFields: [
         { key: "team_name", label: "Nom équipe" },
@@ -2787,8 +3415,8 @@ export default {
         { key: "rounds_won", label: "Rounds +" },
         { key: "rounds_lost", label: "Rounds -" },
         { key: "wins", label: "Victoires" },
-        { key: "losses", label: "Défaites" }
-      ]
+        { key: "losses", label: "Défaites" },
+      ],
     };
   },
 
@@ -2805,12 +3433,19 @@ export default {
     async load() {
       this.loading = true;
       try {
-        const [settings, uploadedFonts, mapImages, playerPhotos] = await Promise.all([
-          this.GetImageSettings(),
-          this.GetImageFonts().catch(() => []),
-          this.axiosCall.get(`${this.apiUrl}/image/maps`).then(r => r.data).catch(() => []),
-          this.axiosCall.get(`${this.apiUrl}/image/players`).then(r => r.data).catch(() => [])
-        ]);
+        const [settings, uploadedFonts, mapImages, playerPhotos] =
+          await Promise.all([
+            this.GetImageSettings(),
+            this.GetImageFonts().catch(() => []),
+            this.axiosCall
+              .get(`${this.apiUrl}/image/maps`)
+              .then((r) => r.data)
+              .catch(() => []),
+            this.axiosCall
+              .get(`${this.apiUrl}/image/players`)
+              .then((r) => r.data)
+              .catch(() => []),
+          ]);
         this.mapImages = mapImages;
         this.playerPhotos = playerPhotos;
         // Merge API response with local defaults so new fields never crash
@@ -2818,7 +3453,7 @@ export default {
         const s = settings || {};
         const sm = s.match || {};
         const sp = s.player || {};
-        const sv = s.mvp   || {};
+        const sv = s.mvp || {};
         const st = s.team_season || {};
         // Number of player slots for the X positions
         const MAX_PLAYERS = 5;
@@ -2831,61 +3466,64 @@ export default {
             team2_logo: { ...def.match.team2_logo, ...(sm.team2_logo || {}) },
             column_headers: {
               ...def.match.column_headers,
-              ...(sm.column_headers || {})
+              ...(sm.column_headers || {}),
             },
             shapes: {
               ...def.match.shapes,
               ...(sm.shapes || {}),
               team_pill: {
                 ...def.match.shapes.team_pill,
-                ...(sm.shapes?.team_pill || {})
+                ...(sm.shapes?.team_pill || {}),
               },
               player_pill: {
                 ...def.match.shapes.player_pill,
-                ...(sm.shapes?.player_pill || {})
+                ...(sm.shapes?.player_pill || {}),
               },
               stats_table: {
                 ...def.match.shapes.stats_table,
-                ...(sm.shapes?.stats_table || {})
+                ...(sm.shapes?.stats_table || {}),
               },
               map_pill: {
                 ...def.match.shapes.map_pill,
-                ...(sm.shapes?.map_pill || {})
-              }
-            }
+                ...(sm.shapes?.map_pill || {}),
+              },
+            },
           },
           player: {
             ...def.player,
             ...sp,
             column_headers: {
               ...def.player.column_headers,
-              ...(sp.column_headers || {})
+              ...(sp.column_headers || {}),
             },
             shapes: {
               ...def.player.shapes,
               ...(sp.shapes || {}),
               team_pill: {
                 ...def.player.shapes.team_pill,
-                ...(sp.shapes?.team_pill || {})
+                ...(sp.shapes?.team_pill || {}),
               },
               player_pill: {
                 ...def.player.shapes.player_pill,
-                ...(sp.shapes?.player_pill || {})
+                ...(sp.shapes?.player_pill || {}),
               },
               stats_bar: {
                 ...def.player.shapes.stats_bar,
-                ...(sp.shapes?.stats_bar || {})
-              }
-            }
+                ...(sp.shapes?.stats_bar || {}),
+              },
+            },
           },
           mvp: {
             ...def.mvp,
             ...sv,
-            map1:         { ...def.mvp.map1,         ...(sv.map1         || {}) },
-            map2:         { ...def.mvp.map2,         ...(sv.map2         || {}) },
-            map3:         { ...def.mvp.map3,         ...(sv.map3         || {}) },
-            map_image:    { ...def.mvp.map_image,    ...(sv.map_image    || {}) },
-            player_image: { ...def.mvp.player_image, ...(sv.player_image || {}) }
+            map1: { ...def.mvp.map1, ...(sv.map1 || {}) },
+            map2: { ...def.mvp.map2, ...(sv.map2 || {}) },
+            map3: { ...def.mvp.map3, ...(sv.map3 || {}) },
+            map_image: { ...def.mvp.map_image, ...(sv.map_image || {}) },
+            player_image: {
+              ...def.mvp.player_image,
+              ...(sv.player_image || {}),
+            },
           },
           team_season: {
             ...def.team_season,
@@ -2895,40 +3533,40 @@ export default {
               ...(st.players || {}),
               x: Array.from(
                 { length: MAX_PLAYERS },
-                (_, i) => st.players?.x?.[i] ?? def.team_season.players.x[i]
-              )
+                (_, i) => st.players?.x?.[i] ?? def.team_season.players.x[i],
+              ),
             },
             best_map_label: {
               ...def.team_season.best_map_label,
               ...(st.best_map_label || {}),
               text:
-                st.best_map_label?.text ?? def.team_season.best_map_label.text
+                st.best_map_label?.text ?? def.team_season.best_map_label.text,
             },
             stat_labels: {
               ...def.team_season.stat_labels,
-              ...(st.stat_labels || {})
+              ...(st.stat_labels || {}),
             },
             map_image: {
               ...def.team_season.map_image,
-              ...(st.map_image || {})
+              ...(st.map_image || {}),
             },
             shapes: {
               ...def.team_season.shapes,
               ...(st.shapes || {}),
               team_pill: {
                 ...def.team_season.shapes.team_pill,
-                ...(st.shapes?.team_pill || {})
+                ...(st.shapes?.team_pill || {}),
               },
               player_pill: {
                 ...def.team_season.shapes.player_pill,
-                ...(st.shapes?.player_pill || {})
+                ...(st.shapes?.player_pill || {}),
               },
               stats_background: {
                 ...def.team_season.shapes.stats_background,
-                ...(st.shapes?.stats_background || {})
-              }
-            }
-          }
+                ...(st.shapes?.stats_background || {}),
+              },
+            },
+          },
         };
         const systemFonts = [
           "Arial",
@@ -2940,7 +3578,7 @@ export default {
           "Times New Roman",
           "Courier New",
           "Impact",
-          "Comic Sans MS"
+          "Comic Sans MS",
         ];
         this.fontList = [...new Set([...systemFonts, ...uploadedFonts])];
       } catch {
@@ -2987,13 +3625,13 @@ export default {
       if (!file) return;
       const sectionKey = ["match", "player", "mvp", "team_season"][this.tab];
       const reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         try {
           const parsed = JSON.parse(e.target.result);
           this.$set(this.settings, sectionKey, parsed);
           this.notify(
             `Configuration "${sectionKey}" importée — pensez à sauvegarder.`,
-            "info"
+            "info",
           );
         } catch {
           this.notify("Fichier JSON invalide", "error");
@@ -3015,7 +3653,7 @@ export default {
         const res = await this.axiosCall.post(
           `${this.apiUrl}/image/upload/img`,
           form,
-          { headers: { "Content-Type": "multipart/form-data" } }
+          { headers: { "Content-Type": "multipart/form-data" } },
         );
         const filename = res.data.filename;
         if (idx === 0) this.settings.match.background = filename;
@@ -3044,7 +3682,7 @@ export default {
         const res = await this.axiosCall.post(
           `${this.apiUrl}/image/upload/font`,
           form,
-          { headers: { "Content-Type": "multipart/form-data" } }
+          { headers: { "Content-Type": "multipart/form-data" } },
         );
         const filename = res.data.filename;
         const family = filename.replace(/\.[^.]+$/, "");
@@ -3065,7 +3703,7 @@ export default {
         this.$set(
           this.uploadMsg,
           idx,
-          `Police uploadée et sauvegardée : ${filename}`
+          `Police uploadée et sauvegardée : ${filename}`,
         );
         this.$set(this.uploadMsgType, idx, "success");
         this.$set(this.fontFileInput, idx, null);
@@ -3086,7 +3724,7 @@ export default {
         form.append("file", this.playerPhotoFile);
         form.append("steam_id", this.playerPhotoSteamId);
         await this.axiosCall.post(`${this.apiUrl}/image/upload/player`, form, {
-          headers: { "Content-Type": "multipart/form-data" }
+          headers: { "Content-Type": "multipart/form-data" },
         });
         this.uploadPhotoMsg = `Photo uploadée pour ${this.playerPhotoSteamId}`;
         this.uploadPhotoMsgType = "success";
@@ -3094,7 +3732,7 @@ export default {
         this.playerPhotoSteamId = "";
         this.playerPhotos = await this.axiosCall
           .get(`${this.apiUrl}/image/players`)
-          .then(r => r.data)
+          .then((r) => r.data)
           .catch(() => []);
       } catch {
         this.uploadPhotoMsg = "Erreur lors de l'upload";
@@ -3112,14 +3750,14 @@ export default {
         const form = new FormData();
         form.append("file", this.mapImageFile);
         await this.axiosCall.post(`${this.apiUrl}/image/upload/map`, form, {
-          headers: { "Content-Type": "multipart/form-data" }
+          headers: { "Content-Type": "multipart/form-data" },
         });
         this.uploadMapMsg = `Image uploadée : ${this.mapImageFile.name}`;
         this.uploadMapMsgType = "success";
         this.mapImageFile = null;
         this.mapImages = await this.axiosCall
           .get(`${this.apiUrl}/image/maps`)
-          .then(r => r.data)
+          .then((r) => r.data)
           .catch(() => []);
       } catch {
         this.uploadMapMsg = "Erreur lors de l'upload";
@@ -3132,13 +3770,13 @@ export default {
     applyFontFamily(type, family) {
       const s = this.settings[type];
       const fcKeys = Object.keys(s).filter(
-        k =>
+        (k) =>
           s[k] &&
           typeof s[k] === "object" &&
           "font" in s[k] &&
-          "enabled" in s[k]
+          "enabled" in s[k],
       );
-      fcKeys.forEach(k => {
+      fcKeys.forEach((k) => {
         s[k].font = family;
       });
       if (type === "team_season" && s.players) {
@@ -3153,8 +3791,8 @@ export default {
       this.snackMsg = msg;
       this.snackColor = color;
       this.snack = true;
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -55,12 +55,8 @@
             user.super_admin == 1 || user.admin == 1 || item.user_id == user.id
           "
         >
-          <v-icon @click="deleteSelectedSeason(item)">
-            mdi-delete
-          </v-icon>
-          <v-icon @click="editSelectedSeason(item)">
-            mdi-pencil
-          </v-icon>
+          <v-icon @click="deleteSelectedSeason(item)"> mdi-delete </v-icon>
+          <v-icon @click="editSelectedSeason(item)"> mdi-pencil </v-icon>
         </div>
       </template>
     </v-data-table>
@@ -175,7 +171,7 @@
                       :label="$t('Seasons.Name')"
                       required
                       :rules="[
-                        () => !!newSeason.name || 'This field is required'
+                        () => !!newSeason.name || 'This field is required',
                       ]"
                     />
                   </v-col>
@@ -192,8 +188,8 @@
                           readonly
                           :label="$t('Seasons.DateTitle')"
                           :rules="[
-                            v => !!v || $t('misc.Required'),
-                            rules.dateLessThan
+                            (v) => !!v || $t('misc.Required'),
+                            rules.dateLessThan,
                           ]"
                         />
                       </template>
@@ -328,7 +324,7 @@
                         () =>
                           seasonDefaults.map_pool.length >
                             seasonDefaults.maps_to_win - 1 ||
-                          $t('CreateMatch.MapNotEnough')
+                          $t('CreateMatch.MapNotEnough'),
                       ]"
                     />
                   </v-col>
@@ -398,7 +394,7 @@
                           map:
                             seasonDefaults.map_pool[index] == null
                               ? entity
-                              : seasonDefaults.map_pool[index]
+                              : seasonDefaults.map_pool[index],
                         })
                       }}
                     </v-col>
@@ -461,7 +457,7 @@
 <script>
 export default {
   props: {
-    user: Object
+    user: Object,
   },
   data() {
     return {
@@ -477,7 +473,7 @@ export default {
       newSeason: {
         name: "",
         dates: [],
-        cvars: []
+        cvars: [],
       },
       seasonDefaults: {
         min_players_to_ready: 5,
@@ -489,24 +485,24 @@ export default {
         spectators: [],
         side_type: "standard",
         map_sides: [],
-        wingman: false
+        wingman: false,
       },
       datemenu: false,
       formTitle: this.$t("Seasons.NewFormTitle"),
       MapList: [],
       rules: {
-        dateLessThan: v => {
+        dateLessThan: (v) => {
           let tmpDateArr = v.split(" ~ ");
           if (tmpDateArr[1] == undefined) {
             return true;
           } else
             return tmpDateArr[0] <= tmpDateArr[1] || this.$t("misc.LessThan");
-        }
+        },
       },
       challongeInfo: {
         tournament_id: "",
-        import_teams: true
-      }
+        import_teams: true,
+      },
     };
   },
   mounted() {
@@ -524,9 +520,9 @@ export default {
                 .toISOString()
                 .substr(0, 10)
                 .slice(0, 19)
-                .replace("T", " ")
+                .replace("T", " "),
             ],
-            cvars: []
+            cvars: [],
           };
           this.seasonDefaults = {
             min_players_to_ready: 5,
@@ -538,7 +534,7 @@ export default {
             spectators: [],
             side_type: "standard",
             map_sides: [],
-            wingman: false
+            wingman: false,
           };
           this.$refs.newSeasonForm.resetValidation();
         });
@@ -548,7 +544,7 @@ export default {
       if (!val) {
         this.$refs.newImportForm.resetValidation();
       }
-    }
+    },
   },
   methods: {
     async GetSeasons() {
@@ -559,23 +555,23 @@ export default {
         if (typeof res == "string") res = [];
         this.MapList = await this.GetUserEnabledMapList(this.user.id);
         const userCache = new Map();
-        const getUserCached = id => {
+        const getUserCached = (id) => {
           if (!userCache.has(id)) userCache.set(id, this.GetUserData(id));
           return userCache.get(id);
         };
         this.seasons = await Promise.all(
-          res.map(async season => {
+          res.map(async (season) => {
             const ownerRes = await getUserCached(season.user_id);
             season.owner = ownerRes.name;
             season.start_date = new Date(season.start_date).toLocaleDateString(
-              "en-CA"
+              "en-CA",
             );
             if (season.end_date != null)
               season.end_date = new Date(season.end_date).toLocaleDateString(
-                "en-CA"
+                "en-CA",
               );
             return season;
-          })
+          }),
         );
       } catch (error) {
         void error;
@@ -594,8 +590,8 @@ export default {
     async deleteSeasonConfirm() {
       let memberData = [
         {
-          season_id: this.removeSeason.id
-        }
+          season_id: this.removeSeason.id,
+        },
       ];
       let tmpResp = await this.DeleteSeason(memberData);
       if (tmpResp.includes("successfully!"))
@@ -616,7 +612,7 @@ export default {
       if (this.$refs.newSeasonForm.validate()) {
         let serverRes;
         let newCvar;
-        const splitStr = x => {
+        const splitStr = (x) => {
           const y = x.split(" ");
           let retVal;
           let key;
@@ -635,7 +631,7 @@ export default {
           newCvar = Object.assign(
             {},
             ...this.newSeason.cvars.map(splitStr),
-            this.seasonDefaults
+            this.seasonDefaults,
           );
         }
         if (newCvar) {
@@ -654,8 +650,8 @@ export default {
                 this.newSeason.dates[1] == undefined
                   ? null
                   : this.newSeason.dates[1],
-              season_cvar: newCvar
-            }
+              season_cvar: newCvar,
+            },
           ];
           serverRes = await this.InsertSeason(serverObj);
         } else {
@@ -668,8 +664,8 @@ export default {
                 this.newSeason.dates[1] == undefined
                   ? null
                   : this.newSeason.dates[1],
-              season_cvar: newCvar
-            }
+              season_cvar: newCvar,
+            },
           ];
           serverRes = await this.UpdateSeasonInfo(updateObj);
         }
@@ -690,9 +686,9 @@ export default {
                 .toISOString()
                 .substr(0, 10)
                 .slice(0, 19)
-                .replace("T", " ")
+                .replace("T", " "),
             ],
-            cvars: []
+            cvars: [],
           };
           this.seasonDefaults = {
             min_players_to_ready: 5,
@@ -704,7 +700,7 @@ export default {
             spectators: [],
             side_type: "standard",
             map_sides: [],
-            wingman: false
+            wingman: false,
           };
           this.$refs.newSeasonForm.resetValidation();
         });
@@ -756,7 +752,7 @@ export default {
         id: item.id,
         dates: dateArray,
         cvars: seasonCvars == null ? seasonCvars : tmpArr,
-        name: item.name
+        name: item.name,
       };
       this.newDialog = true;
     },
@@ -773,12 +769,12 @@ export default {
         this.$nextTick(() => {
           this.challongeInfo = {
             tournament_id: "",
-            import_teams: true
+            import_teams: true,
           };
         });
       }
       return;
-    }
+    },
   },
   computed: {
     dateRangeText() {
@@ -790,31 +786,31 @@ export default {
           text: this.$t("Seasons.ID"),
           align: "start",
           sortable: true,
-          value: "id"
+          value: "id",
         },
         {
           text: this.$t("Seasons.Name"),
-          value: "name"
+          value: "name",
         },
         {
           text: this.$t("Seasons.StartTitle"),
-          value: "start_date"
+          value: "start_date",
         },
         {
           text: this.$t("Seasons.EndTitle"),
-          value: "end_date"
+          value: "end_date",
         },
         {
           text: this.$t("Matches.Owner"),
-          value: "owner"
+          value: "owner",
         },
         {
           text: "",
           value: "actions",
-          sortable: false
-        }
+          sortable: false,
+        },
       ];
-    }
-  }
+    },
+  },
 };
 </script>

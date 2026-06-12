@@ -51,7 +51,7 @@
           v-if="item.side"
           :class="[
             'v-data-table__expand-icon',
-            { 'v-data-table__expand-icon--active': isExpanded }
+            { 'v-data-table__expand-icon--active': isExpanded },
           ]"
           @click.stop="expand(!isExpanded)"
           >$expand</v-icon
@@ -82,10 +82,10 @@ let vetoInformation;
 let vetoSideInformation;
 export default {
   props: {
-    match_id: Number
+    match_id: Number,
   },
   sse: {
-    cleanup: true
+    cleanup: true,
   },
   data() {
     return {
@@ -97,10 +97,10 @@ export default {
           team_name_side: null,
           map: "",
           pick_or_veto: "",
-          side: ""
-        }
+          side: "",
+        },
       ],
-      expanded: []
+      expanded: [],
     };
   },
   mounted() {
@@ -119,7 +119,7 @@ export default {
       try {
         vetoInformation = await this.GetStreamedVetoesOfMatch(this.match_id);
         vetoSideInformation = await this.GetStreamedVetoSidesOfMatch(
-          this.match_id
+          this.match_id,
         );
         // Remove the -1 value.
         this.vetoInfo.pop();
@@ -132,8 +132,8 @@ export default {
       }
     },
     async handleVetoInfo(liveVetoInfo) {
-      await liveVetoInfo.forEach(vetoData => {
-        let isFound = this.vetoInfo.find(tmp => {
+      await liveVetoInfo.forEach((vetoData) => {
+        let isFound = this.vetoInfo.find((tmp) => {
           return tmp["id"] === vetoData.id;
         });
         if (!isFound) {
@@ -142,7 +142,7 @@ export default {
             match_id: vetoData.match_id,
             team_name: vetoData.team_name,
             map: vetoData.map,
-            pick_or_veto: vetoData.pick_or_veto
+            pick_or_veto: vetoData.pick_or_veto,
           });
         }
       });
@@ -151,7 +151,7 @@ export default {
       if (typeof mapStatRes != "string") this.mapStats = mapStatRes;
     },
     async handleLiveSideInfo(liveSideInfo) {
-      await liveSideInfo.forEach(liveVetoData => {
+      await liveSideInfo.forEach((liveVetoData) => {
         this.vetoInfo.forEach((vetoData, idx) => {
           if (liveVetoData["veto_id"] === vetoData["id"]) {
             this.vetoInfo.splice(idx, 1);
@@ -162,7 +162,7 @@ export default {
               map: vetoData.map,
               pick_or_veto: vetoData.pick_or_veto,
               team_name_side: liveVetoData.team_name,
-              side: liveVetoData.side
+              side: liveVetoData.side,
             });
           }
         });
@@ -176,12 +176,12 @@ export default {
         void error;
       }
     },
-    expandAll: function() {
-      this.expanded = this.people.filter(item => item.description);
+    expandAll: function () {
+      this.expanded = this.people.filter((item) => item.description);
     },
-    collapseAll: function() {
+    collapseAll: function () {
       this.expanded = [];
-    }
+    },
   },
   computed: {
     headers() {
@@ -190,42 +190,42 @@ export default {
           text: this.$t("Veto.TeamHeader"),
           sortable: false,
           align: "start",
-          value: "team_name"
+          value: "team_name",
         },
         {
           text: this.$t("Veto.MapHeader"),
           sortable: false,
-          value: "map"
+          value: "map",
         },
         {
           text: this.$t("Veto.PickBan"),
           sortable: false,
-          value: "pick_or_veto"
+          value: "pick_or_veto",
         },
         {
           text: "",
-          value: "data-table-expand"
-        }
+          value: "data-table-expand",
+        },
       ];
     },
     additionalHeaders() {
       return [
         {
           text: this.$t("Veto.TeamHeader"),
-          value: "team_name_side"
+          value: "team_name_side",
         },
         {
           text: this.$t("Veto.MapHeader"),
           sortable: false,
-          value: "map"
+          value: "map",
         },
         {
           text: this.$t("Veto.SidePick"),
           sortable: false,
-          value: "side"
-        }
+          value: "side",
+        },
       ];
-    }
-  }
+    },
+  },
 };
 </script>

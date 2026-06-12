@@ -18,7 +18,7 @@
               :items="servers"
               item-text="display_name"
               item-value="id"
-              :rules="[v => v != -1 || $t('misc.Required')]"
+              :rules="[(v) => v != -1 || $t('misc.Required')]"
               :label="$t('CreateMatch.ServerLabel')"
               required
               ref="newServer"
@@ -64,10 +64,10 @@
               item-text="name"
               item-value="id"
               :rules="[
-                v => !!v || $t('CreateMatch.TeamRequired'),
+                (v) => !!v || $t('CreateMatch.TeamRequired'),
                 () =>
                   newMatchData.team1.id != newMatchData.team2.id ||
-                  $t('CreateMatch.TeamCannotBeEqual')
+                  $t('CreateMatch.TeamCannotBeEqual'),
               ]"
               :label="$t('CreateMatch.FormTeam1')"
               required
@@ -81,10 +81,10 @@
               item-text="name"
               item-value="id"
               :rules="[
-                v => !!v || $t('CreateMatch.TeamRequired'),
+                (v) => !!v || $t('CreateMatch.TeamRequired'),
                 () =>
                   newMatchData.team2.id != newMatchData.team1.id ||
-                  $t('CreateMatch.TeamCannotBeEqual')
+                  $t('CreateMatch.TeamCannotBeEqual'),
               ]"
               :label="$t('CreateMatch.FormTeam2')"
               required
@@ -152,7 +152,7 @@
                     () =>
                       newMatchData.map_pool.length >
                         newMatchData.maps_to_win - 1 ||
-                      $t('CreateMatch.MapNotEnough')
+                      $t('CreateMatch.MapNotEnough'),
                   ]"
                 />
               </v-col>
@@ -242,7 +242,7 @@
                       map:
                         newMatchData.map_pool[index] == null
                           ? entity
-                          : newMatchData.map_pool[index]
+                          : newMatchData.map_pool[index],
                     })
                   }}
                 </v-col>
@@ -366,11 +366,11 @@
 import ServerDialog from "./ServerDialog";
 export default {
   props: {
-    user: Object
+    user: Object,
   },
   name: "CreateMatch",
   components: {
-    ServerDialog
+    ServerDialog,
   },
   data: () => ({
     step: 1,
@@ -394,7 +394,7 @@ export default {
       spectators: [],
       side_type: "standard",
       map_sides: [],
-      wingman: false
+      wingman: false,
     },
     selectedTeams: [],
     newDialog: false,
@@ -402,7 +402,7 @@ export default {
     responseSheet: false,
     newMatchId: null,
     isLoading: false,
-    MapList: []
+    MapList: [],
   }),
   computed: {
     currentTitle() {
@@ -416,12 +416,12 @@ export default {
         default:
           return this.$t("CreateMatch.FormError");
       }
-    }
+    },
   },
   watch: {
     async selectedSeason(val) {
       let arrIndex = this.seasons
-        .map(obj => {
+        .map((obj) => {
           return obj.id;
         })
         .indexOf(val);
@@ -496,7 +496,7 @@ export default {
           this.newMatchData.cvars = tmpCvarArr;
         }
       }
-    }
+    },
   },
   async created() {
     this.servers = await this.GetAllAvailableServers();
@@ -510,7 +510,7 @@ export default {
     else {
       let tmpPublicTeams = await this.GetAllTeams();
       this.allTeams = await this.GetMyTeams();
-      tmpPublicTeams.forEach(async team => {
+      tmpPublicTeams.forEach(async (team) => {
         if (typeof this.allTeams === "string") this.allTeams = [];
         if (team.public_team == 1) this.allTeams.push(team);
       });
@@ -523,7 +523,7 @@ export default {
     const now = new Date();
     this.seasons = Array.isArray(allSeasons)
       ? allSeasons.filter(
-          s => s.end_date == null || new Date(s.end_date) >= now
+          (s) => s.end_date == null || new Date(s.end_date) >= now,
         )
       : [];
     this.MapList = await this.GetUserEnabledMapList(this.user.id);
@@ -532,7 +532,7 @@ export default {
     async ReloadServers() {
       this.servers = await this.GetAllAvailableServers();
       let arrIndex = this.servers
-        .map(obj => {
+        .map((obj) => {
           return obj.ip_string + " " + obj.port + " " + obj.user_id;
         })
         .indexOf(
@@ -540,7 +540,7 @@ export default {
             " " +
             this.newServer.port +
             " " +
-            this.user.id
+            this.user.id,
         );
       this.selectedServer = this.servers[arrIndex].id;
       this.newServer = {};
@@ -554,7 +554,7 @@ export default {
     async callCreateMatch() {
       if (this.$refs.newMatchForm.validate()) {
         this.isLoading = true;
-        const splitStr = x => {
+        const splitStr = (x) => {
           const y = x.split(" ");
           let retVal;
           let key;
@@ -572,7 +572,7 @@ export default {
         };
         let newCvar = Object.assign(
           {},
-          ...this.newMatchData.cvars.map(splitStr)
+          ...this.newMatchData.cvars.map(splitStr),
         );
         let matchInsertObj = [
           {
@@ -580,10 +580,7 @@ export default {
             team1_id: this.newMatchData.team1.id,
             team2_id: this.newMatchData.team2.id,
             season_id: this.selectedSeason == -1 ? null : this.selectedSeason,
-            start_time: new Date()
-              .toISOString()
-              .slice(0, 19)
-              .replace("T", " "),
+            start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
             max_maps: this.newMatchData.maps_to_win,
             side_type: this.newMatchData.side_type,
             veto_mappool: this.newMatchData.map_pool.join(" "),
@@ -593,14 +590,14 @@ export default {
             wingman: this.newMatchData.wingman,
             spectator_auths: this.newMatchData.spectators,
             min_players_to_ready: parseInt(
-              this.newMatchData.min_players_to_ready
+              this.newMatchData.min_players_to_ready,
             ),
             players_per_team: parseInt(this.newMatchData.players_per_team),
             min_spectators_to_ready: parseInt(
-              this.newMatchData.min_spectators_to_ready
+              this.newMatchData.min_spectators_to_ready,
             ),
-            map_sides: this.newMatchData.map_sides.join(",")
-          }
+            map_sides: this.newMatchData.map_sides.join(","),
+          },
         ];
         try {
           let serverRes = await this.InsertMatch(matchInsertObj);
@@ -622,7 +619,7 @@ export default {
       this.response = "";
       if (this.newMatchId != null)
         this.$router.push({ name: `Match`, params: { id: this.newMatchId } });
-    }
-  }
+    },
+  },
 };
 </script>

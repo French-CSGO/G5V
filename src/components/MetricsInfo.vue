@@ -137,7 +137,7 @@ export default {
       allServers: [],
       allMaps: [],
       allUniquePlayers: 0,
-      allSeasons: []
+      allSeasons: [],
     };
   },
   created() {
@@ -159,7 +159,7 @@ export default {
       if (typeof this.allMaps == "string") this.allMaps = [];
       if (typeof this.allUniquePlayers == "string") this.allUniquePlayers = 0;
       if (typeof this.allSeasons == "string") this.allSeasons = [];
-    }
+    },
   },
   computed: {
     userCount() {
@@ -173,7 +173,7 @@ export default {
     },
     matchesComplete() {
       if (typeof this.allMatches == "string") return 0;
-      return this.allMatches.filter(mtch => {
+      return this.allMatches.filter((mtch) => {
         return mtch.cancelled == 0 && mtch.end_time != null;
       }).length;
     },
@@ -181,7 +181,7 @@ export default {
       return this.allServers;
     },
     mapCount() {
-      return this.allMaps.filter(mtch => {
+      return this.allMaps.filter((mtch) => {
         return mtch.end_time != mtch.start_time;
       }).length;
     },
@@ -222,7 +222,7 @@ export default {
     isSeasonsLoading() {
       if (this.seasonCount >= 0) return false;
       else return true;
-    }
-  }
+    },
+  },
 };
 </script>

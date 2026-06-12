@@ -19,7 +19,9 @@
               <!-- Équipes verrouillées -->
               <v-col cols="6">
                 <v-text-field
-                  :value="prefill.team1 ? prefill.team1.name : $t('Challonge.TeamTBD')"
+                  :value="
+                    prefill.team1 ? prefill.team1.name : $t('Challonge.TeamTBD')
+                  "
                   :label="$t('CreateMatch.FormTeam1')"
                   readonly
                   outlined
@@ -29,7 +31,9 @@
               </v-col>
               <v-col cols="6">
                 <v-text-field
-                  :value="prefill.team2 ? prefill.team2.name : $t('Challonge.TeamTBD')"
+                  :value="
+                    prefill.team2 ? prefill.team2.name : $t('Challonge.TeamTBD')
+                  "
                   :label="$t('CreateMatch.FormTeam2')"
                   readonly
                   outlined
@@ -58,7 +62,7 @@
                   item-text="display_name"
                   item-value="id"
                   :label="$t('CreateMatch.ServerLabel')"
-                  :rules="[v => !!v || $t('misc.Required')]"
+                  :rules="[(v) => !!v || $t('misc.Required')]"
                   outlined
                   dense
                   required
@@ -87,19 +91,20 @@
                 <v-alert type="info" text dense>
                   {{ $t("Challonge.MatchInfo") }} #{{
                     prefill.challonge_match
-                      ? prefill.challonge_match.suggested_play_order || prefill.challonge_match.id
+                      ? prefill.challonge_match.suggested_play_order ||
+                        prefill.challonge_match.id
                       : ""
                   }}
                   <span
                     v-if="
                       prefill.challonge_match &&
-                        prefill.challonge_match.scheduled_time
+                      prefill.challonge_match.scheduled_time
                     "
                   >
                     —
                     {{
                       new Date(
-                        prefill.challonge_match.scheduled_time
+                        prefill.challonge_match.scheduled_time,
                       ).toLocaleString()
                     }}
                   </span>
@@ -144,7 +149,9 @@
       </v-alert>
       <v-card-actions>
         <v-btn text @click="close">{{ $t("misc.Cancel") }}</v-btn>
-        <v-btn :disabled="step === 1" text @click="step--">{{ $t("misc.Back") }}</v-btn>
+        <v-btn :disabled="step === 1" text @click="step--">{{
+          $t("misc.Back")
+        }}</v-btn>
         <v-spacer />
         <v-btn v-if="step < 2" color="primary" depressed @click="step++">
           {{ $t("misc.Next") }}
@@ -177,8 +184,8 @@ export default {
     value: Boolean,
     prefill: {
       type: Object,
-      default: () => ({})
-    }
+      default: () => ({}),
+    },
   },
   data() {
     return {
@@ -187,12 +194,12 @@ export default {
       formData: {
         maps_to_win: 1,
         spectators: [],
-        cvars: []
+        cvars: [],
       },
       isLoading: false,
       snackbar: false,
       snackbarMessage: "",
-      snackbarColor: "success"
+      snackbarColor: "success",
     };
   },
   computed: {
@@ -202,13 +209,13 @@ export default {
       },
       set(val) {
         this.$emit("input", val);
-      }
+      },
     },
     currentTitle() {
       return this.step === 1
         ? this.$t("Challonge.StepVerify")
         : this.$t("Challonge.StepDetails");
-    }
+    },
   },
   watch: {
     value(val) {
@@ -221,7 +228,7 @@ export default {
       if (val && val.available_servers && val.available_servers.length > 0) {
         this.selectedServer = val.available_servers[0].id;
       }
-    }
+    },
   },
   methods: {
     reset() {
@@ -230,7 +237,10 @@ export default {
       if (this.prefill.season_cvars) {
         this.formData.cvars = this.buildCvarArray(this.prefill.season_cvars);
       }
-      if (this.prefill.available_servers && this.prefill.available_servers.length > 0) {
+      if (
+        this.prefill.available_servers &&
+        this.prefill.available_servers.length > 0
+      ) {
         this.selectedServer = this.prefill.available_servers[0].id;
       }
     },
@@ -246,7 +256,7 @@ export default {
         "map_pool",
         "side_type",
         "spectators",
-        "map_sides"
+        "map_sides",
       ];
       return Object.entries(cvars)
         .filter(([k]) => !reserved.includes(k))
@@ -279,7 +289,7 @@ export default {
 
       const cvars = Object.assign(
         {},
-        ...this.formData.cvars.map(this.splitCvar)
+        ...this.formData.cvars.map(this.splitCvar),
       );
       const sc = this.prefill.season_cvars || {};
       const matchObj = [
@@ -289,10 +299,7 @@ export default {
           team2_id: this.prefill.team2.id,
           season_id: this.prefill.season_id,
           challonge_id: this.prefill.challonge_match_id ?? null,
-          start_time: new Date()
-            .toISOString()
-            .slice(0, 19)
-            .replace("T", " "),
+          start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
           max_maps: this.formData.maps_to_win,
           spectator_auths: this.formData.spectators.length
             ? this.formData.spectators
@@ -315,8 +322,8 @@ export default {
               : null,
           players_per_team:
             sc.players_per_team != null ? parseInt(sc.players_per_team) : null,
-          wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null
-        }
+          wingman: sc.wingman != null ? !!parseInt(sc.wingman) : null,
+        },
       ];
 
       try {
@@ -326,7 +333,8 @@ export default {
           this.close();
           this.$router.push({ name: "Match", params: { id: res.id } });
         } else {
-          this.snackbarMessage = res?.message || this.$t("Challonge.CreateError");
+          this.snackbarMessage =
+            res?.message || this.$t("Challonge.CreateError");
           this.snackbarColor = "error";
           this.snackbar = true;
         }
@@ -336,7 +344,7 @@ export default {
         this.snackbar = true;
       }
       this.isLoading = false;
-    }
-  }
+    },
+  },
 };
 </script>

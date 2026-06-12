@@ -122,7 +122,7 @@
                               outlined
                               hide-details
                               class="my-1"
-                              style="min-width:200px"
+                              style="min-width: 200px"
                             />
                           </td>
                           <td>
@@ -177,7 +177,7 @@ export default {
       savingRound: {},
       matchDatetime: {},
       savingMatch: {},
-      snackbar: { show: false, text: "", color: "success" }
+      snackbar: { show: false, text: "", color: "success" },
     };
   },
   computed: {
@@ -185,11 +185,11 @@ export default {
       return this.$route.params.id;
     },
     stagesWithRounds() {
-      return this.stages.map(stage => ({
+      return this.stages.map((stage) => ({
         ...stage,
-        rounds: this.rounds.filter(r => r.stage_id === stage.id)
+        rounds: this.rounds.filter((r) => r.stage_id === stage.id),
       }));
-    }
+    },
   },
   async created() {
     this.loading = true;
@@ -201,7 +201,7 @@ export default {
     }
     [this.stages, this.rounds] = await Promise.all([
       this.GetToornamentStages(this.seasonId),
-      this.GetToornamentRounds(this.seasonId)
+      this.GetToornamentRounds(this.seasonId),
     ]);
     this.loading = false;
   },
@@ -210,20 +210,20 @@ export default {
       if (this.matchesByRound[round.id]) return;
       this.$set(this.loadingRound, round.id, true);
       const all = await this.GetToornamentMatches(this.seasonId, {
-        stage_id: round.stage_id
+        stage_id: round.stage_id,
       });
-      const matches = all.filter(m => m.round_id === round.id);
+      const matches = all.filter((m) => m.round_id === round.id);
       this.$set(this.matchesByRound, round.id, matches);
       for (const m of matches) {
         if (m.scheduled_datetime) {
           const dt = new Date(m.scheduled_datetime);
-          const pad = n => String(n).padStart(2, "0");
+          const pad = (n) => String(n).padStart(2, "0");
           this.$set(
             this.matchDatetime,
             m.id,
             `${dt.getFullYear()}-${pad(dt.getMonth() + 1)}-${pad(
-              dt.getDate()
-            )}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`
+              dt.getDate(),
+            )}T${pad(dt.getHours())}:${pad(dt.getMinutes())}`,
           );
         }
       }
@@ -233,7 +233,7 @@ export default {
       const dt = new Date(`${date}T${time}:00`);
       const offset = -dt.getTimezoneOffset();
       const sign = offset >= 0 ? "+" : "-";
-      const pad = n => String(Math.floor(Math.abs(n))).padStart(2, "0");
+      const pad = (n) => String(Math.floor(Math.abs(n))).padStart(2, "0");
       return `${date}T${time}:00${sign}${pad(offset / 60)}:${pad(offset % 60)}`;
     },
     async saveRound(round) {
@@ -245,7 +245,7 @@ export default {
       const result = await this.ScheduleToornamentRound(
         this.seasonId,
         round.id,
-        iso
+        iso,
       );
       if (result?.message) {
         this.snackbar = { show: true, text: result.message, color: "success" };
@@ -256,7 +256,7 @@ export default {
         this.snackbar = {
           show: true,
           text: this.$t("Toornament.ScheduleError"),
-          color: "error"
+          color: "error",
         };
       }
       this.$set(this.savingRound, round.id, false);
@@ -270,7 +270,7 @@ export default {
       const result = await this.ScheduleToornamentMatch(
         this.seasonId,
         match.id,
-        iso
+        iso,
       );
       if (result?.message) {
         this.snackbar = { show: true, text: result.message, color: "success" };
@@ -278,7 +278,7 @@ export default {
         this.snackbar = {
           show: true,
           text: this.$t("Toornament.ScheduleError"),
-          color: "error"
+          color: "error",
         };
       }
       this.$set(this.savingMatch, match.id, false);
@@ -287,7 +287,7 @@ export default {
       return opp?.participant
         ? opp.participant.name
         : this.$t("Toornament.TeamTBD");
-    }
-  }
+    },
+  },
 };
 </script>

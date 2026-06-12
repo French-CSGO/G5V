@@ -11,7 +11,11 @@
       </v-card-title>
 
       <!-- Onglets par bracket -->
-      <v-tabs v-model="activeTournament" background-color="transparent" class="px-4">
+      <v-tabs
+        v-model="activeTournament"
+        background-color="transparent"
+        class="px-4"
+      >
         <v-tab v-for="t in tournaments" :key="t.id">
           {{ t.label }}
         </v-tab>
@@ -26,7 +30,7 @@
               v-model="filterState"
               :items="[
                 { text: $t('Challonge.StateOpen'), value: 'open' },
-                { text: $t('Challonge.StateComplete'), value: 'complete' }
+                { text: $t('Challonge.StateComplete'), value: 'complete' },
               ]"
               :label="$t('Challonge.FilterState')"
               clearable
@@ -51,11 +55,7 @@
       <!-- Contenu par bracket actif -->
       <div v-if="currentTournament">
         <v-card-text v-if="!loading && groupedByRound.length">
-          <div
-            v-for="group in groupedByRound"
-            :key="group.round"
-            class="mb-6"
-          >
+          <div v-for="group in groupedByRound" :key="group.round" class="mb-6">
             <div class="d-flex align-center mb-2">
               <v-chip small color="secondary" class="mr-2 font-weight-bold">
                 {{ $t("Challonge.Round") }} {{ group.round }}
@@ -86,12 +86,16 @@
             >
               <template v-slot:item.player1="{ item }">
                 <span :class="{ 'grey--text': !item.player1 }">
-                  {{ item.player1 ? item.player1.name : $t("Challonge.TeamTBD") }}
+                  {{
+                    item.player1 ? item.player1.name : $t("Challonge.TeamTBD")
+                  }}
                 </span>
               </template>
               <template v-slot:item.player2="{ item }">
                 <span :class="{ 'grey--text': !item.player2 }">
-                  {{ item.player2 ? item.player2.name : $t("Challonge.TeamTBD") }}
+                  {{
+                    item.player2 ? item.player2.name : $t("Challonge.TeamTBD")
+                  }}
                 </span>
               </template>
               <template v-slot:item.state="{ item }">
@@ -101,8 +105,8 @@
                     item.state === 'complete'
                       ? 'success'
                       : item.state === 'open'
-                      ? 'warning'
-                      : 'default'
+                        ? 'warning'
+                        : 'default'
                   "
                 >
                   {{ $t("Challonge.State_" + item.state) }}
@@ -131,10 +135,10 @@
                   <v-btn
                     v-if="
                       item.state === 'open' &&
-                        item.player1 &&
-                        item.player1.local_team &&
-                        item.player2 &&
-                        item.player2.local_team
+                      item.player1 &&
+                      item.player1.local_team &&
+                      item.player2 &&
+                      item.player2.local_team
                     "
                     x-small
                     color="primary"
@@ -210,7 +214,7 @@ export default {
       showBulkCreate: false,
       bulkRound: 0,
       bulkMatches: [],
-      bulkPrefill: {}
+      bulkPrefill: {},
     };
   },
   computed: {
@@ -229,20 +233,20 @@ export default {
     currentMatches() {
       if (!this.currentTournament) return [];
       return this.allMatches.filter(
-        m => m.slug === this.currentTournament.challonge_slug
+        (m) => m.slug === this.currentTournament.challonge_slug,
       );
     },
     filteredMatches() {
       let list = this.currentMatches;
       if (this.filterCreatable) {
         list = list.filter(
-          m =>
+          (m) =>
             !m.g5_match_id &&
             m.state === "open" &&
             m.player1 &&
             m.player1.local_team &&
             m.player2 &&
-            m.player2.local_team
+            m.player2.local_team,
         );
       }
       return list;
@@ -261,21 +265,43 @@ export default {
     tableHeaders() {
       return [
         { text: "#", value: "suggested_play_order", width: "60px" },
-        { text: this.$t("Challonge.ColPlayer1"), value: "player1", sortable: false },
-        { text: this.$t("Challonge.ColPlayer2"), value: "player2", sortable: false },
-        { text: this.$t("Challonge.ColState"), value: "state", sortable: false },
+        {
+          text: this.$t("Challonge.ColPlayer1"),
+          value: "player1",
+          sortable: false,
+        },
+        {
+          text: this.$t("Challonge.ColPlayer2"),
+          value: "player2",
+          sortable: false,
+        },
+        {
+          text: this.$t("Challonge.ColState"),
+          value: "state",
+          sortable: false,
+        },
         { text: this.$t("Challonge.ColDate"), value: "scheduled_time" },
-        { text: "", value: "actions", sortable: false, align: "end", width: "200px" }
+        {
+          text: "",
+          value: "actions",
+          sortable: false,
+          align: "end",
+          width: "200px",
+        },
       ];
-    }
+    },
   },
   watch: {
     activeTournament() {
       this.pushQuery();
       this.loadMatches();
     },
-    filterState() { this.pushQuery(); },
-    filterCreatable() { this.pushQuery(); }
+    filterState() {
+      this.pushQuery();
+    },
+    filterCreatable() {
+      this.pushQuery();
+    },
   },
   async created() {
     this.user = await this.IsLoggedIn();
@@ -294,15 +320,22 @@ export default {
     if (q.creatable === "1") this.filterCreatable = true;
     if (q.tab !== undefined) {
       const idx = parseInt(q.tab);
-      if (!isNaN(idx) && idx < this.tournaments.length) this.activeTournament = idx;
+      if (!isNaN(idx) && idx < this.tournaments.length)
+        this.activeTournament = idx;
     }
     if (this.tournaments.length) {
       await this.loadMatches();
       // Auto-open create form if ?match=<challonge_match_id> is in URL
       if (q.match) {
         const targetId = parseInt(q.match);
-        const match = this.allMatches.find(m => m.id === targetId);
-        if (match && !match.g5_match_id && match.state === "open" && match.player1?.local_team && match.player2?.local_team) {
+        const match = this.allMatches.find((m) => m.id === targetId);
+        if (
+          match &&
+          !match.g5_match_id &&
+          match.state === "open" &&
+          match.player1?.local_team &&
+          match.player2?.local_team
+        ) {
           this.openCreate(match);
         }
       }
@@ -326,8 +359,8 @@ export default {
         // Remplace les matchs du bracket actif, garde les autres
         const slug = this.currentTournament.challonge_slug;
         this.allMatches = [
-          ...this.allMatches.filter(m => m.slug !== slug),
-          ...result
+          ...this.allMatches.filter((m) => m.slug !== slug),
+          ...result,
         ];
       }
       this.loading = false;
@@ -341,11 +374,11 @@ export default {
     },
     creatableInRound(group) {
       return group.matches.filter(
-        m =>
+        (m) =>
           !m.g5_match_id &&
           m.state === "open" &&
           m.player1?.local_team &&
-          m.player2?.local_team
+          m.player2?.local_team,
       );
     },
     async openBulkCreate(group) {
@@ -360,7 +393,7 @@ export default {
     },
     onMatchesCreated() {
       this.loadMatches();
-    }
-  }
+    },
+  },
 };
 </script>

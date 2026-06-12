@@ -9,7 +9,7 @@
           :href="`https://steamcommunity.com/profiles/${steamId}`"
           target="_blank"
           class="ml-2"
-          style="text-decoration:none"
+          style="text-decoration: none"
         >
           <v-icon color="primary">mdi-steam</v-icon>
         </a>
@@ -81,7 +81,7 @@ export default {
     return {
       extraStats: [],
       isLoading: true,
-      playerName: ""
+      playerName: "",
     };
   },
   async created() {
@@ -89,10 +89,10 @@ export default {
       const res = await this.GetUserExtraStats(this.steamId);
       if (Array.isArray(res)) {
         this.extraStats = res;
-        const mine = res.find(e => e.attacker_steam_id === this.steamId);
+        const mine = res.find((e) => e.attacker_steam_id === this.steamId);
         if (mine) this.playerName = mine.attacker_name;
         else {
-          const victim = res.find(e => e.player_steam_id === this.steamId);
+          const victim = res.find((e) => e.player_steam_id === this.steamId);
           if (victim) this.playerName = victim.player_name;
         }
       }
@@ -108,11 +108,13 @@ export default {
     },
     weaponStats() {
       const myKills = this.extraStats.filter(
-        e =>
-          e.attacker_steam_id === this.steamId && !e.suicide && !e.friendly_fire
+        (e) =>
+          e.attacker_steam_id === this.steamId &&
+          !e.suicide &&
+          !e.friendly_fire,
       );
       const map = {};
-      myKills.forEach(e => {
+      myKills.forEach((e) => {
         const w = e.weapon || "unknown";
         if (!map[w]) {
           map[w] = {
@@ -121,7 +123,7 @@ export default {
             hs: 0,
             blind: 0,
             smoke: 0,
-            noscope: 0
+            noscope: 0,
           };
         }
         map[w].kills++;
@@ -130,9 +132,9 @@ export default {
         if (e.thru_smoke) map[w].smoke++;
         if (e.no_scope) map[w].noscope++;
       });
-      return Object.values(map).map(w => ({
+      return Object.values(map).map((w) => ({
         ...w,
-        hsp: w.kills > 0 ? Math.round((w.hs / w.kills) * 100) : 0
+        hsp: w.kills > 0 ? Math.round((w.hs / w.kills) * 100) : 0,
       }));
     },
     headers() {
@@ -140,40 +142,40 @@ export default {
         {
           text: this.$t("GlobalStats.Weapon"),
           value: "weapon",
-          sortable: true
+          sortable: true,
         },
         { text: this.$t("PlayerStats.Kills"), value: "kills", sortable: true },
         {
           text: this.$t("PlayerStats.Headshot") + "%",
           value: "hsp",
           sortable: true,
-          width: "180px"
+          width: "180px",
         },
         { text: this.$t("GlobalStats.HSKills"), value: "hs", sortable: true },
         {
           text: this.$t("GlobalStats.BlindKills"),
           value: "blind",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("GlobalStats.SmokeKills"),
           value: "smoke",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("GlobalStats.NoScope"),
           value: "noscope",
-          sortable: true
-        }
+          sortable: true,
+        },
       ];
-    }
+    },
   },
   methods: {
     formatWeapon(name) {
       if (!name) return "Unknown";
       return name
         .replace(/_/g, " ")
-        .replace(/\b\w/g, c => c.toUpperCase())
+        .replace(/\b\w/g, (c) => c.toUpperCase())
         .replace("Hkp2000", "HKP2000")
         .replace("Usp Silencer", "USP-S")
         .replace("M4a1 Silencer", "M4A1-S")
@@ -190,7 +192,7 @@ export default {
         .replace("Mp9", "MP9")
         .replace("Mac10", "MAC-10")
         .replace("Bizon", "PP-Bizon");
-    }
-  }
+    },
+  },
 };
 </script>

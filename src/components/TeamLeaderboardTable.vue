@@ -36,12 +36,12 @@
 export default {
   name: "TeamLeaderboard",
   props: {
-    seasonid: Number
+    seasonid: Number,
   },
   data() {
     return {
       teams: [],
-      isLoading: true
+      isLoading: true,
     };
   },
   created() {
@@ -55,32 +55,32 @@ export default {
           align: "start",
           sortable: true,
           value: "name",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("Leaderboard.TWin"),
           sortable: true,
           value: "wins",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("Leaderboard.TLosses"),
           value: "losses",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("Leaderboard.TDiff"),
           value: "rounddiff",
-          groupable: false
+          groupable: false,
         },
         {
           text: "",
           value: "actions",
           sortable: false,
-          groupable: false
-        }
+          groupable: false,
+        },
       ];
-    }
+    },
   },
   methods: {
     async GetLeaderboard() {
@@ -92,12 +92,12 @@ export default {
         if (typeof res == "string") return;
         this.teams = res;
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }
       return;
-    }
-  }
+    },
+  },
 };
 </script>

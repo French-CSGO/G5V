@@ -16,7 +16,7 @@
         <div v-if="matchInfo.team1.logo != null">
           <img
             :src="apiUrl + '/static/img/logos/' + matchInfo.team1.logo + '.png'"
-            style="border-radius: 5px; width: 40px; height: 32px;"
+            style="border-radius: 5px; width: 40px; height: 32px"
             @error="imgUrlAlt"
           />
           {{ matchInfo.team1_name }}
@@ -24,7 +24,7 @@
         <div v-else-if="matchInfo.team1.flag != null">
           <img
             :src="get_flag_link(matchInfo.team1)"
-            style="border-radius: 5px;"
+            style="border-radius: 5px"
           />
           {{ matchInfo.team1_name }}
         </div>
@@ -43,7 +43,7 @@
         <div v-if="matchInfo.team2.logo != null">
           <img
             :src="apiUrl + '/static/img/logos/' + matchInfo.team2.logo + '.png'"
-            style="border-radius: 5px; width: 40px; height: 32px;"
+            style="border-radius: 5px; width: 40px; height: 32px"
             @error="imgUrlAlt"
           />
           {{ matchInfo.team2_name }}
@@ -51,7 +51,7 @@
         <div v-else-if="matchInfo.team2.flag != null">
           <img
             :src="get_flag_link(matchInfo.team2)"
-            style="border-radius: 5px;"
+            style="border-radius: 5px"
           />
           {{ matchInfo.team2_name }}
         </div>
@@ -96,11 +96,11 @@
         small
         :href="
           'steam://rungame/730/' +
-            (user.steam_id || '0') +
-            '/+connect%20' +
-            serverInfo.ip_string +
-            ':' +
-            serverInfo.port
+          (user.steam_id || '0') +
+          '/+connect%20' +
+          serverInfo.ip_string +
+          ':' +
+          serverInfo.port
         "
       >
         {{ $t("Match.Connect") }} {{ serverInfo.display_name }}
@@ -110,8 +110,8 @@
       align="center"
       v-if="
         serverInfo.gotv_port != null &&
-          serverInfo.ip_string != '' &&
-          matchInfo.end_time == null
+        serverInfo.ip_string != '' &&
+        matchInfo.end_time == null
       "
     >
       <v-btn
@@ -119,11 +119,11 @@
         small
         :href="
           'steam://rungame/730/' +
-            (user.steam_id || '0') +
-            '/+connect%20' +
-            serverInfo.ip_string +
-            ':' +
-            serverInfo.gotv_port
+          (user.steam_id || '0') +
+          '/+connect%20' +
+          serverInfo.ip_string +
+          ':' +
+          serverInfo.gotv_port
         "
       >
         {{ $t("Match.GOTVConnect") }}
@@ -136,14 +136,14 @@
 import AdminButton from "./MatchAdminButton";
 export default {
   components: {
-    AdminButton
+    AdminButton,
   },
   props: {
     match_id: Number,
-    user: Object
+    user: Object,
   },
   sse: {
-    cleanup: true
+    cleanup: true,
   },
   data() {
     return {
@@ -165,7 +165,7 @@ export default {
           flag: "",
           logo: "",
           auth_name: {},
-          public_team: false
+          public_team: false,
         },
         team2: {
           id: 0,
@@ -175,22 +175,22 @@ export default {
           flag: "",
           logo: "",
           auth_name: {},
-          public_team: false
+          public_team: false,
         },
         symbol: "",
         cancelled: 0,
         forfeit: 0,
         id: -1,
-        user_id: -1
+        user_id: -1,
       },
       serverInfo: {
         ip_string: "",
         port: 0,
         gotv_port: 0,
-        display_name: ""
+        display_name: "",
       },
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
-      imageLoaded: true
+      imageLoaded: true,
     };
   },
   created() {
@@ -208,7 +208,7 @@ export default {
       try {
         let sseClient = await this.GetEventMatchData(this.match_id);
         await sseClient.connect();
-        await sseClient.on("matches", async message => {
+        await sseClient.on("matches", async (message) => {
           try {
             await this.retrieveMatchInfoHelper(message);
           } catch {
@@ -238,7 +238,7 @@ export default {
         this.matchInfo.team1_id = serverResponse.team1_id;
         this.matchInfo.team2_id = serverResponse.team2_id;
         this.matchInfo.start_time = new Date(
-          serverResponse.start_time
+          serverResponse.start_time,
         ).toLocaleString();
         this.matchInfo.end_time =
           serverResponse.end_time == null
@@ -248,7 +248,7 @@ export default {
         this.matchInfo.team2_score = serverResponse.team2_score;
         this.matchInfo.symbol = this.GetScoreSymbol(
           this.matchInfo.team1_score,
-          this.matchInfo.team2_score
+          this.matchInfo.team2_score,
         );
         this.matchInfo.team1 = team1Res;
         this.matchInfo.team2 = team2Res;
@@ -269,7 +269,7 @@ export default {
     imgUrlAlt(event) {
       if (event.target.src.includes("svg")) this.imageLoaded = false;
       else event.target.src = event.target.src.replace("png", "svg");
-    }
-  }
+    },
+  },
 };
 </script>

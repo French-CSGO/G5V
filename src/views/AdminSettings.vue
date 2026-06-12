@@ -54,10 +54,16 @@
             :key="type.key"
             class="d-flex align-center gap-3 mb-2"
           >
-            <div style="min-width:200px" class="text-body-2">{{ type.label }}</div>
+            <div style="min-width: 200px" class="text-body-2">
+              {{ type.label }}
+            </div>
             <v-combobox
               v-model="notifChannels[type.key]"
-              :label="type.webhook ? 'Channel IDs ou Webhook URLs' : 'Channel IDs (bot uniquement)'"
+              :label="
+                type.webhook
+                  ? 'Channel IDs ou Webhook URLs'
+                  : 'Channel IDs (bot uniquement)'
+              "
               multiple
               chips
               deletable-chips
@@ -157,15 +163,18 @@
             persistent-hint
           />
           <v-divider class="my-4" />
-          <div class="d-flex align-center" style="gap:16px">
+          <div class="d-flex align-center" style="gap: 16px">
             <v-chip color="orange darken-2" dark large>
               <v-icon left>mdi-counter</v-icon>
-              {{ settings['challonge.requestCount'] || '0' }} requêtes API
+              {{ settings["challonge.requestCount"] || "0" }} requêtes API
             </v-chip>
             <v-btn small outlined color="grey" @click="resetChallongeCounter">
               <v-icon left small>mdi-refresh</v-icon>Remettre à zéro
             </v-btn>
-            <span class="caption grey--text">Compteur persistant — s'incrémente à chaque appel vers l'API Challonge</span>
+            <span class="caption grey--text"
+              >Compteur persistant — s'incrémente à chaque appel vers l'API
+              Challonge</span
+            >
           </div>
         </v-card>
 
@@ -193,7 +202,8 @@
         <!-- DEMO -->
         <v-card v-if="tab === 6" flat class="pa-4">
           <v-card-subtitle class="pa-0 mb-3">
-            Upload de fichiers .dem — ils seront zippés et associés à la map_stats correspondante.
+            Upload de fichiers .dem — ils seront zippés et associés à la
+            map_stats correspondante.
           </v-card-subtitle>
 
           <v-file-input
@@ -221,7 +231,13 @@
 
           <div v-if="demoUploading" class="mt-3">
             <div class="d-flex justify-space-between text-caption mb-1">
-              <span>{{ demoProgress < 30 ? 'Compression...' : demoProgress < 100 ? 'Envoi en cours...' : 'Traitement serveur...' }}</span>
+              <span>{{
+                demoProgress < 30
+                  ? "Compression..."
+                  : demoProgress < 100
+                    ? "Envoi en cours..."
+                    : "Traitement serveur..."
+              }}</span>
               <span>{{ demoProgress }}%</span>
             </div>
             <v-progress-linear
@@ -237,13 +253,31 @@
             <v-list dense>
               <v-list-item v-for="r in demoResults" :key="r.file">
                 <v-list-item-icon>
-                  <v-icon :color="r.status === 'ok' ? 'success' : r.status === 'skipped' ? 'warning' : 'error'">
-                    {{ r.status === 'ok' ? 'mdi-check-circle' : r.status === 'skipped' ? 'mdi-skip-next-circle' : 'mdi-alert-circle' }}
+                  <v-icon
+                    :color="
+                      r.status === 'ok'
+                        ? 'success'
+                        : r.status === 'skipped'
+                          ? 'warning'
+                          : 'error'
+                    "
+                  >
+                    {{
+                      r.status === "ok"
+                        ? "mdi-check-circle"
+                        : r.status === "skipped"
+                          ? "mdi-skip-next-circle"
+                          : "mdi-alert-circle"
+                    }}
                   </v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title class="text-caption">{{ r.file }}</v-list-item-title>
-                  <v-list-item-subtitle class="text-caption">{{ r.message }}</v-list-item-subtitle>
+                  <v-list-item-title class="text-caption">{{
+                    r.file
+                  }}</v-list-item-title>
+                  <v-list-item-subtitle class="text-caption">{{
+                    r.message
+                  }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
             </v-list>
@@ -297,20 +331,20 @@ export default {
         default: [],
       },
       notifTypes: [
-        { key: "announce",   label: "Match Annonce",              webhook: false },
-        { key: "schedule",   label: "Match à Lancer",             webhook: false },
-        { key: "scoreboard", label: "Suivi des matchs",           webhook: false },
-        { key: "veto",       label: "Veto Finish",                webhook: true  },
-        { key: "demo",       label: "Demo Available",             webhook: true  },
-        { key: "streamer",   label: "Streamer",                   webhook: true  },
-        { key: "default",    label: "Défaut (autres notifs)",     webhook: true  },
-      ]
+        { key: "announce", label: "Match Annonce", webhook: false },
+        { key: "schedule", label: "Match à Lancer", webhook: false },
+        { key: "scoreboard", label: "Suivi des matchs", webhook: false },
+        { key: "veto", label: "Veto Finish", webhook: true },
+        { key: "demo", label: "Demo Available", webhook: true },
+        { key: "streamer", label: "Streamer", webhook: true },
+        { key: "default", label: "Défaut (autres notifs)", webhook: true },
+      ],
     };
   },
   computed: {
     isSuperAdmin() {
       return Number(this.user.super_admin) === 1;
-    }
+    },
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
@@ -321,22 +355,27 @@ export default {
     async loadSettings() {
       try {
         const res = await this.axiosCall.get(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`,
         );
         this.settings = res.data;
         try {
           this.twitchChannels = JSON.parse(
-            this.settings["twitch.channels"] || "[]"
+            this.settings["twitch.channels"] || "[]",
           );
         } catch {
           this.twitchChannels = [];
         }
         const parseArr = (key) => {
-          try { return JSON.parse(this.settings[key] || "[]") || []; }
-          catch { return []; }
+          try {
+            return JSON.parse(this.settings[key] || "[]") || [];
+          } catch {
+            return [];
+          }
         };
         for (const type of this.notifTypes) {
-          this.notifChannels[type.key] = parseArr(`discord.channels.${type.key}`);
+          this.notifChannels[type.key] = parseArr(
+            `discord.channels.${type.key}`,
+          );
         }
       } catch (err) {
         this.errorMsg = "Impossible de charger les paramètres.";
@@ -361,7 +400,7 @@ export default {
             const arrayBuf = await file.arrayBuffer();
             const compressed = zipSync(
               { [file.name]: new Uint8Array(arrayBuf) },
-              { level: 6 }
+              { level: 6 },
             );
             const zipName = file.name.replace(/\.dem$/i, ".zip");
             const blob = new Blob([compressed], { type: "application/zip" });
@@ -380,14 +419,22 @@ export default {
           {
             headers: { "Content-Type": "multipart/form-data" },
             onUploadProgress: (e) => {
-              const uploadPct = e.total ? Math.round((e.loaded / e.total) * 70) : 0;
+              const uploadPct = e.total
+                ? Math.round((e.loaded / e.total) * 70)
+                : 0;
               this.demoProgress = 30 + uploadPct;
             },
-          }
+          },
         );
         this.demoResults = res.data.results || [];
       } catch (err) {
-        this.demoResults = [{ file: "—", status: "error", message: err.response?.data?.message || err.message }];
+        this.demoResults = [
+          {
+            file: "—",
+            status: "error",
+            message: err.response?.data?.message || err.message,
+          },
+        ];
       } finally {
         this.demoUploading = false;
         this.demoProgress = 0;
@@ -400,12 +447,14 @@ export default {
       this.errorMsg = "";
       this.settings["twitch.channels"] = JSON.stringify(this.twitchChannels);
       for (const type of this.notifTypes) {
-        this.settings[`discord.channels.${type.key}`] = JSON.stringify(this.notifChannels[type.key]);
+        this.settings[`discord.channels.${type.key}`] = JSON.stringify(
+          this.notifChannels[type.key],
+        );
       }
       try {
         await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`,
-          this.settings
+          this.settings,
         );
         this.successMsg = "Paramètres enregistrés et services rechargés.";
       } catch (err) {
@@ -420,13 +469,13 @@ export default {
       try {
         await this.axiosCall.put(
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/settings`,
-          { "challonge.requestCount": "0" }
+          { "challonge.requestCount": "0" },
         );
         this.$set(this.settings, "challonge.requestCount", "0");
       } catch (err) {
         this.errorMsg = "Erreur lors de la remise à zéro.";
       }
-    }
-  }
+    },
+  },
 };
 </script>

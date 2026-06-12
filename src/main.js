@@ -22,10 +22,10 @@ const translations = require("./translations/translations.json");
 
 const i18n = new VueI18n({
   locale: "en", // Use English by default
-  messages: translations
+  messages: translations,
 });
 
-Vue.filter("translate", function(value) {
+Vue.filter("translate", function (value) {
   return i18n.t(value);
 });
 
@@ -34,5 +34,5 @@ new Vue({
   store,
   i18n: i18n,
   vuetify,
-  render: h => h(App)
+  render: (h) => h(App),
 }).$mount("#app");

@@ -10,7 +10,7 @@ import MetricsInfo from "@/components/MetricsInfo";
 export default {
   name: "Home",
   components: {
-    MetricsInfo
-  }
+    MetricsInfo,
+  },
 };
 </script>

@@ -40,8 +40,13 @@
         </template>
         <span>{{ $t("Login.title") }}</span>
       </v-tooltip>
-      <v-btn :to="'/stats/player/' + user.steam_id" v-if="user.id !== null" fab small>
-        <img :src="user.small_image" style="border-radius: 15px;" />
+      <v-btn
+        :to="'/stats/player/' + user.steam_id"
+        v-if="user.id !== null"
+        fab
+        small
+      >
+        <img :src="user.small_image" style="border-radius: 15px" />
       </v-btn>
     </v-app-bar>
     <v-navigation-drawer v-model="drawer" temporary fixed app>
@@ -111,9 +116,9 @@
           </v-list-item>
         </v-list-item-group>
 
-          <v-list-item v-if="isCast || isAdmin" index="cast" :to="'/cast'">
-            <v-list-item-title>Cast / Observer</v-list-item-title>
-          </v-list-item>
+        <v-list-item v-if="isCast || isAdmin" index="cast" :to="'/cast'">
+          <v-list-item-title>Cast / Observer</v-list-item-title>
+        </v-list-item>
 
         <!-- Menu Administration (super_admin uniquement) -->
         <template v-if="user.super_admin == 1">
@@ -158,11 +163,11 @@ import LoginDialog from "./LoginDialog";
 export default {
   name: "Navbar",
   props: {
-    user: Object
+    user: Object,
   },
   components: {
     ServerDialog,
-    LoginDialog
+    LoginDialog,
   },
   computed: {
     isAdmin() {
@@ -175,7 +180,7 @@ export default {
     },
     isCast() {
       return Number(this.user.cast) === 1;
-    }
+    },
   },
   data() {
     return {
@@ -183,13 +188,13 @@ export default {
       group: null,
       newDialog: false,
       loginDialog: false,
-      apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api"
+      apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
     };
   },
   watch: {
     group() {
       this.drawer = false;
-    }
-  }
+    },
+  },
 };
 </script>

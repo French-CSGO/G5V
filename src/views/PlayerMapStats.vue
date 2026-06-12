@@ -9,7 +9,7 @@
           :href="`https://steamcommunity.com/profiles/${steamId}`"
           target="_blank"
           class="ml-2"
-          style="text-decoration:none"
+          style="text-decoration: none"
         >
           <v-icon color="primary">mdi-steam</v-icon>
         </a>
@@ -116,7 +116,7 @@ export default {
     return {
       rawStats: [],
       mapNameLookup: {},
-      isLoading: true
+      isLoading: true,
     };
   },
   async created() {
@@ -127,16 +127,16 @@ export default {
       this.rawStats = res;
 
       // Fetch map names for each unique match_id
-      const matchIds = [...new Set(res.map(s => s.match_id))];
+      const matchIds = [...new Set(res.map((s) => s.match_id))];
       await Promise.all(
-        matchIds.map(async matchId => {
+        matchIds.map(async (matchId) => {
           const maps = await this.GetMapStats(matchId);
           if (Array.isArray(maps)) {
-            maps.forEach(m => {
+            maps.forEach((m) => {
               this.mapNameLookup[m.id] = m.map_name || `Map ${m.map_number}`;
             });
           }
-        })
+        }),
       );
     } catch {
       // ignored
@@ -154,7 +154,7 @@ export default {
     },
     mapStats() {
       const grouped = {};
-      this.rawStats.forEach(s => {
+      this.rawStats.forEach((s) => {
         const mapName = this.mapNameLookup[s.map_id] || `Map #${s.map_id}`;
         if (!grouped[mapName]) {
           grouped[mapName] = {
@@ -171,7 +171,7 @@ export default {
             k3: 0,
             k4: 0,
             k5: 0,
-            ratings: []
+            ratings: [],
           };
         }
         const g = grouped[mapName];
@@ -198,14 +198,14 @@ export default {
                 s.k2,
                 s.k3,
                 s.k4,
-                s.k5
-              )
-            )
+                s.k5,
+              ),
+            ),
           );
         }
       });
 
-      return Object.values(grouped).map(g => ({
+      return Object.values(grouped).map((g) => ({
         map_name: g.map_name,
         maps: g.maps,
         kills: g.kills,
@@ -218,9 +218,9 @@ export default {
         rating:
           g.ratings.length > 0
             ? (g.ratings.reduce((a, b) => a + b, 0) / g.ratings.length).toFixed(
-                2
+                2,
               )
-            : "0.00"
+            : "0.00",
       }));
     },
     headers() {
@@ -230,36 +230,40 @@ export default {
         {
           text: this.$t("GlobalStats.Rounds"),
           value: "rounds",
-          sortable: true
+          sortable: true,
         },
         { text: this.$t("PlayerStats.Kills"), value: "kills", sortable: true },
         {
           text: this.$t("PlayerStats.Deaths"),
           value: "deaths",
-          sortable: true
+          sortable: true,
         },
         {
           text: this.$t("PlayerStats.Assists"),
           value: "assists",
-          sortable: true
+          sortable: true,
         },
         { text: this.$t("PlayerStats.KDR"), value: "kd", sortable: false },
         {
           text: this.$t("PlayerStats.Headshot") + "%",
           value: "hsp",
-          sortable: true
+          sortable: true,
         },
         { text: this.$t("PlayerStats.ADR"), value: "adr", sortable: false },
-        { text: this.$t("PlayerStats.Rating"), value: "rating", sortable: true }
+        {
+          text: this.$t("PlayerStats.Rating"),
+          value: "rating",
+          sortable: true,
+        },
       ];
-    }
+    },
   },
   methods: {
     formatMapName(name) {
       if (!name) return name;
       const stripped = name.replace(/^(de_|cs_|gg_|ar_|aim_|mg_|kz_)/, "");
       return stripped.charAt(0).toUpperCase() + stripped.slice(1);
-    }
-  }
+    },
+  },
 };
 </script>

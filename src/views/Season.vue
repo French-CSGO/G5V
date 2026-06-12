@@ -27,7 +27,7 @@
           <v-card-title v-else>
             {{ seasonData.name }}
           </v-card-title>
-          <v-card-title style="gap: 8px; flex-wrap: wrap;">
+          <v-card-title style="gap: 8px; flex-wrap: wrap">
             <v-btn :to="`/leaderboard/${seasonData.id}`">
               {{ $t("misc.PLeader") }}
             </v-btn>
@@ -77,9 +77,7 @@
                 <v-list-item-avatar>
                   <v-img
                     v-if="team.flag"
-                    :src="
-                      `https://www.countryflags.io/${team.flag}/flat/32.png`
-                    "
+                    :src="`https://www.countryflags.io/${team.flag}/flat/32.png`"
                     :alt="team.flag"
                   />
                   <v-icon v-else>mdi-account-group</v-icon>
@@ -148,7 +146,7 @@
         <v-card-text>
           {{
             $t("Season.RemoveTeamConfirm", {
-              name: teamToRemove ? teamToRemove.name : ""
+              name: teamToRemove ? teamToRemove.name : "",
             })
           }}
         </v-card-text>
@@ -195,7 +193,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer />
-          <v-btn text @click="showAddBracketDialog = false">{{ $t("misc.Cancel") }}</v-btn>
+          <v-btn text @click="showAddBracketDialog = false">{{
+            $t("misc.Cancel")
+          }}</v-btn>
           <v-btn
             color="primary"
             :loading="isAddingBracket"
@@ -216,7 +216,7 @@ import MatchesTable from "@/components/MatchesTableNoLimits";
 export default {
   name: "Season",
   components: {
-    MatchesTable
+    MatchesTable,
   },
   data() {
     return {
@@ -228,14 +228,14 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
+        large_image: "",
       },
       seasonData: {
         name: "",
         id: -1,
         user_id: -1,
         start_date: null,
-        end_date: null
+        end_date: null,
       },
       seasonMatches: null,
       seasonTeams: [],
@@ -252,7 +252,7 @@ export default {
       isRemovingTeam: false,
       snackbar: false,
       snackbarMessage: "",
-      snackbarColor: "success"
+      snackbarColor: "success",
     };
   },
   async created() {
@@ -292,10 +292,7 @@ export default {
     isStarted() {
       if (
         this.seasonData.start_date >=
-        new Date()
-          .toISOString()
-          .slice(0, 19)
-          .replace("T", " ")
+        new Date().toISOString().slice(0, 19).replace("T", " ")
       )
         return "Starting";
       else return "Started";
@@ -304,10 +301,7 @@ export default {
       if (
         this.seasonData.end_date != null &&
         this.seasonData.end_date <
-          new Date()
-            .toISOString()
-            .slice(0, 19)
-            .replace("T", " ")
+          new Date().toISOString().slice(0, 19).replace("T", " ")
       )
         return "Ended";
       else return "Ends";
@@ -319,9 +313,9 @@ export default {
       );
     },
     availableTeamsToAdd() {
-      const seasonTeamIds = new Set(this.seasonTeams.map(t => t.id));
-      return this.allTeams.filter(t => !seasonTeamIds.has(t.id));
-    }
+      const seasonTeamIds = new Set(this.seasonTeams.map((t) => t.id));
+      return this.allTeams.filter((t) => !seasonTeamIds.has(t.id));
+    },
   },
   methods: {
     async loadSeasonTeams() {
@@ -337,7 +331,7 @@ export default {
         let publicTeams = await this.GetAllTeams();
         if (typeof myTeams === "string") myTeams = [];
         if (Array.isArray(publicTeams)) {
-          publicTeams.forEach(team => {
+          publicTeams.forEach((team) => {
             if (team.public_team == 1) myTeams.push(team);
           });
         }
@@ -346,7 +340,7 @@ export default {
     },
     async addTeamsToSeason() {
       this.isAddingTeams = true;
-      const teamIds = this.teamsToAdd.map(t => t.id);
+      const teamIds = this.teamsToAdd.map((t) => t.id);
       const res = await this.AddTeamsToSeason(this.$route.params.id, teamIds);
       this.isAddingTeams = false;
       this.showAddTeamDialog = false;
@@ -370,7 +364,7 @@ export default {
       this.isRemovingTeam = true;
       const res = await this.RemoveTeamFromSeason(
         this.$route.params.id,
-        this.teamToRemove.id
+        this.teamToRemove.id,
       );
       this.isRemovingTeam = false;
       this.showRemoveDialog = false;
@@ -392,7 +386,7 @@ export default {
       const res = await this.AddChallongeTournament(
         this.$route.params.id,
         this.newBracketSlug.trim(),
-        this.newBracketLabel.trim() || this.newBracketSlug.trim()
+        this.newBracketLabel.trim() || this.newBracketSlug.trim(),
       );
       this.isAddingBracket = false;
       if (res && res.message && !res.message.toLowerCase().includes("error")) {
@@ -403,10 +397,13 @@ export default {
         this.newBracketLabel = "";
       } else {
         this.snackbarColor = "error";
-        this.snackbarMessage = res && res.message ? res.message : this.$t("Challonge.AddBracketError");
+        this.snackbarMessage =
+          res && res.message
+            ? res.message
+            : this.$t("Challonge.AddBracketError");
       }
       this.snackbar = true;
-    }
-  }
+    },
+  },
 };
 </script>

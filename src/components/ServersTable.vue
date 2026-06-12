@@ -64,9 +64,7 @@
         <v-icon v-if="item.public_server == 1" color="green darken-2">
           mdi-check-circle
         </v-icon>
-        <v-icon v-else color="red darken-2">
-          mdi-close-circle
-        </v-icon>
+        <v-icon v-else color="red darken-2"> mdi-close-circle </v-icon>
       </template>
       <template v-slot:item.status="{ item }">
         <v-btn
@@ -88,16 +86,12 @@
             user.id != null && (IsAnyAdmin(user) || item.user_id == user.id)
           "
         >
-          <v-icon @click="deleteSelectedServer(item)">
-            mdi-delete
-          </v-icon>
-          <v-icon @click="editSelectedServer(item)">
-            mdi-pencil
-          </v-icon>
+          <v-icon @click="deleteSelectedServer(item)"> mdi-delete </v-icon>
+          <v-icon @click="editSelectedServer(item)"> mdi-pencil </v-icon>
         </div>
       </template>
       <template v-slot:item.flag="{ item }">
-        <img :src="get_flag_link(item)" style="border-radius: 5px;" />
+        <img :src="get_flag_link(item)" style="border-radius: 5px" />
       </template>
     </v-data-table>
     <v-bottom-sheet v-model="responseSheet" inset persistent>
@@ -149,11 +143,11 @@
 import ServerDialog from "./ServerDialog";
 export default {
   props: {
-    user: Object
+    user: Object,
   },
   name: "ServersTable",
   components: {
-    ServerDialog
+    ServerDialog,
   },
   data() {
     return {
@@ -173,10 +167,10 @@ export default {
         rcon_password: "",
         public_server: 0,
         flag: "",
-        gotv_port: 0
+        gotv_port: 0,
       },
       allServers: false,
-      formTitle: this.$t("MyServers.FormTitleNew")
+      formTitle: this.$t("MyServers.FormTitleNew"),
     };
   },
   created() {
@@ -191,7 +185,7 @@ export default {
     },
     allServers() {
       this.GetServers(true);
-    }
+    },
   },
   computed: {
     headers() {
@@ -200,50 +194,50 @@ export default {
           text: this.$t("MyServers.ID"),
           align: "start",
           sortable: true,
-          value: "id"
+          value: "id",
         },
         {
           text: this.$t("MyServers.Name"),
-          value: "display_name"
+          value: "display_name",
         },
         {
           text: this.$t("MyServers.Host"),
-          value: "ip_string"
+          value: "ip_string",
         },
         {
           text: this.$t("MyServers.Port"),
-          value: "port"
+          value: "port",
         },
         {
           text: this.$t("MyServers.RCONPass"),
-          value: "rcon_password"
+          value: "rcon_password",
         },
         {
           text: this.$t("ServerCreate.FormGOTVPort"),
-          value: "gotv_port"
+          value: "gotv_port",
         },
         {
           text: this.$t("MyServers.IsPublic"),
-          value: "public_server"
+          value: "public_server",
         },
         {
           text: this.$t("MyServers.Owner"),
-          value: "name"
+          value: "name",
         },
         {
           text: this.$t("MyServers.Flag"),
-          value: "flag"
+          value: "flag",
         },
         {
           text: "",
           value: "actions",
-          sortable: false
+          sortable: false,
         },
         {
           text: "",
           value: "status",
-          sortable: false
-        }
+          sortable: false,
+        },
       ];
     },
     selectedHeaders() {
@@ -251,7 +245,7 @@ export default {
       let arrIndex;
       if (this.servers.length > 0 && this.servers[0].rcon_password == null) {
         arrIndex = tmpHeaders
-          .map(obj => {
+          .map((obj) => {
             return obj.value;
           })
           .indexOf("rcon_password");
@@ -259,7 +253,7 @@ export default {
       }
       if (this.servers.length > 0 && this.servers[0].ip_string == null) {
         arrIndex = tmpHeaders
-          .map(obj => {
+          .map((obj) => {
             return obj.value;
           })
           .indexOf("ip_string");
@@ -267,7 +261,7 @@ export default {
       }
       if (this.servers.length > 0 && this.servers[0].port == null) {
         arrIndex = tmpHeaders
-          .map(obj => {
+          .map((obj) => {
             return obj.value;
           })
           .indexOf("port");
@@ -275,14 +269,14 @@ export default {
       }
       if (this.servers.length > 0 && this.servers[0].gotv_port == null) {
         arrIndex = tmpHeaders
-          .map(obj => {
+          .map((obj) => {
             return obj.value;
           })
           .indexOf("gotv_port");
         tmpHeaders.splice(arrIndex, 1);
       }
       return tmpHeaders;
-    }
+    },
   },
   methods: {
     async GetServers(refreshGrid) {
@@ -297,7 +291,7 @@ export default {
           res = await this.GetAllServers();
         }
         if (typeof res == "string") res = [];
-        res.forEach(async season => {
+        res.forEach(async (season) => {
           season.showRcon = false;
           season.colour = "gray";
           season.isLoading = false;
@@ -320,8 +314,8 @@ export default {
     async deleteServerConfirm() {
       let serverData = [
         {
-          server_id: this.removeServer.id
-        }
+          server_id: this.removeServer.id,
+        },
       ];
       this.response = await this.DeleteServer(serverData);
       this.servers.splice(this.removeIndex, 1);
@@ -353,7 +347,7 @@ export default {
       } finally {
         server.isLoading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>

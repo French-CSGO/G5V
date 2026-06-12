@@ -60,11 +60,7 @@
               small
               color="primary"
               :href="
-                apiUrl +
-                  '/image/match/' +
-                  match_id +
-                  '/map/' +
-                  (index + 1)
+                apiUrl + '/image/match/' + match_id + '/map/' + (index + 1)
               "
               target="_blank"
               class="mr-2"
@@ -77,11 +73,11 @@
               color="warning"
               :href="
                 apiUrl +
-                  '/image/match/' +
-                  match_id +
-                  '/map/' +
-                  (index + 1) +
-                  '/mvp'
+                '/image/match/' +
+                match_id +
+                '/map/' +
+                (index + 1) +
+                '/mvp'
               "
               target="_blank"
             >
@@ -148,12 +144,12 @@
                   color="primary"
                   :href="
                     apiUrl +
-                      '/image/match/' +
-                      match_id +
-                      '/map/' +
-                      (index + 1) +
-                      '/player/' +
-                      item.steam_id
+                    '/image/match/' +
+                    match_id +
+                    '/map/' +
+                    (index + 1) +
+                    '/player/' +
+                    item.steam_id
                   "
                   target="_blank"
                 >
@@ -177,7 +173,7 @@
 <script>
 export default {
   props: {
-    match_id: Number
+    match_id: Number,
   },
   data() {
     return {
@@ -187,7 +183,7 @@ export default {
       allowRefresh: false,
       timeoutId: -1,
       isFinished: false,
-      apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api"
+      apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
     };
   },
   created() {
@@ -201,108 +197,108 @@ export default {
           align: "start",
           sortable: true,
           value: "name",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.Kills"),
           value: "kills",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.Deaths"),
           value: "deaths",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.Assists"),
           value: "assists",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.FlashbangAssists"),
           value: "flashbang_assists",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.EnemyFlash"),
           value: "enemies_flashed",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.FriendFlash"),
           value: "friendlies_flashed",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.Rating"),
           value: "rating",
-          groupable: false
+          groupable: false,
         },
         {
           text: this.$t("PlayerStats.TeamName"),
           value: "Team",
-          align: "right"
+          align: "right",
         },
         {
           text: "",
           value: "data-table-expand",
           groupable: false,
-          align: "end"
-        }
+          align: "end",
+        },
       ];
     },
     additionalHeaders() {
       return [
         {
           text: this.$t("PlayerStats.Suicides"),
-          value: "suicides"
+          value: "suicides",
         },
         {
           text: this.$t("PlayerStats.ADR"),
-          value: "adr"
+          value: "adr",
         },
         {
           text: this.$t("PlayerStats.UtilDamage"),
-          value: "util_damage"
+          value: "util_damage",
         },
         {
           text: this.$t("PlayerStats.KnifeKills"),
-          value: "knife_kills"
+          value: "knife_kills",
         },
         {
           text: this.$t("PlayerStats.BombPlants"),
-          value: "bomb_plants"
+          value: "bomb_plants",
         },
         {
           text: this.$t("PlayerStats.BombDefuses"),
-          value: "bomb_defuses"
+          value: "bomb_defuses",
         },
         {
           text: this.$t("PlayerStats.Headshot") + "%",
-          value: "hsp"
+          value: "hsp",
         },
         {
           text: this.$t("PlayerStats.KDR"),
-          value: "kdr"
+          value: "kdr",
         },
         {
           text: this.$t("PlayerStats.FPR"),
-          value: "fpr"
+          value: "fpr",
         },
         {
           text: this.$t("PlayerStats.KAST"),
-          value: "kast"
+          value: "kast",
         },
         {
           text: this.$t("PlayerStats.ContribScore"),
-          value: "contribution_score"
+          value: "contribution_score",
         },
         {
           text: this.$t("PlayerStats.MVP"),
-          value: "mvp"
-        }
+          value: "mvp",
+        },
       ];
-    }
+    },
   },
   methods: {
     async useStreamOrStaticData() {
@@ -315,16 +311,16 @@ export default {
       if (typeof serverResponse == "string") return;
       let allMapIds = [];
       let totalMatchTeam = [];
-      serverResponse.filter(item => {
-        let i = allMapIds.findIndex(x => x == item.map_id);
+      serverResponse.filter((item) => {
+        let i = allMapIds.findIndex((x) => x == item.map_id);
         if (i <= -1) allMapIds.push(item.map_id);
         return null;
       });
-      allMapIds.forEach(map_id => {
+      allMapIds.forEach((map_id) => {
         totalMatchTeam.push(
-          serverResponse.filter(stats => {
+          serverResponse.filter((stats) => {
             return stats.map_id == map_id;
-          })
+          }),
         );
       });
       this.playerstats = totalMatchTeam;
@@ -341,7 +337,7 @@ export default {
               player.k2,
               player.k3,
               player.k4,
-              player.k5
+              player.k5,
             );
             let adr = this.GetADR(player);
             let hsp = this.GetHSP(player);
@@ -371,7 +367,7 @@ export default {
               adr: adr,
               hsp: hsp,
               kdr: kdr,
-              fpr: fpr
+              fpr: fpr,
             };
             this.$set(this.playerstats[idx], pIdx, updatedPlayer);
           }
@@ -383,11 +379,11 @@ export default {
       try {
         let sseClient = await this.GetEventPlayerStats(this.match_id);
         await sseClient.connect();
-        await sseClient.on("playerstats", async message => {
+        await sseClient.on("playerstats", async (message) => {
           await this.retrieveStatsHelper(message, matchData);
         });
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }
@@ -398,7 +394,7 @@ export default {
         let res = await this.GetPlayerStats(this.match_id);
         await this.retrieveStatsHelper(res, matchData);
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }
@@ -408,11 +404,11 @@ export default {
       try {
         let sseClient = await this.GetEventMapStats(this.match_id);
         await sseClient.connect();
-        await sseClient.on("mapstats", async message => {
+        await sseClient.on("mapstats", async (message) => {
           await this.retrieveMapStatsHelper(message, matchData);
         });
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }
@@ -423,7 +419,7 @@ export default {
         let res = await this.GetMapStats(this.match_id);
         await this.retrieveMapStatsHelper(res, matchData);
       } catch (error) {
-        console.log("Our error: " + error);
+        console.error(error);
       } finally {
         this.isLoading = false;
       }
@@ -442,7 +438,7 @@ export default {
           " " +
           this.GetScoreSymbol(
             singleMapStat.team1_score,
-            singleMapStat.team2_score
+            singleMapStat.team2_score,
           ) +
           " " +
           singleMapStat.team2_score;
@@ -461,14 +457,14 @@ export default {
           end: endText,
           map: "Map: " + singleMapStat.map_name,
           demo: singleMapStat.demoFile,
-          id: singleMapStat.id
+          id: singleMapStat.id,
         };
       });
 
       this.mapStats = nextMapStats;
 
       if (matchData.end_time != null) this.isFinished = true;
-    }
-  }
+    },
+  },
 };
 </script>

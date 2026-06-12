@@ -14,7 +14,7 @@ import TeamsTable from "@/components/TeamsTable";
 export default {
   name: "Teams",
   components: {
-    TeamsTable
+    TeamsTable,
   },
   data() {
     return {
@@ -26,8 +26,8 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
-      }
+        large_image: "",
+      },
     };
   },
   computed: {
@@ -41,10 +41,10 @@ export default {
       return (
         Number(this.user.admin) === 1 || Number(this.user.super_admin) === 1
       );
-    }
+    },
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>

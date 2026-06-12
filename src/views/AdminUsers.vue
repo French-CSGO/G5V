@@ -48,10 +48,7 @@
             </v-chip>
           </template>
           <template v-slot:item.cast="{ item }">
-            <v-chip
-              small
-              :color="item.cast === 1 ? 'teal' : 'grey lighten-1'"
-            >
+            <v-chip small :color="item.cast === 1 ? 'teal' : 'grey lighten-1'">
               {{ item.cast === 1 ? "Oui" : "Non" }}
             </v-chip>
           </template>
@@ -139,19 +136,19 @@ export default {
         { text: "Super Admin", value: "super_admin", align: "center" },
         { text: "Admin", value: "admin", align: "center" },
         { text: "Cast", value: "cast", align: "center" },
-        { text: "Actions", value: "actions", sortable: false, align: "center" }
+        { text: "Actions", value: "actions", sortable: false, align: "center" },
       ],
       editDialog: false,
       editUser: null,
       editSaving: false,
       editError: "",
-      successMsg: ""
+      successMsg: "",
     };
   },
   computed: {
     isSuperAdmin() {
       return Number(this.user.super_admin) === 1;
-    }
+    },
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
@@ -163,8 +160,9 @@ export default {
       this.loading = true;
       try {
         const url = query
-          ? `${process.env?.VUE_APP_G5V_API_URL ||
-              "/api"}/users?search=${encodeURIComponent(query)}`
+          ? `${
+              process.env?.VUE_APP_G5V_API_URL || "/api"
+            }/users?search=${encodeURIComponent(query)}`
           : `${process.env?.VUE_APP_G5V_API_URL || "/api"}/users`;
         const res = await this.axiosCall.get(url);
         this.users = Array.isArray(res.data) ? res.data : res.data.users || [];
@@ -186,7 +184,7 @@ export default {
         ...item,
         admin: Number(item.admin),
         super_admin: Number(item.super_admin),
-        cast: Number(item.cast)
+        cast: Number(item.cast),
       };
       this.editError = "";
       this.editDialog = true;
@@ -204,12 +202,12 @@ export default {
               steam_id: this.editUser.steam_id,
               admin: this.editUser.admin,
               super_admin: this.editUser.super_admin,
-              cast: this.editUser.cast
-            }
-          ]
+              cast: this.editUser.cast,
+            },
+          ],
         );
         // Mise à jour locale
-        const idx = this.users.findIndex(u => u.id === this.editUser.id);
+        const idx = this.users.findIndex((u) => u.id === this.editUser.id);
         if (idx !== -1) {
           this.users[idx].admin = this.editUser.admin;
           this.users[idx].super_admin = this.editUser.super_admin;
@@ -224,7 +222,7 @@ export default {
       } finally {
         this.editSaving = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>

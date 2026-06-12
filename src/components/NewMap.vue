@@ -110,7 +110,7 @@
                       map:
                         selectedMap && selectedMap.map_display_name
                           ? selectedMap.map_display_name
-                          : ""
+                          : "",
                     })
                   }}
                 </v-col>
@@ -180,7 +180,7 @@
                       newMap = {
                         map_display_name: '',
                         map_name: '',
-                        enabled: true
+                        enabled: true,
                       };
                       newMapReveal = false;
                     "
@@ -207,7 +207,7 @@
 <script>
 export default {
   props: {
-    user: Object
+    user: Object,
   },
   data() {
     return {
@@ -219,9 +219,9 @@ export default {
       newMap: {
         map_display_name: "",
         map_name: "",
-        enabled: true
+        enabled: true,
       },
-      errorMessage: ""
+      errorMessage: "",
     };
   },
   created() {
@@ -233,7 +233,7 @@ export default {
         let res = await this.GetUserMapList(this.user.id);
         if (typeof res == "string") return;
         else {
-          res.forEach(mapInfo => {
+          res.forEach((mapInfo) => {
             mapInfo.reveal = false;
             this.MapList.push(mapInfo);
           });
@@ -251,8 +251,8 @@ export default {
             id: mapInfo.id,
             map_name: mapInfo.map_name,
             map_display_name: mapInfo.map_display_name,
-            enabled: mapInfo.enabled
-          }
+            enabled: mapInfo.enabled,
+          },
         ];
         await this.UpdateUserMap(updateMapData);
       } catch (error) {
@@ -264,12 +264,12 @@ export default {
       try {
         let mapToDelete = [
           {
-            id: mapInfo.id
-          }
+            id: mapInfo.id,
+          },
         ];
         await this.DeleteUserMap(mapToDelete);
         this.MapList = this.MapList.filter(
-          map => map.id != this.selectedMap.id
+          (map) => map.id != this.selectedMap.id,
         );
         this.selectedMap = {};
         this.deleteDialog = false;
@@ -284,8 +284,8 @@ export default {
           {
             map_name: mapInfo.map_name,
             map_display_name: mapInfo.map_display_name,
-            enabled: mapInfo.enabled
-          }
+            enabled: mapInfo.enabled,
+          },
         ];
         await this.InsertUserMapInfo(newMap);
         this.newMapReveal = false;
@@ -293,14 +293,14 @@ export default {
         this.newMap = {
           map_display_name: "",
           map_name: "",
-          enabled: true
+          enabled: true,
         };
       } catch (error) {
         console.error("Failed to insert new map:", error);
         this.errorMessage = "Unable to create map. Please try again.";
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

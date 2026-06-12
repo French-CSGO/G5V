@@ -29,7 +29,7 @@
                       :label="$t('ServerCreate.FormDisplayName')"
                       required
                       :rules="[
-                        () => !!serverInfo.display_name || $t('misc.Required')
+                        () => !!serverInfo.display_name || $t('misc.Required'),
                       ]"
                     />
                   </v-col>
@@ -41,7 +41,7 @@
                       ref="HostName"
                       required
                       :rules="[
-                        () => !!serverInfo.ip_string || $t('misc.Required')
+                        () => !!serverInfo.ip_string || $t('misc.Required'),
                       ]"
                     />
                   </v-col>
@@ -55,7 +55,7 @@
                         () => !!serverInfo.port || $t('misc.Required'),
                         () =>
                           (serverInfo.port > 0 && serverInfo.port < 65536) ||
-                          $t('ServerCreate.PortRangeIncorrect')
+                          $t('ServerCreate.PortRangeIncorrect'),
                       ]"
                     />
                   </v-col>
@@ -70,7 +70,7 @@
                           serverInfo.gotv_port == null ||
                           (serverInfo.gotv_port > 0 &&
                             serverInfo.gotv_port < 65536) ||
-                          $t('ServerCreate.PortRangeIncorrect')
+                          $t('ServerCreate.PortRangeIncorrect'),
                       ]"
                     />
                   </v-col>
@@ -102,7 +102,7 @@
                   <v-col cols="1" align-self="center">
                     <img
                       :src="get_flag_link(serverInfo)"
-                      style="border-radius: 5px;"
+                      style="border-radius: 5px"
                     />
                   </v-col>
                   <v-col cols="12" sm="10">
@@ -231,7 +231,7 @@ export default {
   props: {
     value: Boolean,
     serverInfo: Object,
-    title: String
+    title: String,
   },
   computed: {
     show: {
@@ -245,8 +245,8 @@ export default {
           });
         }
         this.$emit("input", value);
-      }
-    }
+      },
+    },
   },
   data() {
     return {
@@ -258,7 +258,7 @@ export default {
       pteroDialog: false,
       pteroLoading: false,
       pteroServers: [],
-      pteroError: ""
+      pteroError: "",
     };
   },
   created() {
@@ -299,8 +299,8 @@ export default {
                 : this.serverInfo.public_server,
             flag: this.serverInfo.flag,
             gotv_port: this.serverInfo.gotv_port,
-            pterodactyl_id: this.serverInfo.pterodactyl_id || null
-          }
+            pterodactyl_id: this.serverInfo.pterodactyl_id || null,
+          },
         ];
         if (this.serverInfo.id == null)
           serverRes = await this.InsertServer(serverObj);
@@ -319,7 +319,7 @@ export default {
         this.show = false;
         this.serverLoading = false;
       }
-    }
-  }
+    },
+  },
 };
 </script>

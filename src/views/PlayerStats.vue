@@ -10,7 +10,7 @@
           :href="`https://steamcommunity.com/profiles/${steamId}`"
           target="_blank"
           class="ml-2"
-          style="text-decoration:none"
+          style="text-decoration: none"
         >
           <v-icon color="primary">mdi-steam</v-icon>
         </a>
@@ -266,7 +266,7 @@ export default {
     return {
       stats: [],
       isLoading: true,
-      userId: -1
+      userId: -1,
     };
   },
   async created() {
@@ -333,7 +333,7 @@ export default {
     },
     avgKast() {
       const kastVals = this.stats.filter(
-        s => s.kast != null && s.roundsplayed > 0
+        (s) => s.kast != null && s.roundsplayed > 0,
       );
       if (kastVals.length === 0) return "N/A";
       const avg =
@@ -355,8 +355,8 @@ export default {
               s.k2,
               s.k3,
               s.k4,
-              s.k5
-            )
+              s.k5,
+            ),
           )
         );
       }, 0);
@@ -370,13 +370,13 @@ export default {
         { label: this.$t("PlayerStats.Deaths"), value: this.totalDeaths },
         {
           label: this.$t("PlayerStats.Assists"),
-          value: this.totalStat("assists")
+          value: this.totalStat("assists"),
         },
         { label: this.$t("PlayerStats.KDR"), value: this.kd },
         { label: this.$t("PlayerStats.Headshot") + "%", value: this.hsp + "%" },
         { label: this.$t("PlayerStats.ADR"), value: this.adr },
         { label: this.$t("PlayerStats.KAST"), value: this.avgKast },
-        { label: this.$t("PlayerStats.Rating"), value: this.avgRating }
+        { label: this.$t("PlayerStats.Rating"), value: this.avgRating },
       ];
     },
     recentMatches() {
@@ -394,16 +394,16 @@ export default {
         {
           text: this.$t("PlayerStats.Headshot") + "%",
           value: "hsp",
-          sortable: false
+          sortable: false,
         },
-        { text: this.$t("PlayerStats.ADR"), value: "adr", sortable: false }
+        { text: this.$t("PlayerStats.ADR"), value: "adr", sortable: false },
       ];
-    }
+    },
   },
   methods: {
     totalStat(field) {
       return this.stats.reduce((sum, s) => sum + (s[field] || 0), 0);
-    }
-  }
+    },
+  },
 };
 </script>

@@ -14,7 +14,7 @@ import ServersTable from "@/components/ServersTable";
 export default {
   name: "Servers",
   components: {
-    ServersTable
+    ServersTable,
   },
   data() {
     return {
@@ -26,12 +26,12 @@ export default {
         name: "",
         small_image: "",
         medium_image: "",
-        large_image: ""
-      }
+        large_image: "",
+      },
     };
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
-  }
+  },
 };
 </script>

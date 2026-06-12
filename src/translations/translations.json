@@ -191,6 +191,10 @@
       "Server": "Server",
       "Owner": "Owner",
       "DeleteButton": "Delete My Cancelled Matches",
+      "PauseAllLive": "Pause all live matches",
+      "UnpauseAllLive": "Unpause all live matches",
+      "PauseAllLiveDone": "{count} live match(es) paused",
+      "UnpauseAllLiveDone": "{count} live match(es) unpaused",
       "Versus": "vs"
     },
     "Metrics": {
@@ -726,6 +730,10 @@
       "Server": "Serveur",
       "Owner": "Propriétaire",
       "DeleteButton": "Supprimer mes matchs annulés",
+      "PauseAllLive": "Mettre en pause tous les matchs en cours",
+      "UnpauseAllLive": "Reprendre tous les matchs en cours",
+      "PauseAllLiveDone": "{count} match(s) en cours mis en pause",
+      "UnpauseAllLiveDone": "{count} match(s) en cours repris",
       "Versus": "vs"
     },
     "Metrics": {
@@ -1257,6 +1265,10 @@
       "Server": "サーバ",
       "Owner": "オーナー",
       "DeleteButton": "キャンセルされたマッチを削除する",
+      "PauseAllLive": "進行中の全マッチを一時停止",
+      "UnpauseAllLive": "進行中の全マッチを再開",
+      "PauseAllLiveDone": "{count} 件の進行中マッチを一時停止しました",
+      "UnpauseAllLiveDone": "{count} 件の進行中マッチを再開しました",
       "Versus": "対"
     },
     "Metrics": {

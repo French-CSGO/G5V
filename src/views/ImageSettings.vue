@@ -12,6 +12,7 @@
         <v-tabs v-model="tab" background-color="primary" dark>
           <v-tab>Image Match</v-tab>
           <v-tab>Image Joueur</v-tab>
+          <v-tab>Image MVP</v-tab>
           <v-tab>Image Équipe Saison</v-tab>
           <v-tab>Aperçu</v-tab>
         </v-tabs>
@@ -41,88 +42,8 @@
           </v-row>
 
           <v-divider class="my-3" />
-          <v-subheader class="font-weight-bold"
-            >Éléments fixes (X + Y)</v-subheader
-          >
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-                <th style="width:90px">Y</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in matchFCFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch
-                    v-model="settings.match[f.key].enabled"
-                    color="primary"
-                    inset
-                    dense
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-combobox
-                    v-model="settings.match[f.key].font"
-                    :items="fontList"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    v-model="settings.match[f.key].color"
-                    class="color-input"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].size"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-checkbox
-                    v-model="settings.match[f.key].bold"
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].x"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].y"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+          <v-subheader class="font-weight-bold">Éléments fixes (X + Y)</v-subheader>
+          <image-f-c-table :fields="matchFCFields" :section="settings.match" :font-list="fontList" />
 
           <v-subheader class="font-weight-bold mt-2"
             >Lignes joueurs — Y
@@ -173,78 +94,8 @@
             /></v-col>
           </v-row>
 
-          <v-subheader class="font-weight-bold"
-            >Colonnes joueurs (X seul, Y = ligne)</v-subheader
-          >
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in matchFXFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch
-                    v-model="settings.match[f.key].enabled"
-                    color="primary"
-                    inset
-                    dense
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-combobox
-                    v-model="settings.match[f.key].font"
-                    :items="fontList"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    v-model="settings.match[f.key].color"
-                    class="color-input"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].size"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-checkbox
-                    v-model="settings.match[f.key].bold"
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.match[f.key].x"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+          <v-subheader class="font-weight-bold">Colonnes joueurs (X seul, Y = ligne)</v-subheader>
+          <image-f-x-table :fields="matchFXFields" :section="settings.match" :font-list="fontList" />
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -645,6 +496,70 @@
           </div>
 
           <v-divider class="my-3" />
+          <!-- ── Box derrière les noms de map ──────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Box derrière les noms de map
+            <v-switch
+              v-model="settings.match.shapes.map_pill.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.match.shapes.map_pill.enabled">
+            <v-row dense class="mt-1">
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.shapes.map_pill.fill" class="color-input" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.alpha" label="Opacité (autres)" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.current_alpha" label="Opacité (map en cours)" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.radius" label="Rayon" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.width" label="Largeur" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.height" label="Hauteur" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1">
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.match.shapes.map_pill.border" class="color-input" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.border_alpha" label="Opacité bordure" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.match.shapes.map_pill.border_width" label="Épaisseur bordure" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Logos d'équipes (position &amp; taille)
+          </v-subheader>
+          <v-row dense>
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch v-model="settings.match.team1_logo.enabled" label="Logo 1" color="primary" inset dense hide-details class="mt-0 pt-0" />
+            </v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.x" label="Logo 1 X" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.y" label="Logo 1 Y" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team1_logo.size" label="Logo 1 Taille" type="number" outlined dense hide-details /></v-col>
+          </v-row>
+          <v-row dense class="mt-1">
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch v-model="settings.match.team2_logo.enabled" label="Logo 2" color="primary" inset dense hide-details class="mt-0 pt-0" />
+            </v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.x" label="Logo 2 X" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.y" label="Logo 2 Y" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.match.team2_logo.size" label="Logo 2 Taille" type="number" outlined dense hide-details /></v-col>
+          </v-row>
+
+          <v-divider class="my-3" />
           <v-subheader class="font-weight-bold"
             >Fond &amp; Police personnalisée</v-subheader
           >
@@ -723,85 +638,7 @@
         <!-- Tab 1 : Image Joueur                                          -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 1" flat class="pa-4">
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-                <th style="width:90px">Y</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in playerFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch
-                    v-model="settings.player[f.key].enabled"
-                    color="primary"
-                    inset
-                    dense
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-combobox
-                    v-model="settings.player[f.key].font"
-                    :items="fontList"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    v-model="settings.player[f.key].color"
-                    class="color-input"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.player[f.key].size"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-checkbox
-                    v-model="settings.player[f.key].bold"
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.player[f.key].x"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.player[f.key].y"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+          <image-f-c-table :fields="playerFields" :section="settings.player" :font-list="fontList" />
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -1289,88 +1126,250 @@
         </v-card>
 
         <!-- ══════════════════════════════════════════════════════════════ -->
-        <!-- Tab 2 : Image Équipe Saison                                   -->
+        <!-- Tab 2 : Image MVP                                             -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 2" flat class="pa-4">
-          <v-simple-table dense class="mb-2">
-            <thead>
-              <tr>
-                <th style="width:232px">Champ</th>
-                <th style="width:52px">Actif</th>
-                <th style="width:80px">Police</th>
-                <th style="width:42px">Coul.</th>
-                <th style="width:64px">Taille</th>
-                <th style="width:48px">Gras</th>
-                <th style="width:90px">X</th>
-                <th style="width:90px">Y</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="f in teamSeasonFields" :key="f.key">
-                <td class="caption font-weight-medium">{{ f.label }}</td>
-                <td>
-                  <v-switch
-                    v-model="settings.team_season[f.key].enabled"
-                    color="primary"
-                    inset
-                    dense
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-combobox
-                    v-model="settings.team_season[f.key].font"
-                    :items="fontList"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <input
-                    type="color"
-                    v-model="settings.team_season[f.key].color"
-                    class="color-input"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.team_season[f.key].size"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-checkbox
-                    v-model="settings.team_season[f.key].bold"
-                    hide-details
-                    class="mt-0 pt-0"
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.team_season[f.key].x"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-                <td>
-                  <v-text-field
-                    v-model.number="settings.team_season[f.key].y"
-                    type="number"
-                    outlined
-                    dense
-                    hide-details
-                  />
-                </td>
-              </tr>
-            </tbody>
-          </v-simple-table>
+
+          <!-- ── Photos joueurs ─────────────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            <v-icon left small>mdi-account-circle</v-icon>
+            Photos joueurs (liées au SteamID)
+          </v-subheader>
+          <v-row align="center">
+            <v-col cols="4">
+              <v-text-field
+                v-model="playerPhotoSteamId"
+                label="SteamID (17 chiffres)"
+                outlined dense hide-details
+                prepend-icon="mdi-steam"
+              />
+            </v-col>
+            <v-col cols="4">
+              <v-file-input
+                v-model="playerPhotoFile"
+                label="Photo joueur (PNG/JPG)"
+                accept="image/png,image/jpeg,image/webp"
+                outlined dense hide-details
+                prepend-icon="mdi-account-box"
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-btn
+                :disabled="!playerPhotoFile || !playerPhotoSteamId"
+                color="secondary" small
+                @click="uploadPlayerPhoto"
+                :loading="uploadingPhoto"
+              >
+                <v-icon left>mdi-upload</v-icon>Uploader
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row v-if="playerPhotos.length > 0" class="mt-1">
+            <v-col>
+              <span class="caption grey--text mr-2">Déjà uploadé :</span>
+              <v-chip v-for="f in playerPhotos" :key="f" small class="mr-1 mb-1">{{ f }}</v-chip>
+            </v-col>
+          </v-row>
+          <v-alert v-if="uploadPhotoMsg" :type="uploadPhotoMsgType" dense class="mt-2">
+            {{ uploadPhotoMsg }}
+          </v-alert>
+
+          <v-divider class="my-3" />
+          <!-- ── Position photo joueur dans l'image MVP ─────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Position de la photo dans l'image MVP
+            <v-switch
+              v-model="settings.mvp.player_image.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <v-row dense v-if="settings.mvp.player_image.enabled">
+            <v-col cols="2">
+              <v-text-field v-model.number="settings.mvp.player_image.x" label="X (centre)" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field v-model.number="settings.mvp.player_image.y" label="Y (centre)" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field v-model.number="settings.mvp.player_image.width" label="Largeur (px)" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field v-model.number="settings.mvp.player_image.height" label="Hauteur (px)" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2" class="d-flex align-center">
+              <v-switch v-model="settings.mvp.player_image.circle" label="Découpe circulaire" color="primary" inset dense hide-details />
+            </v-col>
+          </v-row>
+
+          <v-divider class="my-3" />
+          <!-- ── Image de map en fond ───────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Image de map en fond
+            <v-switch
+              v-model="settings.mvp.map_image.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+              label="Afficher l'image de map"
+            />
+          </v-subheader>
+
+          <v-divider class="my-3" />
+          <!-- ── Éléments graphiques MVP ────────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Éléments graphiques
+            <v-switch v-model="settings.mvp.shapes.enabled" color="primary" inset dense hide-details class="ml-4 mt-0 pt-0" />
+          </v-subheader>
+          <div v-if="settings.mvp.shapes.enabled">
+            <!-- Team pill -->
+            <v-subheader class="caption font-weight-bold pl-0">Pilule nom d'équipe</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.mvp.shapes.team_pill.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.team_pill.fill" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.team_pill.border" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.team_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Player pill -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Pilule nom du joueur</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.mvp.shapes.player_pill.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.player_pill.fill" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.player_pill.border" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.border_alpha" label="Op. bord." type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.player_pill.border_width" label="Ép. bord." type="number" outlined dense hide-details /></v-col>
+            </v-row>
+            <!-- Stats bar -->
+            <v-subheader class="caption font-weight-bold pl-0 mt-2">Barre stats</v-subheader>
+            <v-row dense>
+              <v-col cols="1" class="d-flex align-center">
+                <v-switch v-model="settings.mvp.shapes.stats_bar.enabled" label="Actif" color="primary" inset dense hide-details class="mt-0 pt-0" />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center"><input type="color" v-model="settings.mvp.shapes.stats_bar.fill" class="color-input" /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.alpha" label="Opacité" type="number" step="0.05" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.radius" label="Rayon" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.x" label="X" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.y" label="Y (0=auto)" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.width" label="Largeur" type="number" outlined dense hide-details /></v-col>
+              <v-col cols="1"><v-text-field v-model.number="settings.mvp.shapes.stats_bar.height" label="Hauteur" type="number" outlined dense hide-details /></v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
+          <!-- ── Box derrière les noms de map ──────────────────────────────── -->
+          <v-subheader class="font-weight-bold">
+            Box derrière les noms de map
+            <v-switch
+              v-model="settings.mvp.shapes.map_pill.enabled"
+              color="primary" inset dense hide-details class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.mvp.shapes.map_pill.enabled">
+            <v-row dense class="mt-1">
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.mvp.shapes.map_pill.fill" class="color-input" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.alpha" label="Opacité (autres)" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.current_alpha" label="Opacité (map en cours)" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.radius" label="Rayon" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.width" label="Largeur" type="number" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.height" label="Hauteur" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1">
+              <v-col cols="1" class="d-flex align-center">
+                <input type="color" v-model="settings.mvp.shapes.map_pill.border" class="color-input" />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.border_alpha" label="Opacité bordure" type="number" step="0.05" outlined dense hide-details />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field v-model.number="settings.mvp.shapes.map_pill.border_width" label="Épaisseur bordure" type="number" outlined dense hide-details />
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
+          <!-- ── Éléments textuels MVP ───────────────────────────────────── -->
+          <v-subheader class="font-weight-bold">Éléments textuels</v-subheader>
+          <image-f-c-table :fields="mvpFields" :section="settings.mvp" :font-list="fontList" />
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Logos d'équipes dans l'image MVP (position &amp; taille)
+          </v-subheader>
+          <v-row dense>
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch v-model="settings.mvp.team1_logo.enabled" label="Logo 1" color="primary" inset dense hide-details class="mt-0 pt-0" />
+            </v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.x" label="Logo 1 X" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.y" label="Logo 1 Y" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team1_logo.size" label="Logo 1 Taille" type="number" outlined dense hide-details /></v-col>
+          </v-row>
+          <v-row dense class="mt-1">
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch v-model="settings.mvp.team2_logo.enabled" label="Logo 2" color="primary" inset dense hide-details class="mt-0 pt-0" />
+            </v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.x" label="Logo 2 X" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.y" label="Logo 2 Y" type="number" outlined dense hide-details /></v-col>
+            <v-col cols="2"><v-text-field v-model.number="settings.mvp.team2_logo.size" label="Logo 2 Taille" type="number" outlined dense hide-details /></v-col>
+          </v-row>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">Fond &amp; Police personnalisée</v-subheader>
+          <v-row align="center">
+            <v-col cols="4">
+              <v-text-field v-model="settings.mvp.background" label="Fichier de fond (public/img/)" outlined dense />
+            </v-col>
+            <v-col cols="4">
+              <v-file-input v-model="bgFile[2]" label="Uploader un fond" accept="image/png,image/jpeg" outlined dense hide-details prepend-icon="mdi-image" />
+            </v-col>
+            <v-col cols="2">
+              <v-btn :disabled="!bgFile[2]" color="secondary" small @click="uploadBg(2)" :loading="uploadingBg[2]">
+                <v-icon left>mdi-upload</v-icon>Uploader
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row align="center">
+            <v-col cols="4">
+              <v-text-field v-model="settings.mvp.fontFile" label="Fichier police (public/fonts/)" outlined dense />
+            </v-col>
+            <v-col cols="4">
+              <v-file-input v-model="fontFileInput[2]" label="Uploader une police" accept=".ttf,.otf" outlined dense hide-details prepend-icon="mdi-format-font" />
+            </v-col>
+            <v-col cols="2">
+              <v-btn :disabled="!fontFileInput[2]" color="secondary" small @click="uploadFont(2)" :loading="uploadingFont[2]">
+                <v-icon left>mdi-upload</v-icon>Uploader
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-alert v-if="uploadMsg[2]" :type="uploadMsgType[2]" dense class="mt-2">{{ uploadMsg[2] }}</v-alert>
+        </v-card>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- Tab 3 : Image Équipe Saison                                   -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <v-card v-if="tab === 3" flat class="pa-4">
+          <image-f-c-table :fields="teamSeasonFields" :section="settings.team_season" :font-list="fontList" />
           <v-row dense class="mt-2">
             <v-col cols="4">
               <v-text-field
@@ -2080,7 +2079,7 @@
             /></v-col>
             <v-col cols="4"
               ><v-file-input
-                v-model="bgFile[2]"
+                v-model="bgFile[3]"
                 label="Uploader un fond"
                 accept="image/png,image/jpeg"
                 outlined
@@ -2090,11 +2089,11 @@
             /></v-col>
             <v-col cols="2"
               ><v-btn
-                :disabled="!bgFile[2]"
+                :disabled="!bgFile[3]"
                 color="secondary"
                 small
-                @click="uploadBg(2)"
-                :loading="uploadingBg[2]"
+                @click="uploadBg(3)"
+                :loading="uploadingBg[3]"
                 ><v-icon left>mdi-upload</v-icon>Uploader</v-btn
               ></v-col
             >
@@ -2109,7 +2108,7 @@
             /></v-col>
             <v-col cols="4"
               ><v-file-input
-                v-model="fontFileInput[2]"
+                v-model="fontFileInput[3]"
                 label="Uploader une police"
                 accept=".ttf,.otf"
                 outlined
@@ -2119,18 +2118,18 @@
             /></v-col>
             <v-col cols="2"
               ><v-btn
-                :disabled="!fontFileInput[2]"
+                :disabled="!fontFileInput[3]"
                 color="secondary"
                 small
-                @click="uploadFont(2)"
-                :loading="uploadingFont[2]"
+                @click="uploadFont(3)"
+                :loading="uploadingFont[3]"
                 ><v-icon left>mdi-upload</v-icon>Uploader</v-btn
               ></v-col
             >
           </v-row>
           <v-alert
-            v-if="uploadMsg[2]"
-            :type="uploadMsgType[2]"
+            v-if="uploadMsg[3]"
+            :type="uploadMsgType[3]"
             dense
             class="mt-2"
             >{{ uploadMsg[2] }}</v-alert
@@ -2138,9 +2137,9 @@
         </v-card>
 
         <!-- ══════════════════════════════════════════════════════════════ -->
-        <!-- Tab 3 : Aperçu                                                -->
+        <!-- Tab 4 : Aperçu                                                -->
         <!-- ══════════════════════════════════════════════════════════════ -->
-        <v-card v-if="tab === 3" flat class="pa-4">
+        <v-card v-if="tab === 4" flat class="pa-4">
           <v-subheader class="font-weight-bold">Image Match</v-subheader>
           <v-row align="center">
             <v-col cols="4">
@@ -2228,6 +2227,60 @@
           </div>
 
           <v-divider class="my-4" />
+          <v-subheader class="font-weight-bold">Image MVP (par map)</v-subheader>
+          <v-row align="center">
+            <v-col cols="3">
+              <v-text-field v-model="previewMatchId" label="ID du match" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field v-model="previewMvpMap" label="N° de la map" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="auto">
+              <v-btn color="warning"
+                :href="`${apiUrl}/image/match/${previewMatchId}/map/${previewMvpMap}/mvp`"
+                target="_blank"
+                :disabled="!previewMatchId || !previewMvpMap"
+                small>
+                <v-icon left small>mdi-star</v-icon>Ouvrir map
+              </v-btn>
+            </v-col>
+          </v-row>
+          <div v-if="previewMatchId && previewMvpMap" class="mt-3">
+            <img
+              :src="`${apiUrl}/image/match/${previewMatchId}/map/${previewMvpMap}/mvp?t=${previewTs}`"
+              style="max-width:100%;border:1px solid #ccc;"
+              @error="previewMvpError = true"
+              @load="previewMvpError = false"
+            />
+            <v-alert v-if="previewMvpError" type="error" dense>Impossible de charger l'image MVP.</v-alert>
+          </div>
+
+          <v-subheader class="font-weight-bold mt-2">Image MVP (match complet)</v-subheader>
+          <v-row align="center">
+            <v-col cols="3">
+              <v-text-field v-model="previewMatchId" label="ID du match" type="number" outlined dense hide-details />
+            </v-col>
+            <v-col cols="auto">
+              <v-btn color="warning"
+                :href="`${apiUrl}/image/match/${previewMatchId}/mvp`"
+                target="_blank"
+                :disabled="!previewMatchId"
+                small>
+                <v-icon left small>mdi-star-circle</v-icon>Ouvrir match
+              </v-btn>
+            </v-col>
+          </v-row>
+          <div v-if="previewMatchId" class="mt-3">
+            <img
+              :src="`${apiUrl}/image/match/${previewMatchId}/mvp?t=${previewTs}`"
+              style="max-width:100%;border:1px solid #ccc;"
+              @error="previewMvpMatchError = true"
+              @load="previewMvpMatchError = false"
+            />
+            <v-alert v-if="previewMvpMatchError" type="error" dense>Impossible de charger l'image MVP match.</v-alert>
+          </div>
+
+          <v-divider class="my-4" />
           <v-subheader class="font-weight-bold"
             >Image Équipe Saison</v-subheader
           >
@@ -2283,11 +2336,11 @@
 
         <!-- ── Actions ───────────────────────────────────────────────── -->
         <v-card-actions class="pa-4">
-          <v-btn outlined @click="exportConfig" v-if="tab < 3">
+          <v-btn outlined @click="exportConfig" v-if="tab < 4">
             <v-icon left>mdi-download</v-icon>
             Exporter
           </v-btn>
-          <v-btn outlined @click="$refs.importFile.click()" v-if="tab < 3">
+          <v-btn outlined @click="$refs.importFile.click()" v-if="tab < 4">
             <v-icon left>mdi-upload</v-icon>
             Importer
           </v-btn>
@@ -2314,6 +2367,9 @@
 </template>
 
 <script>
+import ImageFCTable from "@/components/ImageFCTable.vue";
+import ImageFXTable from "@/components/ImageFXTable.vue";
+
 const defFC = (enabled, font, color, size, bold, x, y) => ({
   enabled,
   font,
@@ -2334,6 +2390,7 @@ const defFX = (enabled, font, color, size, bold, x) => ({
 
 export default {
   name: "ImageSettings",
+  components: { ImageFCTable, ImageFXTable },
   data() {
     return {
       loading: true,
@@ -2351,7 +2408,9 @@ export default {
           team1_score: defFC(true, "Arial", "#1a1a2e", 30, true, 806, 302),
           team2_score: defFC(true, "Arial", "#1a1a2e", 30, true, 1114, 302),
           team2_name: defFC(true, "Arial", "#1a1a2e", 30, true, 1595, 302),
-          map_name: defFC(true, "Arial", "#1a1a2e", 28, true, 960, 980),
+          map1: defFC(true, "Arial", "#1a1a2e", 24, true, 480, 980),
+          map2: defFC(true, "Arial", "#1a1a2e", 24, true, 960, 980),
+          map3: defFC(true, "Arial", "#1a1a2e", 24, true, 1440, 980),
           player_name_l: defFX(true, "Arial", "#1a1a2e", 20, true, 180),
           player_name_r: defFX(true, "Arial", "#1a1a2e", 20, true, 1450),
           kills_l: defFX(true, "Arial", "#1a1a2e", 20, false, 630),
@@ -2374,6 +2433,8 @@ export default {
             deaths_label: "D",
             rating_label: "RTG"
           },
+          team1_logo: { enabled: true, x: 310, y: 302, size: 60 },
+          team2_logo: { enabled: true, x: 1610, y: 302, size: 60 },
           shapes: {
             enabled: false,
             team_pill: {
@@ -2414,6 +2475,18 @@ export default {
               odd_alpha: 0.08,
               even_fill: "#ffffff",
               even_alpha: 0.05
+            },
+            map_pill: {
+              enabled: true,
+              fill: "#000000",
+              alpha: 0.3,
+              current_alpha: 0.7,
+              radius: 8,
+              width: 280,
+              height: 40,
+              border: "#ffffff",
+              border_alpha: 0.2,
+              border_width: 1
             }
           }
         },
@@ -2484,6 +2557,29 @@ export default {
               border_width: 1
             }
           }
+        },
+
+        mvp: {
+          background: "marble.png",
+          fontFile: "",
+          map1:        defFC(true, "Arial", "#ffffff", 20, false,  480, 130),
+          map2:        defFC(true, "Arial", "#ffffff", 20, false,  960, 130),
+          map3:        defFC(true, "Arial", "#ffffff", 20, false, 1440, 130),
+          team1_name:  defFC(true, "Arial", "#ffffff", 32, true, 450, 200),
+          team1_score: defFC(true, "Arial", "#ffffff", 32, true, 800, 200),
+          team2_score: defFC(true, "Arial", "#ffffff", 32, true, 1120, 200),
+          team2_name:  defFC(true, "Arial", "#ffffff", 32, true, 1470, 200),
+          mvp_label:   defFC(true, "Arial", "#f4d03f", 28, true, 960, 310),
+          player_name: defFC(true, "Arial", "#ffffff", 52, true, 960, 390),
+          player_team: defFC(true, "Arial", "#cccccc", 22, false, 960, 450),
+          kills:       defFC(true, "Arial", "#ffffff", 28, false, 500, 620),
+          assists:     defFC(true, "Arial", "#ffffff", 28, false, 700, 620),
+          deaths:      defFC(true, "Arial", "#ffffff", 28, false, 900, 620),
+          rating:      defFC(true, "Arial", "#ffffff", 28, false, 1100, 620),
+          hs:          defFC(true, "Arial", "#ffffff", 28, false, 1310, 620),
+          clutches:    defFC(true, "Arial", "#ffffff", 28, false, 1500, 620),
+          player_image: { enabled: true, x: 960, y: 480, size: 120, width: 120, height: 200, circle: false },
+          map_image: { enabled: false }
         },
 
         team_season: {
@@ -2581,22 +2677,33 @@ export default {
       uploadMapMsg: "",
       uploadMapMsgType: "success",
 
-      // Upload state — index 0=match, 1=joueur, 2=équipe
-      bgFile: [null, null, null],
-      fontFileInput: [null, null, null],
-      uploadingBg: [false, false, false],
-      uploadingFont: [false, false, false],
-      uploadMsg: ["", "", ""],
-      uploadMsgType: ["success", "success", "success"],
+      // Photos joueurs (MVP)
+      playerPhotoFile: null,
+      playerPhotoSteamId: "",
+      uploadingPhoto: false,
+      uploadPhotoMsg: "",
+      uploadPhotoMsgType: "success",
+      playerPhotos: [],
+
+      // Upload state — index 0=match, 1=joueur, 2=mvp, 3=équipe
+      bgFile: [null, null, null, null],
+      fontFileInput: [null, null, null, null],
+      uploadingBg: [false, false, false, false],
+      uploadingFont: [false, false, false, false],
+      uploadMsg: ["", "", "", ""],
+      uploadMsgType: ["success", "success", "success", "success"],
 
       // Aperçu
       previewTs: Date.now(),
       previewMatchId: "",
       previewSteamId: "",
+      previewMvpMap: "",
       previewSeasonId: "",
       previewTeamId: "",
       previewMatchError: false,
       previewPlayerError: false,
+      previewMvpError: false,
+      previewMvpMatchError: false,
       previewTeamError: false,
 
       snack: false,
@@ -2623,7 +2730,9 @@ export default {
         { key: "team1_score", label: "Score équipe 1" },
         { key: "team2_score", label: "Score équipe 2" },
         { key: "team2_name", label: "Nom équipe 2" },
-        { key: "map_name", label: "Nom de la map" }
+        { key: "map1", label: "Map 1 (gauche)" },
+        { key: "map2", label: "Map 2 (centre)" },
+        { key: "map3", label: "Map 3 (droite)" }
       ],
       matchFXFields: [
         { key: "player_name_l", label: "Nom joueur gauche" },
@@ -2648,6 +2757,24 @@ export default {
         { key: "rating", label: "Rating" },
         { key: "hs", label: "Headshot %" },
         { key: "clutches", label: "Clutches" }
+      ],
+      mvpFields: [
+        { key: "map1",        label: "Map 1 (gauche)" },
+        { key: "map2",        label: "Map 2 (centre)" },
+        { key: "map3",        label: "Map 3 (droite)" },
+        { key: "team1_name",  label: "Nom équipe 1" },
+        { key: "team1_score", label: "Score équipe 1" },
+        { key: "team2_score", label: "Score équipe 2" },
+        { key: "team2_name",  label: "Nom équipe 2" },
+        { key: "mvp_label",   label: "★ MVP" },
+        { key: "player_name", label: "Nom joueur" },
+        { key: "player_team", label: "Équipe joueur" },
+        { key: "kills",       label: "Kills" },
+        { key: "assists",     label: "Assists" },
+        { key: "deaths",      label: "Morts" },
+        { key: "rating",      label: "Rating" },
+        { key: "hs",          label: "Headshot %" },
+        { key: "clutches",    label: "Clutches" }
       ],
       teamSeasonFields: [
         { key: "team_name", label: "Nom équipe" },
@@ -2678,20 +2805,20 @@ export default {
     async load() {
       this.loading = true;
       try {
-        const [settings, uploadedFonts, mapImages] = await Promise.all([
+        const [settings, uploadedFonts, mapImages, playerPhotos] = await Promise.all([
           this.GetImageSettings(),
           this.GetImageFonts().catch(() => []),
-          this.axiosCall
-            .get(`${this.apiUrl}/image/maps`)
-            .then(r => r.data)
-            .catch(() => [])
+          this.axiosCall.get(`${this.apiUrl}/image/maps`).then(r => r.data).catch(() => []),
+          this.axiosCall.get(`${this.apiUrl}/image/players`).then(r => r.data).catch(() => [])
         ]);
         this.mapImages = mapImages;
+        this.playerPhotos = playerPhotos;
         // Merge API response with local defaults so new fields never crash
         const def = this.settings;
         const s = settings || {};
         const sm = s.match || {};
         const sp = s.player || {};
+        const sv = s.mvp   || {};
         const st = s.team_season || {};
         // Number of player slots for the X positions
         const MAX_PLAYERS = 5;
@@ -2700,6 +2827,8 @@ export default {
           match: {
             ...def.match,
             ...sm,
+            team1_logo: { ...def.match.team1_logo, ...(sm.team1_logo || {}) },
+            team2_logo: { ...def.match.team2_logo, ...(sm.team2_logo || {}) },
             column_headers: {
               ...def.match.column_headers,
               ...(sm.column_headers || {})
@@ -2718,6 +2847,10 @@ export default {
               stats_table: {
                 ...def.match.shapes.stats_table,
                 ...(sm.shapes?.stats_table || {})
+              },
+              map_pill: {
+                ...def.match.shapes.map_pill,
+                ...(sm.shapes?.map_pill || {})
               }
             }
           },
@@ -2744,6 +2877,15 @@ export default {
                 ...(sp.shapes?.stats_bar || {})
               }
             }
+          },
+          mvp: {
+            ...def.mvp,
+            ...sv,
+            map1:         { ...def.mvp.map1,         ...(sv.map1         || {}) },
+            map2:         { ...def.mvp.map2,         ...(sv.map2         || {}) },
+            map3:         { ...def.mvp.map3,         ...(sv.map3         || {}) },
+            map_image:    { ...def.mvp.map_image,    ...(sv.map_image    || {}) },
+            player_image: { ...def.mvp.player_image, ...(sv.player_image || {}) }
           },
           team_season: {
             ...def.team_season,
@@ -2822,7 +2964,7 @@ export default {
     },
 
     exportConfig() {
-      const sectionKey = ["match", "player", "team_season"][this.tab];
+      const sectionKey = ["match", "player", "mvp", "team_season"][this.tab];
       const data = JSON.stringify(this.settings[sectionKey], null, 2);
       const blob = new Blob([data], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -2843,7 +2985,7 @@ export default {
       const inputEl = event.target;
       const file = inputEl.files[0];
       if (!file) return;
-      const sectionKey = ["match", "player", "team_season"][this.tab];
+      const sectionKey = ["match", "player", "mvp", "team_season"][this.tab];
       const reader = new FileReader();
       reader.onload = e => {
         try {
@@ -2878,6 +3020,7 @@ export default {
         const filename = res.data.filename;
         if (idx === 0) this.settings.match.background = filename;
         else if (idx === 1) this.settings.player.background = filename;
+        else if (idx === 2) this.settings.mvp.background = filename;
         else this.settings.team_season.background = filename;
         this.$set(this.uploadMsg, idx, `Fond uploadé : ${filename}`);
         this.$set(this.uploadMsgType, idx, "success");
@@ -2911,6 +3054,9 @@ export default {
         } else if (idx === 1) {
           this.settings.player.fontFile = filename;
           this.applyFontFamily("player", family);
+        } else if (idx === 2) {
+          this.settings.mvp.fontFile = filename;
+          this.applyFontFamily("mvp", family);
         } else {
           this.settings.team_season.fontFile = filename;
           this.applyFontFamily("team_season", family);
@@ -2928,6 +3074,33 @@ export default {
         this.$set(this.uploadMsgType, idx, "error");
       } finally {
         this.$set(this.uploadingFont, idx, false);
+      }
+    },
+
+    async uploadPlayerPhoto() {
+      if (!this.playerPhotoFile || !this.playerPhotoSteamId) return;
+      this.uploadingPhoto = true;
+      this.uploadPhotoMsg = "";
+      try {
+        const form = new FormData();
+        form.append("file", this.playerPhotoFile);
+        form.append("steam_id", this.playerPhotoSteamId);
+        await this.axiosCall.post(`${this.apiUrl}/image/upload/player`, form, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
+        this.uploadPhotoMsg = `Photo uploadée pour ${this.playerPhotoSteamId}`;
+        this.uploadPhotoMsgType = "success";
+        this.playerPhotoFile = null;
+        this.playerPhotoSteamId = "";
+        this.playerPhotos = await this.axiosCall
+          .get(`${this.apiUrl}/image/players`)
+          .then(r => r.data)
+          .catch(() => []);
+      } catch {
+        this.uploadPhotoMsg = "Erreur lors de l'upload";
+        this.uploadPhotoMsgType = "error";
+      } finally {
+        this.uploadingPhoto = false;
       }
     },
 

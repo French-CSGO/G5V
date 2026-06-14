@@ -71,6 +71,7 @@
       "MessageSendCommandSuccess": "Successfully sent command.",
       "StartTime": "Start:",
       "EndTime": "End:",
+      "EstimatedEndTime": "Estimated end in {minutes} min ({time})",
       "Connect": "Connect!",
       "GOTVConnect": "Connect to GOTV!"
     },
@@ -610,6 +611,7 @@
       "MessageSendCommandSuccess": "Commande envoyée avec succés.",
       "StartTime": "Début : ",
       "EndTime": "Fin : ",
+      "EstimatedEndTime": "Fin estimée dans {minutes} minutes ({time})",
       "Connect": "Connexion !",
       "GOTVConnect": "Connexion à la GOTV!"
     },
@@ -1149,6 +1151,7 @@
       "MessageSendCommandSuccess": "コマンドの送信に成功しました。",
       "StartTime": "スタート:",
       "EndTime": "終り:",
+      "EstimatedEndTime": "終了予定まで {minutes} 分 ({time})",
       "Connect": "つなげろ！",
       "GOTVConnect": "GOTVに接続"
     },

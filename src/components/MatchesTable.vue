@@ -184,6 +184,23 @@ export default {
           match.start_time != null
         ) {
           matchString = `Live, ${team1Score}:${team2Score} - ${match.team1_string} vs ${match.team2_string}`;
+          const seriesScorePlayed =
+            (match.team1_series_score || 0) + (match.team2_series_score || 0);
+          const remainingMapsAfterThis = Math.max(
+            0,
+            match.max_maps - seriesScorePlayed - 1,
+          );
+          const estimate = this.EstimateMatchEndTime(
+            team1Score,
+            team2Score,
+            remainingMapsAfterThis,
+          );
+          if (estimate != null) {
+            matchString += ` - ${this.$t("Match.EstimatedEndTime", {
+              minutes: estimate.minutes,
+              time: estimate.time,
+            })}`;
+          }
         } else if (team1Score < team2Score) {
           matchString = `Lost, ${team1Score}:${team2Score} - ${match.team1_string} vs ${match.team2_string}`;
         } else if (team1Score > team2Score) {

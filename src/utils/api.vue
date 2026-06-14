@@ -1905,6 +1905,25 @@ export default {
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/season/${seasonId}/team/${teamId}`;
     },
+    EstimateMatchEndTime(team1Score, team2Score, remainingMaps = 0) {
+      const ROUND_DURATION_SEC = 115;
+      const EXTRA_MAP_DURATION_SEC = 40 * 60;
+      const t1 = team1Score == null ? 0 : team1Score;
+      const t2 = team2Score == null ? 0 : team2Score;
+      if (Math.max(t1, t2) >= 13) return null;
+      const roundsToLeaderWin = 13 - Math.max(t1, t2);
+      const roundsToTiedAt12 = 24 - (t1 + t2);
+      const roundsRemaining = (roundsToLeaderWin + roundsToTiedAt12) / 2;
+      const totalSeconds =
+        roundsRemaining * ROUND_DURATION_SEC +
+        remainingMaps * EXTRA_MAP_DURATION_SEC;
+      const minutes = Math.ceil(totalSeconds / 60);
+      const endDate = new Date(Date.now() + totalSeconds * 1000);
+      const time = `${String(endDate.getHours()).padStart(2, "0")}:${String(
+        endDate.getMinutes(),
+      ).padStart(2, "0")}`;
+      return { minutes, time };
+    },
   },
 };
 </script>

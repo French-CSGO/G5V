@@ -1907,14 +1907,12 @@ export default {
     },
     EstimateMatchEndTime(team1Score, team2Score) {
       const ROUND_DURATION_SEC = 115;
-      const REGULATION_ROUNDS = 24;
-      const OT_ROUNDS = 6;
       const t1 = team1Score == null ? 0 : team1Score;
       const t2 = team2Score == null ? 0 : team2Score;
       if (Math.max(t1, t2) >= 13) return null;
-      const roundsPlayed = t1 + t2;
-      let roundsRemaining = REGULATION_ROUNDS - roundsPlayed;
-      if (roundsRemaining <= 0) roundsRemaining = OT_ROUNDS;
+      const roundsToLeaderWin = 13 - Math.max(t1, t2);
+      const roundsToTiedAt12 = 24 - (t1 + t2);
+      const roundsRemaining = (roundsToLeaderWin + roundsToTiedAt12) / 2;
       const minutes = Math.ceil((roundsRemaining * ROUND_DURATION_SEC) / 60);
       const endDate = new Date(
         Date.now() + roundsRemaining * ROUND_DURATION_SEC * 1000,

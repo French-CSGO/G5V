@@ -191,8 +191,8 @@ export default {
             match.max_maps - seriesScorePlayed - 1,
           );
           const estimate = this.EstimateMatchEndTime(
-            match.team1_score,
-            match.team2_score,
+            team1Score,
+            team2Score,
             remainingMapsAfterThis,
           );
           if (estimate != null) {

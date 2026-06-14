@@ -1905,6 +1905,25 @@ export default {
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/season/${seasonId}/team/${teamId}`;
     },
+    EstimateMatchEndTime(team1Score, team2Score) {
+      const ROUND_DURATION_SEC = 115;
+      const REGULATION_ROUNDS = 24;
+      const OT_ROUNDS = 6;
+      const t1 = team1Score == null ? 0 : team1Score;
+      const t2 = team2Score == null ? 0 : team2Score;
+      if (Math.max(t1, t2) >= 13) return null;
+      const roundsPlayed = t1 + t2;
+      let roundsRemaining = REGULATION_ROUNDS - roundsPlayed;
+      if (roundsRemaining <= 0) roundsRemaining = OT_ROUNDS;
+      const minutes = Math.ceil((roundsRemaining * ROUND_DURATION_SEC) / 60);
+      const endDate = new Date(
+        Date.now() + roundsRemaining * ROUND_DURATION_SEC * 1000,
+      );
+      const time = `${String(endDate.getHours()).padStart(2, "0")}:${String(
+        endDate.getMinutes(),
+      ).padStart(2, "0")}`;
+      return { minutes, time };
+    },
   },
 };
 </script>

@@ -184,6 +184,13 @@ export default {
           match.start_time != null
         ) {
           matchString = `Live, ${team1Score}:${team2Score} - ${match.team1_string} vs ${match.team2_string}`;
+          const estimate = this.EstimateMatchEndTime(team1Score, team2Score);
+          if (estimate != null) {
+            matchString += ` - ${this.$t("Match.EstimatedEndTime", {
+              minutes: estimate.minutes,
+              time: estimate.time,
+            })}`;
+          }
         } else if (team1Score < team2Score) {
           matchString = `Lost, ${team1Score}:${team2Score} - ${match.team1_string} vs ${match.team2_string}`;
         } else if (team1Score > team2Score) {

@@ -33,6 +33,13 @@
           </div>
           <div
             class="text-subtitle-2 mapInfo"
+            v-if="mapStats[index] != null && mapStats[index].estimate != null"
+            align="center"
+          >
+            {{ mapStats[index].estimate }}
+          </div>
+          <div
+            class="text-subtitle-2 mapInfo"
             v-if="mapStats[index] != null && mapStats[index].end != null"
             align="center"
           >
@@ -451,6 +458,14 @@ export default {
             ? null
             : "Map End: " + new Date(singleMapStat.end_time).toLocaleString();
 
+        const estimate =
+          singleMapStat.end_time == null && matchData.end_time == null
+            ? this.EstimateMatchEndTime(
+                singleMapStat.team1_score,
+                singleMapStat.team2_score,
+              )
+            : null;
+
         nextMapStats[index] = {
           score: scoreText,
           start: startText,
@@ -458,6 +473,13 @@ export default {
           map: "Map: " + singleMapStat.map_name,
           demo: singleMapStat.demoFile,
           id: singleMapStat.id,
+          estimate:
+            estimate == null
+              ? null
+              : this.$t("Match.EstimatedEndTime", {
+                  minutes: estimate.minutes,
+                  time: estimate.time,
+                }),
         };
       });
 

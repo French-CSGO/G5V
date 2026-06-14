@@ -77,22 +77,6 @@
     >
       {{ $t("Match.EndTime") }} {{ matchInfo.end_time }}
     </div>
-    <div
-      class="estimated-end-date text-subtitle-2"
-      align="center"
-      v-else-if="
-        matchInfo.start_time != null &&
-        matchInfo.cancelled != 1 &&
-        estimatedEndTime != null
-      "
-    >
-      {{
-        $t("Match.EstimatedEndTime", {
-          minutes: estimatedEndTime.minutes,
-          time: estimatedEndTime.time,
-        })
-      }}
-    </div>
     <div v-if="matchInfo.forfeit == 1" align="center">
       <strong>
         {{ $t("Match.MatchForfeitedBy", { team: get_loser(matchInfo) }) }}
@@ -211,14 +195,6 @@ export default {
   },
   created() {
     this.checkIfMatchLive();
-  },
-  computed: {
-    estimatedEndTime() {
-      return this.EstimateMatchEndTime(
-        this.matchInfo.team1_score,
-        this.matchInfo.team2_score,
-      );
-    },
   },
   methods: {
     async checkIfMatchLive() {

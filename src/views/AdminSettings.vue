@@ -201,6 +201,14 @@
 
         <!-- DEMO -->
         <v-card v-if="tab === 6" flat class="pa-4">
+          <v-text-field
+            v-model="settings['demos.baseUrl']"
+            label="URL de base des démos (ex: https://white-gaming.fr/demos)"
+            hint="Lien affiché dans Discord pour télécharger les démos. Laisser vide pour utiliser l'URL de l'API."
+            persistent-hint
+            class="mb-4"
+          />
+          <v-divider class="mb-4" />
           <v-card-subtitle class="pa-0 mb-3">
             Upload de fichiers .dem — ils seront zippés et associés à la
             map_stats correspondante.

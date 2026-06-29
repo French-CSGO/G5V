@@ -1,0 +1,369 @@
+<template>
+  <div class="overlay-root">
+    <div v-if="loading" class="overlay-loading">
+      <v-progress-circular indeterminate color="#e8523a" size="32" />
+    </div>
+
+    <div v-else-if="!playerStats" class="overlay-no-match">
+      <span class="no-match-text">{{ $t("OverlaySeason.noData") }}</span>
+    </div>
+
+    <template v-else>
+      <!-- Header : titre saison -->
+      <div class="overlay-header">
+        <span class="season-label">{{ $t("OverlaySeason.season") }} #{{ seasonid }}</span>
+        <span class="player-name-header">{{ playerStats.name || steamid }}</span>
+      </div>
+
+      <!-- Panneaux alternants -->
+      <transition name="fade" mode="out-in">
+        <!-- Panneau joueur -->
+        <div v-if="showPanel === 0" key="player" class="stat-panel">
+          <div class="panel-title">{{ playerStats.name || steamid }}</div>
+          <div class="stat-grid">
+            <div class="stat-item">
+              <span class="stat-label">Parties</span>
+              <span class="stat-value">{{ playerStats.total_maps || "–" }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Victoires</span>
+              <span class="stat-value">{{ playerStats.wins || "–" }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">K</span>
+              <span class="stat-value">{{ playerStats.kills }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">D</span>
+              <span class="stat-value">{{ playerStats.deaths }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">A</span>
+              <span class="stat-value">{{ playerStats.assists }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">ADR</span>
+              <span class="stat-value">{{ playerAdr }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">HS%</span>
+              <span class="stat-value">{{ playerHsp }}</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Rating</span>
+              <span class="stat-value rating-value">{{ playerRating }}</span>
+            </div>
+          </div>
+          <div class="panel-badge">{{ $t("OverlaySeason.playerBadge") }}</div>
+        </div>
+
+        <!-- Panneau équipe (leaderboard saison) -->
+        <div v-else key="team" class="stat-panel">
+          <div class="panel-title">{{ $t("OverlaySeason.teamBadge") }}</div>
+          <div class="team-rows">
+            <div
+              v-for="p in teamLeaderboard"
+              :key="p.steamId"
+              class="team-row"
+              :class="{ 'team-row--self': p.steamId === steamid }"
+            >
+              <span class="tr-name">{{ p.name }}</span>
+              <span class="tr-kda">{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span>
+              <span class="tr-rating">{{ calcRating(p).toFixed(2) }}</span>
+            </div>
+          </div>
+          <div class="panel-badge">{{ $t("OverlaySeason.teamBadge") }}</div>
+        </div>
+      </transition>
+
+      <!-- Indicateurs de panneau -->
+      <div class="panel-dots">
+        <span class="dot" :class="{ active: showPanel === 0 }" />
+        <span class="dot" :class="{ active: showPanel === 1 }" />
+      </div>
+    </template>
+  </div>
+</template>
+
+<script>
+export default {
+  name: "OverlaySeason",
+  data() {
+    return {
+      steamid: this.$route.params.steamid,
+      seasonid: this.$route.params.seasonid,
+      loading: true,
+      playerStats: null,
+      teamLeaderboard: [],
+      showPanel: 0,
+      rotateTimer: null,
+    };
+  },
+  computed: {
+    playerAdr() {
+      if (!this.playerStats || !this.playerStats.roundsplayed) return "–";
+      return (this.playerStats.damage / this.playerStats.roundsplayed).toFixed(1);
+    },
+    playerHsp() {
+      if (!this.playerStats || !this.playerStats.kills) return "–";
+      return Math.round((this.playerStats.headshot_kills / this.playerStats.kills) * 100) + "%";
+    },
+    playerRating() {
+      if (!this.playerStats) return "–";
+      return this.calcRating(this.playerStats).toFixed(2);
+    },
+  },
+  async mounted() {
+    await this.fetchData();
+    this.startRotate();
+  },
+  beforeDestroy() {
+    clearInterval(this.rotateTimer);
+  },
+  methods: {
+    async fetchData() {
+      try {
+        // Stats du joueur pour la saison
+        const playerRes = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/${this.steamid}/season/${this.seasonid}`,
+        );
+        const raw = playerRes.data?.playerstats;
+        if (!raw || !raw.length) {
+          this.playerStats = null;
+          return;
+        }
+        // Agréger les stats multi-maps
+        this.playerStats = this.aggregateStats(raw);
+
+        // Leaderboard de la saison (tous les joueurs) pour contexte équipe
+        const lbRes = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/players/${this.seasonid}`,
+        );
+        const lb = lbRes.data?.leaderboard || [];
+        // Garder les 5 premiers + le joueur s'il n'est pas dedans
+        const top5 = lb.slice(0, 5);
+        const inTop = top5.some((p) => p.steamId === this.steamid);
+        if (!inTop) {
+          const self = lb.find((p) => p.steamId === this.steamid);
+          if (self) top5.push(self);
+        }
+        this.teamLeaderboard = top5;
+      } catch (e) {
+        console.error("OverlaySeason fetch error", e);
+        this.playerStats = null;
+      } finally {
+        this.loading = false;
+      }
+    },
+    aggregateStats(rows) {
+      const sum = (field) => rows.reduce((acc, r) => acc + (r[field] || 0), 0);
+      return {
+        name: rows[0].name,
+        steam_id: rows[0].steam_id,
+        kills: sum("kills"),
+        deaths: sum("deaths"),
+        assists: sum("assists"),
+        roundsplayed: sum("roundsplayed"),
+        damage: sum("damage"),
+        headshot_kills: sum("headshot_kills"),
+        kast: sum("kast"),
+        k1: sum("k1"), k2: sum("k2"), k3: sum("k3"), k4: sum("k4"), k5: sum("k5"),
+        v1: sum("v1"), v2: sum("v2"), v3: sum("v3"), v4: sum("v4"), v5: sum("v5"),
+        total_maps: rows.length,
+      };
+    },
+    startRotate() {
+      this.rotateTimer = setInterval(() => {
+        this.showPanel = this.showPanel === 0 ? 1 : 0;
+      }, 6000);
+    },
+    calcRating(p) {
+      if (!p || !p.roundsplayed) return 0;
+      const r = p.roundsplayed;
+      const kpr = p.kills / r;
+      const dpr = p.deaths / r;
+      const impact = 2.13 * kpr + 0.42 * (p.assists / r) - 0.41;
+      const adr = p.damage ? p.damage / r : 0;
+      return (0.0073 * (p.kast || 0) + 0.3591 * kpr - 0.5329 * dpr + 0.2372 * impact + 0.0032 * adr + 0.1587);
+    },
+  },
+};
+</script>
+
+<style scoped>
+.overlay-root {
+  background: rgba(11, 13, 18, 0.88);
+  border: 1px solid rgba(232, 82, 58, 0.4);
+  border-radius: 8px;
+  width: 380px;
+  padding: 10px 14px 8px;
+  font-family: "Roboto", sans-serif;
+  color: #fff;
+  box-sizing: border-box;
+  user-select: none;
+}
+
+.overlay-loading,
+.overlay-no-match {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+}
+
+.no-match-text {
+  color: #888;
+  font-size: 13px;
+}
+
+.overlay-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.season-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #666;
+}
+
+.player-name-header {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e8523a;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.stat-panel {
+  min-height: 120px;
+  position: relative;
+}
+
+.panel-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e8523a;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px 4px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-value {
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.rating-value {
+  color: #e8523a;
+}
+
+.team-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.team-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.team-row--self {
+  background: rgba(232, 82, 58, 0.18);
+  font-weight: 700;
+}
+
+.tr-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #ddd;
+}
+
+.tr-kda {
+  width: 70px;
+  text-align: center;
+  color: #fff;
+  font-weight: 600;
+}
+
+.tr-rating {
+  width: 40px;
+  text-align: right;
+  color: #e8523a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.panel-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #555;
+}
+
+.panel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #444;
+  transition: background 0.3s;
+}
+
+.dot.active {
+  background: #e8523a;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>

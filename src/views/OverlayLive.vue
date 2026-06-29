@@ -81,7 +81,8 @@
             >
               <span class="tr-name">{{ p.name }}</span>
               <span class="tr-kda">{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span>
-              <span class="tr-adr">{{ calcAdr(p) }} ADR</span>
+              <span class="tr-adr">{{ calcAdr(p) }}</span>
+              <span class="tr-rating">{{ calcRating(p).toFixed(2) }}</span>
             </div>
           </div>
           <div class="panel-badge">{{ $t("OverlayLive.teamBadge") }}</div>
@@ -426,10 +427,22 @@ export default {
 }
 
 .tr-adr {
-  width: 60px;
+  width: 48px;
   text-align: right;
   color: #aaa;
   font-size: 11px;
+}
+
+.tr-rating {
+  width: 40px;
+  text-align: right;
+  color: #e8523a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.overlay-root--transparent .tr-rating {
+  color: #c0392b;
 }
 
 /* Badge panneau */

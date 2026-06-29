@@ -13,23 +13,25 @@
       <div class="overlay-header">
         <span class="team-name team-name--left">{{ match.team1_string }}</span>
         <div class="score-block">
-          <span class="score">{{ match.team1_series_score }}</span>
+          <span class="score">{{ match.team1_series_score != null ? match.team1_series_score : 0 }}</span>
           <span class="score-sep">–</span>
-          <span class="score">{{ match.team2_series_score }}</span>
+          <span class="score">{{ match.team2_series_score != null ? match.team2_series_score : 0 }}</span>
         </div>
         <span class="team-name team-name--right">{{ match.team2_string }}</span>
       </div>
 
-      <!-- Map score courant -->
+      <!-- Pseudo du joueur + map score -->
       <div class="map-score">
-        {{ $t("OverlayLive.map") }} · {{ match.team1_score }} – {{ match.team2_score }}
+        <span v-if="playerStats" class="player-label">{{ playerStats.name }}</span>
+        <span class="map-score-sep" v-if="playerStats"> · </span>
+        {{ $t("OverlayLive.map") }} {{ match.team1_score }} – {{ match.team2_score }}
       </div>
 
       <!-- Panneaux alternants -->
       <transition name="fade" mode="out-in">
         <!-- Panneau joueur -->
         <div v-if="showPanel === 0" key="player" class="stat-panel">
-          <div class="panel-title">{{ playerStats ? playerStats.name : steamid }}</div>
+          <div class="panel-title">{{ playerStats ? playerStats.name : "–" }}</div>
           <div class="stat-grid">
             <div class="stat-item">
               <span class="stat-label">K</span>
@@ -109,7 +111,7 @@ export default {
       teamStats: [],
       showPanel: 0,
       rotateTimer: null,
-      liveSSE: null,
+      pollTimer: null,
     };
   },
   computed: {
@@ -136,10 +138,11 @@ export default {
   async mounted() {
     await this.fetchLive();
     this.startRotate();
-    await this.startStream();
+    this.startPoll();
   },
   beforeDestroy() {
     clearInterval(this.rotateTimer);
+    clearInterval(this.pollTimer);
   },
   methods: {
     async fetchLive() {
@@ -149,34 +152,26 @@ export default {
         );
         this.applyPayload(res.data);
       } catch (_) {
-        this.match = null;
+        // garde les données existantes si le poll échoue
       } finally {
         this.loading = false;
       }
     },
     applyPayload(data) {
-      this.match = data.match || null;
-      this.playerStats = data.playerStats || null;
-      this.teamStats = data.teamStats || [];
+      if (!data) return;
+      if (data.match !== undefined) this.match = data.match;
+      if (data.playerStats) this.playerStats = data.playerStats;
+      if (data.teamStats && data.teamStats.length) this.teamStats = data.teamStats;
     },
     startRotate() {
       this.rotateTimer = setInterval(() => {
         this.showPanel = this.showPanel === 0 ? 1 : 0;
       }, 6000);
     },
-    async startStream() {
-      try {
-        this.liveSSE = await this.$sse.create(
-          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/${this.steamid}/live/stream`,
-        );
-        await this.liveSSE
-          .on("livestats", (data) => {
-            this.applyPayload(data);
-          })
-          .connect();
-      } catch (e) {
-        console.error("Overlay SSE error", e);
-      }
+    startPoll() {
+      this.pollTimer = setInterval(() => {
+        this.fetchLive();
+      }, 10000);
     },
     calcAdr(p) {
       if (!p || !p.roundsplayed) return "–";
@@ -334,6 +329,16 @@ export default {
   font-size: 11px;
   color: #666;
   margin-bottom: 8px;
+}
+
+.player-label {
+  color: #e8523a;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+.overlay-root--transparent .player-label {
+  color: #c0392b;
 }
 
 /* Panneaux */

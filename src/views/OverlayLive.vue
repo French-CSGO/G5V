@@ -1,5 +1,5 @@
 <template>
-  <div class="overlay-root">
+  <div class="overlay-root" :class="{ 'overlay-root--transparent': transparent }">
     <div v-if="loading" class="overlay-loading">
       <v-progress-circular indeterminate color="#e8523a" size="32" />
     </div>
@@ -102,6 +102,7 @@ export default {
   data() {
     return {
       steamid: this.$route.params.steamid,
+      transparent: this.$route.query.transparent === "1",
       loading: true,
       match: null,
       playerStats: null,
@@ -205,6 +206,77 @@ export default {
   color: #fff;
   box-sizing: border-box;
   user-select: none;
+}
+
+/* Mode transparent : fond invisible, texte sombre */
+.overlay-root--transparent {
+  background: transparent;
+  border-color: transparent;
+  color: #111;
+}
+
+.overlay-root--transparent .team-name {
+  color: #222;
+}
+
+.overlay-root--transparent .score {
+  color: #c0392b;
+}
+
+.overlay-root--transparent .score-sep {
+  color: #555;
+}
+
+.overlay-root--transparent .map-score {
+  color: #555;
+}
+
+.overlay-root--transparent .panel-title {
+  color: #c0392b;
+}
+
+.overlay-root--transparent .stat-label {
+  color: #555;
+}
+
+.overlay-root--transparent .stat-value {
+  color: #111;
+}
+
+.overlay-root--transparent .rating-value {
+  color: #c0392b;
+}
+
+.overlay-root--transparent .tr-name {
+  color: #222;
+}
+
+.overlay-root--transparent .tr-kda {
+  color: #111;
+}
+
+.overlay-root--transparent .tr-adr {
+  color: #555;
+}
+
+.overlay-root--transparent .panel-badge {
+  color: #999;
+}
+
+.overlay-root--transparent .team-row--self {
+  background: rgba(192, 57, 43, 0.12);
+}
+
+.overlay-root--transparent .dot {
+  background: #bbb;
+}
+
+.overlay-root--transparent .dot.active {
+  background: #c0392b;
+}
+
+.overlay-root--transparent .no-match-text {
+  color: #555;
 }
 
 .overlay-loading,

@@ -106,7 +106,7 @@ export default {
       return (this.playerStats.damage / this.playerStats.roundsplayed).toFixed(1);
     },
     playerHsp() {
-      if (!this.playerStats || !this.playerStats.kills) return "–";
+      if (!this.playerStats || !Number(this.playerStats.kills)) return "0%";
       return Math.round((this.playerStats.headshot_kills / this.playerStats.kills) * 100) + "%";
     },
     playerRating() {

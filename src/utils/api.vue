@@ -1471,6 +1471,105 @@ export default {
       return retVal;
     },
     // END VETO CALLS
+    // BEGIN PRE-MATCH VETO CALLS (token authenticated, no login required)
+    async GetPreVetoState(token) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/prevetoes/${token}`,
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async GetStreamedPreVeto(token) {
+      let retVal;
+      try {
+        retVal = this.$sse.create({
+          url: `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/prevetoes/${token}/stream`,
+          format: "json",
+          withCredentials: true,
+          polyfill: true,
+        });
+      } catch (error) {
+        retVal = error.response.data;
+      }
+      return retVal;
+    },
+    async SubmitPreVetoStartChoice(token, choice) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/prevetoes/${token}/start-choice`,
+          { choice },
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async SubmitPreVetoAction(token, type, map) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/prevetoes/${token}/action`,
+          { type, map },
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async SubmitPreVetoSide(token, side) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/prevetoes/${token}/side`,
+          { side },
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async ForcePreVetoAdmin(token) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/prevetoes/${token}/admin/force`,
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    async ResetPreVetoAdmin(token) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/prevetoes/${token}/admin/reset`,
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
+    // END PRE-MATCH VETO CALLS
     // BEGIN LEADERBOARD CALLS
     async GetTotalPlayerLeaderboard() {
       let res;

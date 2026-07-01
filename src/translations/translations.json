@@ -128,7 +128,8 @@
       "VetoLinkAdmin": "Admin link",
       "CopyLink": "Copy",
       "LinkCopied": "Link copied!",
-      "GoToMatchLater": "You can close this window, the match will appear once the veto is finished."
+      "GoToMatchLater": "You can close this window, the match will appear once the veto is finished.",
+      "CopyFailed": "Couldn't copy automatically — please select and copy the link manually."
     },
     "PlayerStats": {
       "Kills": "Kills",
@@ -733,7 +734,8 @@
       "VetoLinkAdmin": "Lien admin",
       "CopyLink": "Copier",
       "LinkCopied": "Lien copié !",
-      "GoToMatchLater": "Vous pouvez fermer cette fenêtre, le match apparaîtra une fois le véto terminé."
+      "GoToMatchLater": "Vous pouvez fermer cette fenêtre, le match apparaîtra une fois le véto terminé.",
+      "CopyFailed": "Copie automatique impossible — sélectionnez et copiez le lien manuellement."
     },
     "PlayerStats": {
       "Kills": "Kills",
@@ -1334,7 +1336,8 @@
       "VetoLinkAdmin": "管理者リンク",
       "CopyLink": "コピー",
       "LinkCopied": "リンクをコピーしました！",
-      "GoToMatchLater": "このウィンドウは閉じても構いません。ベトが終わると試合が表示されます。"
+      "GoToMatchLater": "このウィンドウは閉じても構いません。ベトが終わると試合が表示されます。",
+      "CopyFailed": "自動コピーできませんでした。リンクを選択して手動でコピーしてください。"
     },
     "PlayerStats": {
       "Kills": "キルズ",

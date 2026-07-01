@@ -393,8 +393,12 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-snackbar v-model="linkCopiedSnackbar" timeout="2500">
-      {{ $t("CreateMatch.LinkCopied") }}
+    <v-snackbar
+      v-model="copySnackbar"
+      :color="copySnackbarColor"
+      timeout="3000"
+    >
+      {{ copyMessage }}
     </v-snackbar>
   </v-card>
 </template>
@@ -442,7 +446,9 @@ export default {
     responseSheet: false,
     vetoLinksDialog: false,
     vetoLinks: null,
-    linkCopiedSnackbar: false,
+    copySnackbar: false,
+    copySnackbarColor: "success",
+    copyMessage: "",
     newMatchId: null,
     isLoading: false,
     MapList: [],
@@ -716,13 +722,37 @@ export default {
       if (this.newMatchId != null)
         this.$router.push({ name: `Match`, params: { id: this.newMatchId } });
     },
+    legacyCopyToClipboard(url) {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "0";
+      textarea.style.left = "0";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, url.length);
+      const succeeded = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!succeeded) throw new Error("execCommand copy failed");
+    },
     async copyVetoLink(url) {
       try {
-        await navigator.clipboard.writeText(url);
-        this.linkCopiedSnackbar = true;
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          this.legacyCopyToClipboard(url);
+        }
+        this.copyMessage = this.$t("CreateMatch.LinkCopied");
+        this.copySnackbarColor = "success";
       } catch (error) {
         void error;
+        this.copyMessage = this.$t("CreateMatch.CopyFailed");
+        this.copySnackbarColor = "error";
       }
+      this.copySnackbar = true;
     },
     closeVetoLinksDialog() {
       this.vetoLinksDialog = false;

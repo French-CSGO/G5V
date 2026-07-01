@@ -402,7 +402,7 @@ export default {
     },
     async startStream() {
       try {
-        this.sseHandle = this.GetStreamedPreVeto(this.token);
+        this.sseHandle = await this.GetStreamedPreVeto(this.token);
         await this.sseHandle
           .on("prevetodata", (data) => {
             this.state = data;

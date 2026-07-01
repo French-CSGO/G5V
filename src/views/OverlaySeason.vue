@@ -150,7 +150,9 @@ export default {
             `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${this.seasonid}`,
           );
           this.seasonName = seasonRes.data?.season?.name || null;
-        } catch (_) {}
+        } catch (e) {
+          console.warn("Could not fetch season name", e);
+        }
 
         // Leaderboard de la saison (tous les joueurs) pour contexte équipe
         const lbRes = await this.axiosCall.get(

@@ -555,6 +555,7 @@
     "OverlayLive": {
       "noMatch": "No live match found",
       "map": "Map",
+      "serie": "Series",
       "playerBadge": "Player",
       "teamBadge": "Team"
     },
@@ -1163,6 +1164,7 @@
     "OverlayLive": {
       "noMatch": "Aucun match en cours trouvé",
       "map": "Map",
+      "serie": "Série",
       "playerBadge": "Joueur",
       "teamBadge": "Équipe"
     },
@@ -1765,6 +1767,7 @@
     "OverlayLive": {
       "noMatch": "ライブマッチが見つかりません",
       "map": "マップ",
+      "serie": "シリーズ",
       "playerBadge": "プレイヤー",
       "teamBadge": "チーム"
     },

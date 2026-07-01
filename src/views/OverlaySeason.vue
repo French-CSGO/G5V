@@ -11,7 +11,7 @@
     <template v-else>
       <!-- Header : titre saison -->
       <div class="overlay-header">
-        <span class="season-label">{{ $t("OverlaySeason.season") }} #{{ seasonid }}</span>
+        <span class="season-label">{{ seasonName || ($t("OverlaySeason.season") + " #" + seasonid) }}</span>
         <span class="player-name-header">{{ playerStats.name || steamid }}</span>
       </div>
 
@@ -60,13 +60,20 @@
         <!-- Panneau équipe (leaderboard saison) -->
         <div v-else key="team" class="stat-panel">
           <div class="panel-title">{{ $t("OverlaySeason.teamBadge") }}</div>
+          <div class="lb-header">
+            <span class="lbh-rank">#</span>
+            <span class="lbh-name"></span>
+            <span class="lbh-kda">K / D / A</span>
+            <span class="lbh-rating">RTG</span>
+          </div>
           <div class="team-rows">
             <div
-              v-for="p in teamLeaderboard"
+              v-for="(p, i) in teamLeaderboard"
               :key="p.steamId"
               class="team-row"
               :class="{ 'team-row--self': p.steamId === steamid }"
             >
+              <span class="tr-rank">{{ i + 1 }}</span>
               <span class="tr-name">{{ p.name }}</span>
               <span class="tr-kda">{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span>
               <span class="tr-rating">{{ calcRating(p).toFixed(2) }}</span>
@@ -94,6 +101,7 @@ export default {
       seasonid: this.$route.params.seasonid,
       transparent: this.$route.query.transparent === "1",
       loading: true,
+      seasonName: null,
       playerStats: null,
       teamLeaderboard: [],
       showPanel: 0,
@@ -135,6 +143,14 @@ export default {
         }
         // L'API retourne un objet unique déjà agrégé
         this.playerStats = raw;
+
+        // Nom de la saison
+        try {
+          const seasonRes = await this.axiosCall.get(
+            `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${this.seasonid}`,
+          );
+          this.seasonName = seasonRes.data?.season?.name || null;
+        } catch (_) {}
 
         // Leaderboard de la saison (tous les joueurs) pour contexte équipe
         const lbRes = await this.axiosCall.get(
@@ -234,6 +250,19 @@ export default {
 
 .overlay-root--transparent .panel-badge {
   color: #999;
+}
+
+.overlay-root--transparent .lb-header {
+  color: #999;
+  border-bottom-color: rgba(0,0,0,0.1);
+}
+
+.overlay-root--transparent .tr-rank {
+  color: #999;
+}
+
+.overlay-root--transparent .team-row--self .tr-rank {
+  color: #c0392b;
 }
 
 .overlay-root--transparent .team-row--self {
@@ -341,10 +370,27 @@ export default {
   gap: 4px;
 }
 
+/* En-tête colonnes */
+.lb-header {
+  display: flex;
+  align-items: center;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #555;
+  padding: 0 4px 3px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  margin-bottom: 3px;
+}
+
+.lbh-rank  { width: 18px; text-align: center; }
+.lbh-name  { flex: 1; }
+.lbh-kda   { width: 90px; text-align: center; }
+.lbh-rating { width: 36px; text-align: right; }
+
 .team-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   font-size: 12px;
   padding: 2px 4px;
   border-radius: 4px;
@@ -353,6 +399,18 @@ export default {
 .team-row--self {
   background: rgba(232, 82, 58, 0.18);
   font-weight: 700;
+}
+
+.tr-rank {
+  width: 18px;
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+  flex-shrink: 0;
+}
+
+.team-row--self .tr-rank {
+  color: #e8523a;
 }
 
 .tr-name {
@@ -364,14 +422,14 @@ export default {
 }
 
 .tr-kda {
-  width: 70px;
+  width: 90px;
   text-align: center;
   color: #fff;
   font-weight: 600;
 }
 
 .tr-rating {
-  width: 40px;
+  width: 36px;
   text-align: right;
   color: #e8523a;
   font-size: 11px;

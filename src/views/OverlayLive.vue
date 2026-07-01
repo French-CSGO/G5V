@@ -9,22 +9,36 @@
     </div>
 
     <template v-else>
-      <!-- Header : score du match -->
+      <!-- Header : équipes + scores -->
       <div class="overlay-header">
         <span class="team-name team-name--left">{{ match.team1_string }}</span>
-        <div class="score-block">
-          <span class="score">{{ match.team1_series_score != null ? match.team1_series_score : 0 }}</span>
-          <span class="score-sep">–</span>
-          <span class="score">{{ match.team2_series_score != null ? match.team2_series_score : 0 }}</span>
+        <div class="scores-block">
+          <!-- Score map courante -->
+          <div class="map-row">
+            <span class="map-name-label" v-if="currentMap">{{ formatMapName(currentMap.map_name) }}</span>
+            <span class="map-score-val">
+              {{ currentMap ? currentMap.team1_score : 0 }}
+              <span class="score-sep">–</span>
+              {{ currentMap ? currentMap.team2_score : 0 }}
+            </span>
+          </div>
+          <!-- Score série (affiché uniquement en bo3/bo5) -->
+          <div class="serie-row" v-if="match.max_maps > 1">
+            <span class="serie-label">{{ $t("OverlayLive.serie") }}</span>
+            <span class="serie-score">
+              {{ match.team1_series_score != null ? match.team1_series_score : 0 }}
+              –
+              {{ match.team2_series_score != null ? match.team2_series_score : 0 }}
+            </span>
+          </div>
         </div>
         <span class="team-name team-name--right">{{ match.team2_string }}</span>
       </div>
 
-      <!-- Pseudo du joueur + map score -->
-      <div class="map-score">
-        <span v-if="playerStats" class="player-label">{{ playerStats.name }}</span>
-        <span class="map-score-sep" v-if="playerStats"> · </span>
-        {{ $t("OverlayLive.map") }} {{ match.team1_score }} – {{ match.team2_score }}
+      <!-- Pseudo + numéro de map -->
+      <div class="player-subheader" v-if="playerStats">
+        <span class="player-label">{{ playerStats.name }}</span>
+        <span class="map-number-label" v-if="currentMap"> · Map {{ currentMap.map_number }}/{{ match.max_maps }}</span>
       </div>
 
       <!-- Panneaux alternants -->
@@ -108,6 +122,7 @@ export default {
       transparent: this.$route.query.transparent === "1",
       loading: true,
       match: null,
+      currentMap: null,
       playerStats: null,
       teamStats: [],
       showPanel: 0,
@@ -161,8 +176,19 @@ export default {
     applyPayload(data) {
       if (!data) return;
       if (data.match !== undefined) this.match = data.match;
+      if (data.currentMap !== undefined) this.currentMap = data.currentMap;
       if (data.playerStats) this.playerStats = data.playerStats;
       if (data.teamStats && data.teamStats.length) this.teamStats = data.teamStats;
+    },
+    formatMapName(map) {
+      if (!map) return "";
+      const names = {
+        de_dust2: "Dust 2", de_mirage: "Mirage", de_inferno: "Inferno",
+        de_nuke: "Nuke", de_overpass: "Overpass", de_anubis: "Anubis",
+        de_ancient: "Ancient", de_vertigo: "Vertigo", de_cache: "Cache",
+        de_train: "Train",
+      };
+      return names[map] || map.replace(/^(de_|cs_)/, "").replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
     },
     startRotate() {
       this.rotateTimer = setInterval(() => {
@@ -293,7 +319,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2px;
+  margin-bottom: 4px;
 }
 
 .team-name {
@@ -302,33 +328,67 @@ export default {
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: #ccc;
-  max-width: 120px;
+  max-width: 100px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.score-block {
+.scores-block {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 1px;
 }
 
-.score {
-  font-size: 20px;
+.map-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-name-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.map-score-val {
+  font-size: 22px;
   font-weight: 900;
   color: #e8523a;
+  letter-spacing: 2px;
 }
 
 .score-sep {
   font-size: 16px;
   color: #666;
+  margin: 0 2px;
 }
 
-.map-score {
+.serie-row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.serie-label {
+  font-size: 10px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.serie-score {
+  font-size: 12px;
+  font-weight: 700;
+  color: #aaa;
+}
+
+/* Pseudo + map number */
+.player-subheader {
   text-align: center;
-  font-size: 11px;
-  color: #666;
   margin-bottom: 8px;
 }
 
@@ -338,9 +398,17 @@ export default {
   font-size: 12px;
 }
 
-.overlay-root--transparent .player-label {
-  color: #c0392b;
+.map-number-label {
+  font-size: 11px;
+  color: #666;
 }
+
+.overlay-root--transparent .map-score-val { color: #c0392b; }
+.overlay-root--transparent .map-name-label { color: #999; }
+.overlay-root--transparent .serie-label { color: #999; }
+.overlay-root--transparent .serie-score { color: #444; }
+.overlay-root--transparent .player-label { color: #c0392b; }
+.overlay-root--transparent .map-number-label { color: #777; }
 
 /* Panneaux */
 .stat-panel {

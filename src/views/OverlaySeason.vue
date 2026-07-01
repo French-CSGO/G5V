@@ -77,12 +77,12 @@
           </div>
           <div class="team-rows">
             <div
-              v-for="(p, i) in teamLeaderboard"
+              v-for="p in teamLeaderboard"
               :key="p.steamId"
               class="team-row"
               :class="{ 'team-row--self': p.steamId === steamid }"
             >
-              <span class="tr-rank">{{ i + 1 }}</span>
+              <span class="tr-rank">{{ p.rank }}</span>
               <span class="tr-name">{{ p.name }}</span>
               <span class="tr-kda"
                 >{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span
@@ -170,14 +170,19 @@ export default {
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/leaderboard/players/${this.seasonid}`,
         );
         const lb = lbRes.data?.leaderboard || [];
-        // Garder les 5 premiers + le joueur s'il n'est pas dedans
-        const top5 = lb.slice(0, 5);
-        const inTop = top5.some((p) => p.steamId === this.steamid);
-        if (!inTop) {
-          const self = lb.find((p) => p.steamId === this.steamid);
-          if (self) top5.push(self);
-        }
-        this.teamLeaderboard = top5;
+        const sorted = [...lb].sort(
+          (a, b) =>
+            parseFloat(b.average_rating || 0) -
+            parseFloat(a.average_rating || 0),
+        );
+        const playerIndex = sorted.findIndex((p) => p.steamId === this.steamid);
+        const end =
+          playerIndex >= 0 ? playerIndex + 1 : Math.min(6, sorted.length);
+        const start = Math.max(0, end - 6);
+        this.teamLeaderboard = sorted.slice(start, end).map((p, i) => ({
+          ...p,
+          rank: start + i + 1,
+        }));
       } catch (e) {
         console.error("OverlaySeason fetch error", e);
         this.playerStats = null;

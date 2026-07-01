@@ -11,7 +11,7 @@
     <template v-else>
       <!-- Header : titre saison -->
       <div class="overlay-header">
-        <span class="season-label">{{ $t("OverlaySeason.season") }} #{{ seasonid }}</span>
+        <span class="season-label">{{ seasonName || ($t("OverlaySeason.season") + " #" + seasonid) }}</span>
         <span class="player-name-header">{{ playerStats.name || steamid }}</span>
       </div>
 
@@ -101,6 +101,7 @@ export default {
       seasonid: this.$route.params.seasonid,
       transparent: this.$route.query.transparent === "1",
       loading: true,
+      seasonName: null,
       playerStats: null,
       teamLeaderboard: [],
       showPanel: 0,
@@ -142,6 +143,14 @@ export default {
         }
         // L'API retourne un objet unique déjà agrégé
         this.playerStats = raw;
+
+        // Nom de la saison
+        try {
+          const seasonRes = await this.axiosCall.get(
+            `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${this.seasonid}`,
+          );
+          this.seasonName = seasonRes.data?.season?.name || null;
+        } catch (_) {}
 
         // Leaderboard de la saison (tous les joueurs) pour contexte équipe
         const lbRes = await this.axiosCall.get(

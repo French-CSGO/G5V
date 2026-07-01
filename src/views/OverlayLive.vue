@@ -1,5 +1,8 @@
 <template>
-  <div class="overlay-root" :class="{ 'overlay-root--transparent': transparent }">
+  <div
+    class="overlay-root"
+    :class="{ 'overlay-root--transparent': transparent }"
+  >
     <div v-if="loading" class="overlay-loading">
       <v-progress-circular indeterminate color="#e8523a" size="32" />
     </div>
@@ -15,7 +18,9 @@
         <div class="scores-block">
           <!-- Score map courante -->
           <div class="map-row">
-            <span class="map-name-label" v-if="currentMap">{{ formatMapName(currentMap.map_name) }}</span>
+            <span class="map-name-label" v-if="currentMap">{{
+              formatMapName(currentMap.map_name)
+            }}</span>
             <span class="map-score-val">
               {{ currentMap ? currentMap.team1_score : 0 }}
               <span class="score-sep">–</span>
@@ -26,9 +31,13 @@
           <div class="serie-row" v-if="match.max_maps > 1">
             <span class="serie-label">{{ $t("OverlayLive.serie") }}</span>
             <span class="serie-score">
-              {{ match.team1_series_score != null ? match.team1_series_score : 0 }}
+              {{
+                match.team1_series_score != null ? match.team1_series_score : 0
+              }}
               –
-              {{ match.team2_series_score != null ? match.team2_series_score : 0 }}
+              {{
+                match.team2_series_score != null ? match.team2_series_score : 0
+              }}
             </span>
           </div>
         </div>
@@ -38,26 +47,36 @@
       <!-- Pseudo + numéro de map -->
       <div class="player-subheader" v-if="playerStats">
         <span class="player-label">{{ playerStats.name }}</span>
-        <span class="map-number-label" v-if="currentMap"> · Map {{ currentMap.map_number }}/{{ match.max_maps }}</span>
+        <span class="map-number-label" v-if="currentMap">
+          · Map {{ currentMap.map_number }}/{{ match.max_maps }}</span
+        >
       </div>
 
       <!-- Panneaux alternants -->
       <transition name="fade" mode="out-in">
         <!-- Panneau joueur -->
         <div v-if="showPanel === 0" key="player" class="stat-panel">
-          <div class="panel-title">{{ playerStats ? playerStats.name : "–" }}</div>
+          <div class="panel-title">
+            {{ playerStats ? playerStats.name : "–" }}
+          </div>
           <div class="stat-grid">
             <div class="stat-item">
               <span class="stat-label">K</span>
-              <span class="stat-value">{{ playerStats ? playerStats.kills : "–" }}</span>
+              <span class="stat-value">{{
+                playerStats ? playerStats.kills : "–"
+              }}</span>
             </div>
             <div class="stat-item">
               <span class="stat-label">D</span>
-              <span class="stat-value">{{ playerStats ? playerStats.deaths : "–" }}</span>
+              <span class="stat-value">{{
+                playerStats ? playerStats.deaths : "–"
+              }}</span>
             </div>
             <div class="stat-item">
               <span class="stat-label">A</span>
-              <span class="stat-value">{{ playerStats ? playerStats.assists : "–" }}</span>
+              <span class="stat-value">{{
+                playerStats ? playerStats.assists : "–"
+              }}</span>
             </div>
             <div class="stat-item">
               <span class="stat-label">ADR</span>
@@ -69,7 +88,9 @@
             </div>
             <div class="stat-item">
               <span class="stat-label">KAST</span>
-              <span class="stat-value">{{ playerStats ? playerStats.kast : "–" }}</span>
+              <span class="stat-value">{{
+                playerStats ? playerStats.kast : "–"
+              }}</span>
             </div>
             <div class="stat-item">
               <span class="stat-label">Rating</span>
@@ -77,7 +98,9 @@
             </div>
             <div class="stat-item">
               <span class="stat-label">MVP</span>
-              <span class="stat-value">{{ playerStats ? playerStats.mvp : "–" }}</span>
+              <span class="stat-value">{{
+                playerStats ? playerStats.mvp : "–"
+              }}</span>
             </div>
           </div>
           <div class="panel-badge">{{ $t("OverlayLive.playerBadge") }}</div>
@@ -94,7 +117,9 @@
               :class="{ 'team-row--self': p.steam_id === steamid }"
             >
               <span class="tr-name">{{ p.name }}</span>
-              <span class="tr-kda">{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span>
+              <span class="tr-kda"
+                >{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span
+              >
               <span class="tr-adr">{{ calcAdr(p) }}</span>
               <span class="tr-rating">{{ calcRating(p).toFixed(2) }}</span>
             </div>
@@ -140,11 +165,17 @@ export default {
     },
     playerAdr() {
       if (!this.playerStats || !this.playerStats.roundsplayed) return "–";
-      return (this.playerStats.damage / this.playerStats.roundsplayed).toFixed(1);
+      return (this.playerStats.damage / this.playerStats.roundsplayed).toFixed(
+        1,
+      );
     },
     playerHsp() {
       if (!this.playerStats || !Number(this.playerStats.kills)) return "0%";
-      return Math.round((this.playerStats.headshot_kills / this.playerStats.kills) * 100) + "%";
+      return (
+        Math.round(
+          (this.playerStats.headshot_kills / this.playerStats.kills) * 100,
+        ) + "%"
+      );
     },
     playerRating() {
       if (!this.playerStats || !this.playerStats.roundsplayed) return "–";
@@ -178,17 +209,30 @@ export default {
       if (data.match !== undefined) this.match = data.match;
       if (data.currentMap !== undefined) this.currentMap = data.currentMap;
       if (data.playerStats) this.playerStats = data.playerStats;
-      if (data.teamStats && data.teamStats.length) this.teamStats = data.teamStats;
+      if (data.teamStats && data.teamStats.length)
+        this.teamStats = data.teamStats;
     },
     formatMapName(map) {
       if (!map) return "";
       const names = {
-        de_dust2: "Dust 2", de_mirage: "Mirage", de_inferno: "Inferno",
-        de_nuke: "Nuke", de_overpass: "Overpass", de_anubis: "Anubis",
-        de_ancient: "Ancient", de_vertigo: "Vertigo", de_cache: "Cache",
+        de_dust2: "Dust 2",
+        de_mirage: "Mirage",
+        de_inferno: "Inferno",
+        de_nuke: "Nuke",
+        de_overpass: "Overpass",
+        de_anubis: "Anubis",
+        de_ancient: "Ancient",
+        de_vertigo: "Vertigo",
+        de_cache: "Cache",
         de_train: "Train",
       };
-      return names[map] || map.replace(/^(de_|cs_)/, "").replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+      return (
+        names[map] ||
+        map
+          .replace(/^(de_|cs_)/, "")
+          .replace(/_/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase())
+      );
     },
     startRotate() {
       this.rotateTimer = setInterval(() => {
@@ -210,7 +254,14 @@ export default {
       const kpr = p.kills / r;
       const dpr = p.deaths / r;
       const impact = 2.13 * kpr + 0.42 * (p.assists / r) - 0.41;
-      return (0.0073 * (p.kast || 0) + 0.3591 * kpr - 0.5329 * dpr + 0.2372 * impact + 0.0032 * (p.damage / r) + 0.1587);
+      return (
+        0.0073 * (p.kast || 0) +
+        0.3591 * kpr -
+        0.5329 * dpr +
+        0.2372 * impact +
+        0.0032 * (p.damage / r) +
+        0.1587
+      );
     },
   },
 };
@@ -403,12 +454,24 @@ export default {
   color: #666;
 }
 
-.overlay-root--transparent .map-score-val { color: #c0392b; }
-.overlay-root--transparent .map-name-label { color: #999; }
-.overlay-root--transparent .serie-label { color: #999; }
-.overlay-root--transparent .serie-score { color: #444; }
-.overlay-root--transparent .player-label { color: #c0392b; }
-.overlay-root--transparent .map-number-label { color: #777; }
+.overlay-root--transparent .map-score-val {
+  color: #c0392b;
+}
+.overlay-root--transparent .map-name-label {
+  color: #999;
+}
+.overlay-root--transparent .serie-label {
+  color: #999;
+}
+.overlay-root--transparent .serie-score {
+  color: #444;
+}
+.overlay-root--transparent .player-label {
+  color: #c0392b;
+}
+.overlay-root--transparent .map-number-label {
+  color: #777;
+}
 
 /* Panneaux */
 .stat-panel {

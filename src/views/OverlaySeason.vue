@@ -1,5 +1,8 @@
 <template>
-  <div class="overlay-root" :class="{ 'overlay-root--transparent': transparent }">
+  <div
+    class="overlay-root"
+    :class="{ 'overlay-root--transparent': transparent }"
+  >
     <div v-if="loading" class="overlay-loading">
       <v-progress-circular indeterminate color="#e8523a" size="32" />
     </div>
@@ -11,8 +14,12 @@
     <template v-else>
       <!-- Header : titre saison -->
       <div class="overlay-header">
-        <span class="season-label">{{ seasonName || ($t("OverlaySeason.season") + " #" + seasonid) }}</span>
-        <span class="player-name-header">{{ playerStats.name || steamid }}</span>
+        <span class="season-label">{{
+          seasonName || $t("OverlaySeason.season") + " #" + seasonid
+        }}</span>
+        <span class="player-name-header">{{
+          playerStats.name || steamid
+        }}</span>
       </div>
 
       <!-- Panneaux alternants -->
@@ -23,7 +30,9 @@
           <div class="stat-grid">
             <div class="stat-item">
               <span class="stat-label">Parties</span>
-              <span class="stat-value">{{ playerStats.total_maps || "–" }}</span>
+              <span class="stat-value">{{
+                playerStats.total_maps || "–"
+              }}</span>
             </div>
             <div class="stat-item">
               <span class="stat-label">Victoires</span>
@@ -75,7 +84,9 @@
             >
               <span class="tr-rank">{{ i + 1 }}</span>
               <span class="tr-name">{{ p.name }}</span>
-              <span class="tr-kda">{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span>
+              <span class="tr-kda"
+                >{{ p.kills }}/{{ p.deaths }}/{{ p.assists }}</span
+              >
               <span class="tr-rating">{{ calcRating(p).toFixed(2) }}</span>
             </div>
           </div>
@@ -188,7 +199,14 @@ export default {
       const dpr = p.deaths / r;
       const impact = 2.13 * kpr + 0.42 * (p.assists / r) - 0.41;
       const adr = p.total_damage ? p.total_damage / r : 0;
-      return (0.0073 * (p.kast || 0) + 0.3591 * kpr - 0.5329 * dpr + 0.2372 * impact + 0.0032 * adr + 0.1587);
+      return (
+        0.0073 * (p.kast || 0) +
+        0.3591 * kpr -
+        0.5329 * dpr +
+        0.2372 * impact +
+        0.0032 * adr +
+        0.1587
+      );
     },
   },
 };
@@ -256,7 +274,7 @@ export default {
 
 .overlay-root--transparent .lb-header {
   color: #999;
-  border-bottom-color: rgba(0,0,0,0.1);
+  border-bottom-color: rgba(0, 0, 0, 0.1);
 }
 
 .overlay-root--transparent .tr-rank {
@@ -381,14 +399,25 @@ export default {
   letter-spacing: 0.5px;
   color: #555;
   padding: 0 4px 3px;
-  border-bottom: 1px solid rgba(255,255,255,0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   margin-bottom: 3px;
 }
 
-.lbh-rank  { width: 18px; text-align: center; }
-.lbh-name  { flex: 1; }
-.lbh-kda   { width: 90px; text-align: center; }
-.lbh-rating { width: 36px; text-align: right; }
+.lbh-rank {
+  width: 18px;
+  text-align: center;
+}
+.lbh-name {
+  flex: 1;
+}
+.lbh-kda {
+  width: 90px;
+  text-align: center;
+}
+.lbh-rating {
+  width: 36px;
+  text-align: right;
+}
 
 .team-row {
   display: flex;

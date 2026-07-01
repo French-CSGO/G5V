@@ -330,6 +330,13 @@ export default {
           map: this.formatMapName(awaiting.map),
         });
       }
+      // On the shared tablet, always spell out which team acts — "your turn"
+      // is ambiguous when both teams are looking at the same screen.
+      if (this.state.role === "tablet" && this.state.can_act) {
+        return awaiting.type === "ban"
+          ? this.$t("PreMatchVeto.TeamTurnBan", { team: teamName })
+          : this.$t("PreMatchVeto.TeamTurnPick", { team: teamName });
+      }
       if (this.state.can_act) {
         return awaiting.type === "ban"
           ? this.$t("PreMatchVeto.YourTurnBan")

@@ -602,7 +602,9 @@
       "ReadyWaitingBoth": "Waiting for both teams to confirm they are ready.",
       "ReadyButton": "We are ready",
       "ReadyDone": "Ready",
-      "ReadyPending": "Not ready yet"
+      "ReadyPending": "Not ready yet",
+      "TeamTurnBan": "{team}: pick a map to ban.",
+      "TeamTurnPick": "{team}: pick a map to play."
     }
   },
   "fr": {
@@ -1208,7 +1210,9 @@
       "ReadyWaitingBoth": "En attente de la confirmation des deux équipes.",
       "ReadyButton": "Nous sommes prêts",
       "ReadyDone": "Prêt",
-      "ReadyPending": "Pas encore prêt"
+      "ReadyPending": "Pas encore prêt",
+      "TeamTurnBan": "{team} : choisissez une map à bannir.",
+      "TeamTurnPick": "{team} : choisissez une map à jouer."
     }
   },
   "jp": {
@@ -1808,7 +1812,9 @@
       "ReadyWaitingBoth": "両チームの準備確認を待っています。",
       "ReadyButton": "準備完了です",
       "ReadyDone": "準備完了",
-      "ReadyPending": "まだ準備できていません"
+      "ReadyPending": "まだ準備できていません",
+      "TeamTurnBan": "{team}：禁止するマップを選んでください。",
+      "TeamTurnPick": "{team}：プレイするマップを選んでください。"
     }
   }
 }

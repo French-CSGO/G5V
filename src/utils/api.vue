@@ -1501,6 +1501,20 @@ export default {
       }
       return retVal;
     },
+    async SubmitPreVetoReady(token, team) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.post(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/prevetoes/${token}/ready`,
+          { team },
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data;
+      }
+      return message;
+    },
     async SubmitPreVetoStartChoice(token, choice) {
       let res;
       let message;

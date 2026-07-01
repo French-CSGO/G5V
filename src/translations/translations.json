@@ -596,7 +596,12 @@
       "Ban": "Ban",
       "Pick": "Pick",
       "Decider": "Decider",
-      "ActionFailed": "Action failed"
+      "ActionFailed": "Action failed",
+      "ReadyTitle": "Ready check",
+      "ReadyWaitingBoth": "Waiting for both teams to confirm they are ready.",
+      "ReadyButton": "We are ready",
+      "ReadyDone": "Ready",
+      "ReadyPending": "Not ready yet"
     }
   },
   "fr": {
@@ -1196,7 +1201,12 @@
       "Ban": "Ban",
       "Pick": "Pick",
       "Decider": "Décideur",
-      "ActionFailed": "Action échouée"
+      "ActionFailed": "Action échouée",
+      "ReadyTitle": "Vérification de présence",
+      "ReadyWaitingBoth": "En attente de la confirmation des deux équipes.",
+      "ReadyButton": "Nous sommes prêts",
+      "ReadyDone": "Prêt",
+      "ReadyPending": "Pas encore prêt"
     }
   },
   "jp": {
@@ -1790,7 +1800,12 @@
       "Ban": "禁止",
       "Pick": "選択",
       "Decider": "決定者",
-      "ActionFailed": "アクション失敗"
+      "ActionFailed": "アクション失敗",
+      "ReadyTitle": "準備確認",
+      "ReadyWaitingBoth": "両チームの準備確認を待っています。",
+      "ReadyButton": "準備完了です",
+      "ReadyDone": "準備完了",
+      "ReadyPending": "まだ準備できていません"
     }
   }
 }

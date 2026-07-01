@@ -10,7 +10,6 @@
     </div>
     <template v-else>
       <div class="preveto-header">
-        <div class="match-title">{{ state.match_title }}</div>
         <div class="team-vs">
           <span :class="{ 'active-team': isAwaitingTeam('team1') }">{{
             state.team1_name
@@ -38,6 +37,65 @@
       >
         {{ $t("PreMatchVeto.TimeLeft", { sec: remainingSeconds }) }}
       </div>
+
+      <!-- Ready check -->
+      <template v-if="state.status === 'awaiting_ready'">
+        <v-alert type="info" dense text class="mt-2">
+          {{ $t("PreMatchVeto.ReadyWaitingBoth") }}
+        </v-alert>
+        <div class="ready-row">
+          <v-chip
+            :color="state.ready.team1 ? 'success' : 'grey darken-2'"
+            label
+          >
+            {{ state.team1_name }} —
+            {{
+              $t(
+                state.ready.team1
+                  ? "PreMatchVeto.ReadyDone"
+                  : "PreMatchVeto.ReadyPending",
+              )
+            }}
+          </v-chip>
+          <v-chip
+            :color="state.ready.team2 ? 'success' : 'grey darken-2'"
+            label
+          >
+            {{ state.team2_name }} —
+            {{
+              $t(
+                state.ready.team2
+                  ? "PreMatchVeto.ReadyDone"
+                  : "PreMatchVeto.ReadyPending",
+              )
+            }}
+          </v-chip>
+        </div>
+        <div class="action-row">
+          <v-btn
+            v-if="state.ready.can_ready_team1"
+            color="primary"
+            :loading="busy"
+            @click="markReady('team1')"
+          >
+            {{ $t("PreMatchVeto.ReadyButton") }}
+            <span v-if="state.role === 'tablet'"
+              >&nbsp;({{ state.team1_name }})</span
+            >
+          </v-btn>
+          <v-btn
+            v-if="state.ready.can_ready_team2"
+            color="primary"
+            :loading="busy"
+            @click="markReady('team2')"
+          >
+            {{ $t("PreMatchVeto.ReadyButton") }}
+            <span v-if="state.role === 'tablet'"
+              >&nbsp;({{ state.team2_name }})</span
+            >
+          </v-btn>
+        </div>
+      </template>
 
       <!-- Status banner -->
       <v-alert
@@ -231,7 +289,8 @@ export default {
     isActive() {
       return (
         this.state &&
-        (this.state.status === "awaiting_start" ||
+        (this.state.status === "awaiting_ready" ||
+          this.state.status === "awaiting_start" ||
           this.state.status === "in_progress")
       );
     },
@@ -383,6 +442,9 @@ export default {
         this.busy = false;
       }
     },
+    markReady(team) {
+      return this.handleResult(this.SubmitPreVetoReady(this.token, team));
+    },
     chooseStart(choice) {
       return this.handleResult(
         this.SubmitPreVetoStartChoice(this.token, choice),
@@ -453,13 +515,6 @@ export default {
   margin-bottom: 12px;
 }
 
-.match-title {
-  font-size: 14px;
-  color: #999;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
 .team-vs {
   font-size: 24px;
   font-weight: 700;
@@ -484,6 +539,13 @@ export default {
   font-size: 13px;
   color: #ccc;
   margin-bottom: 8px;
+}
+
+.ready-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 12px 0;
 }
 
 .action-row {

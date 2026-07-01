@@ -102,16 +102,16 @@ export default {
   },
   computed: {
     playerAdr() {
-      if (!this.playerStats || !this.playerStats.roundsplayed) return "–";
-      return (this.playerStats.damage / this.playerStats.roundsplayed).toFixed(1);
+      if (!this.playerStats || !this.playerStats.trp) return "–";
+      return (this.playerStats.total_damage / this.playerStats.trp).toFixed(1);
     },
     playerHsp() {
-      if (!this.playerStats || !Number(this.playerStats.kills)) return "0%";
-      return Math.round((this.playerStats.headshot_kills / this.playerStats.kills) * 100) + "%";
+      if (!this.playerStats) return "0%";
+      return parseFloat(this.playerStats.hsp).toFixed(1) + "%";
     },
     playerRating() {
       if (!this.playerStats) return "–";
-      return this.calcRating(this.playerStats).toFixed(2);
+      return parseFloat(this.playerStats.average_rating).toFixed(2);
     },
   },
   async mounted() {
@@ -129,12 +129,12 @@ export default {
           `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/${this.steamid}/season/${this.seasonid}`,
         );
         const raw = playerRes.data?.playerstats;
-        if (!raw || !raw.length) {
+        if (!raw) {
           this.playerStats = null;
           return;
         }
-        // Agréger les stats multi-maps
-        this.playerStats = this.aggregateStats(raw);
+        // L'API retourne un objet unique déjà agrégé
+        this.playerStats = raw;
 
         // Leaderboard de la saison (tous les joueurs) pour contexte équipe
         const lbRes = await this.axiosCall.get(
@@ -156,35 +156,20 @@ export default {
         this.loading = false;
       }
     },
-    aggregateStats(rows) {
-      const sum = (field) => rows.reduce((acc, r) => acc + (r[field] || 0), 0);
-      return {
-        name: rows[0].name,
-        steam_id: rows[0].steam_id,
-        kills: sum("kills"),
-        deaths: sum("deaths"),
-        assists: sum("assists"),
-        roundsplayed: sum("roundsplayed"),
-        damage: sum("damage"),
-        headshot_kills: sum("headshot_kills"),
-        kast: sum("kast"),
-        k1: sum("k1"), k2: sum("k2"), k3: sum("k3"), k4: sum("k4"), k5: sum("k5"),
-        v1: sum("v1"), v2: sum("v2"), v3: sum("v3"), v4: sum("v4"), v5: sum("v5"),
-        total_maps: rows.length,
-      };
-    },
     startRotate() {
       this.rotateTimer = setInterval(() => {
         this.showPanel = this.showPanel === 0 ? 1 : 0;
       }, 6000);
     },
     calcRating(p) {
-      if (!p || !p.roundsplayed) return 0;
-      const r = p.roundsplayed;
+      if (!p) return 0;
+      if (p.average_rating != null) return parseFloat(p.average_rating);
+      if (!p.trp) return 0;
+      const r = p.trp;
       const kpr = p.kills / r;
       const dpr = p.deaths / r;
       const impact = 2.13 * kpr + 0.42 * (p.assists / r) - 0.41;
-      const adr = p.damage ? p.damage / r : 0;
+      const adr = p.total_damage ? p.total_damage / r : 0;
       return (0.0073 * (p.kast || 0) + 0.3591 * kpr - 0.5329 * dpr + 0.2372 * impact + 0.0032 * adr + 0.1587);
     },
   },

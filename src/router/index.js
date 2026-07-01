@@ -90,6 +90,13 @@ const routes = [
       import(/* webpackChunkName: "Match" */ "../views/VetoDisplay.vue"),
   },
   {
+    path: "/veto/:role/:token",
+    name: "PreMatchVeto",
+    meta: { hideChrome: true },
+    component: () =>
+      import(/* webpackChunkName: "Match" */ "../views/PreMatchVeto.vue"),
+  },
+  {
     path: "/match/:id",
     name: "Match",
     // route level code-splitting

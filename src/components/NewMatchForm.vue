@@ -219,7 +219,14 @@
               </v-col>
             </v-row>
             <v-divider />
-            <v-row class="justify-center">
+            <v-row v-if="newMatchData.veto_before_match" class="justify-center">
+              <v-col cols="12" md="8">
+                <v-alert type="info" dense text>
+                  {{ $t("CreateMatch.VetoBeforeMatchHint") }}
+                </v-alert>
+              </v-col>
+            </v-row>
+            <v-row v-else class="justify-center">
               <v-col cols="2">
                 <v-switch
                   v-model="newMatchData.skip_veto"
@@ -228,7 +235,10 @@
                 />
               </v-col>
             </v-row>
-            <v-row class="justify-center" v-if="newMatchData.skip_veto">
+            <v-row
+              class="justify-center"
+              v-if="newMatchData.skip_veto && !newMatchData.veto_before_match"
+            >
               <v-col
                 lg="3"
                 md="12"
@@ -359,6 +369,37 @@
         </div>
       </v-sheet>
     </v-bottom-sheet>
+    <v-dialog v-model="vetoLinksDialog" max-width="640" persistent>
+      <v-card>
+        <v-card-title>{{ $t("CreateMatch.VetoLinksTitle") }}</v-card-title>
+        <v-card-text>
+          <p>{{ $t("CreateMatch.VetoLinksInfo") }}</p>
+          <v-text-field
+            v-for="link in vetoLinkFields"
+            :key="link.key"
+            :label="$t(link.labelKey)"
+            :value="link.url"
+            readonly
+            append-icon="mdi-content-copy"
+            @click:append="copyVetoLink(link.url)"
+          />
+          <p class="mt-2">{{ $t("CreateMatch.GoToMatchLater") }}</p>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer />
+          <v-btn color="primary" text @click="closeVetoLinksDialog">
+            {{ $t("misc.Close") }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+    <v-snackbar
+      v-model="copySnackbar"
+      :color="copySnackbarColor"
+      timeout="3000"
+    >
+      {{ copyMessage }}
+    </v-snackbar>
   </v-card>
 </template>
 
@@ -395,11 +436,19 @@ export default {
       side_type: "standard",
       map_sides: [],
       wingman: false,
+      veto_before_match: false,
+      veto_timer_enabled: true,
+      veto_timer_seconds: 30,
     },
     selectedTeams: [],
     newDialog: false,
     response: "",
     responseSheet: false,
+    vetoLinksDialog: false,
+    vetoLinks: null,
+    copySnackbar: false,
+    copySnackbarColor: "success",
+    copyMessage: "",
     newMatchId: null,
     isLoading: false,
     MapList: [],
@@ -416,6 +465,32 @@ export default {
         default:
           return this.$t("CreateMatch.FormError");
       }
+    },
+    vetoLinkFields() {
+      if (!this.vetoLinks) return [];
+      const origin = window.location.origin;
+      return [
+        {
+          key: "team1",
+          labelKey: "CreateMatch.VetoLinkTeam1",
+          url: origin + this.vetoLinks.team1,
+        },
+        {
+          key: "team2",
+          labelKey: "CreateMatch.VetoLinkTeam2",
+          url: origin + this.vetoLinks.team2,
+        },
+        {
+          key: "tablet",
+          labelKey: "CreateMatch.VetoLinkTablet",
+          url: origin + this.vetoLinks.tablet,
+        },
+        {
+          key: "admin",
+          labelKey: "CreateMatch.VetoLinkAdmin",
+          url: origin + this.vetoLinks.admin,
+        },
+      ];
     },
   },
   watch: {
@@ -478,6 +553,20 @@ export default {
             seasonCvars.wingman == null || seasonCvars.wingman == 0
               ? false
               : true;
+          this.newMatchData.veto_before_match =
+            seasonCvars.veto_before_match == null ||
+            seasonCvars.veto_before_match == 0
+              ? false
+              : true;
+          this.newMatchData.veto_timer_enabled =
+            seasonCvars.veto_timer_enabled == null ||
+            seasonCvars.veto_timer_enabled == 0
+              ? false
+              : true;
+          this.newMatchData.veto_timer_seconds =
+            seasonCvars.veto_timer_seconds == null
+              ? 30
+              : parseInt(seasonCvars.veto_timer_seconds);
           //Delete all used get prepare custom CVARs.
           delete seasonCvars.min_players_to_ready;
           delete seasonCvars.min_spectators_to_ready;
@@ -489,6 +578,9 @@ export default {
           delete seasonCvars.side_type;
           delete seasonCvars.spectators;
           delete seasonCvars.map_sides;
+          delete seasonCvars.veto_before_match;
+          delete seasonCvars.veto_timer_enabled;
+          delete seasonCvars.veto_timer_seconds;
           // Now set Match CVARs. These will be converted back on submit.
           let tmpCvarArr = [];
           for (var obj in seasonCvars)
@@ -597,10 +689,20 @@ export default {
               this.newMatchData.min_spectators_to_ready,
             ),
             map_sides: this.newMatchData.map_sides.join(","),
+            veto_before_match: this.newMatchData.veto_before_match,
+            veto_timer_enabled: this.newMatchData.veto_timer_enabled,
+            veto_timer_seconds: parseInt(this.newMatchData.veto_timer_seconds),
           },
         ];
         try {
           let serverRes = await this.InsertMatch(matchInsertObj);
+          if (serverRes.pending_veto && serverRes.veto_links) {
+            this.newMatchId = serverRes.id;
+            this.vetoLinks = serverRes.veto_links;
+            this.vetoLinksDialog = true;
+            this.isLoading = false;
+            return;
+          }
           if (serverRes.id != null)
             this.response = this.$t("CreateMatch.MessageRegisterSuccess");
           else this.response = serverRes.message;
@@ -617,6 +719,44 @@ export default {
     GoToMatch() {
       this.responseSheet = !this.responseSheet;
       this.response = "";
+      if (this.newMatchId != null)
+        this.$router.push({ name: `Match`, params: { id: this.newMatchId } });
+    },
+    legacyCopyToClipboard(url) {
+      const textarea = document.createElement("textarea");
+      textarea.value = url;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "0";
+      textarea.style.left = "0";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, url.length);
+      const succeeded = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!succeeded) throw new Error("execCommand copy failed");
+    },
+    async copyVetoLink(url) {
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          this.legacyCopyToClipboard(url);
+        }
+        this.copyMessage = this.$t("CreateMatch.LinkCopied");
+        this.copySnackbarColor = "success";
+      } catch (error) {
+        void error;
+        this.copyMessage = this.$t("CreateMatch.CopyFailed");
+        this.copySnackbarColor = "error";
+      }
+      this.copySnackbar = true;
+    },
+    closeVetoLinksDialog() {
+      this.vetoLinksDialog = false;
+      this.vetoLinks = null;
       if (this.newMatchId != null)
         this.$router.push({ name: `Match`, params: { id: this.newMatchId } });
     },

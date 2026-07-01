@@ -355,6 +355,39 @@
                   </v-col>
                 </v-row>
                 <v-row class="justify-center">
+                  <v-col cols="12" md="4" class="text-center">
+                    <v-switch
+                      v-model="seasonDefaults.veto_before_match"
+                      :label="$t('CreateMatch.VetoBeforeMatch')"
+                      :hint="$t('CreateMatch.VetoBeforeMatchHint')"
+                      persistent-hint
+                      ref="vetoBeforeMatch"
+                    />
+                  </v-col>
+                  <template v-if="seasonDefaults.veto_before_match">
+                    <v-col cols="12" md="4" class="text-center">
+                      <v-switch
+                        v-model="seasonDefaults.veto_timer_enabled"
+                        :label="$t('CreateMatch.VetoTimerEnabled')"
+                        ref="vetoTimerEnabled"
+                      />
+                    </v-col>
+                    <v-col
+                      cols="12"
+                      md="4"
+                      v-if="seasonDefaults.veto_timer_enabled"
+                    >
+                      <v-text-field
+                        v-model.number="seasonDefaults.veto_timer_seconds"
+                        type="number"
+                        min="5"
+                        :label="$t('CreateMatch.VetoTimerSeconds')"
+                        ref="vetoTimerSeconds"
+                      />
+                    </v-col>
+                  </template>
+                </v-row>
+                <v-row class="justify-center">
                   <v-radio-group
                     v-model="seasonDefaults.side_type"
                     row
@@ -486,6 +519,9 @@ export default {
         side_type: "standard",
         map_sides: [],
         wingman: false,
+        veto_before_match: false,
+        veto_timer_enabled: true,
+        veto_timer_seconds: 30,
       },
       datemenu: false,
       formTitle: this.$t("Seasons.NewFormTitle"),
@@ -535,6 +571,9 @@ export default {
             side_type: "standard",
             map_sides: [],
             wingman: false,
+            veto_before_match: false,
+            veto_timer_enabled: true,
+            veto_timer_seconds: 30,
           };
           this.$refs.newSeasonForm.resetValidation();
         });
@@ -701,6 +740,9 @@ export default {
             side_type: "standard",
             map_sides: [],
             wingman: false,
+            veto_before_match: false,
+            veto_timer_enabled: true,
+            veto_timer_seconds: 30,
           };
           this.$refs.newSeasonForm.resetValidation();
         });

@@ -537,6 +537,18 @@
       "company": "Phlex Plexico",
       "metrics": "Metrics",
       "powered": "Powered by Steam"
+    },
+    "OverlayLive": {
+      "noMatch": "No live match found",
+      "map": "Map",
+      "playerBadge": "Player",
+      "teamBadge": "Team"
+    },
+    "OverlaySeason": {
+      "noData": "No season data found",
+      "season": "Season",
+      "playerBadge": "Player",
+      "teamBadge": "Season Leaderboard"
     }
   },
   "fr": {
@@ -1077,6 +1089,18 @@
       "company": "Phlex Plexico",
       "metrics": "Metrics",
       "powered": "Powered by Steam"
+    },
+    "OverlayLive": {
+      "noMatch": "Aucun match en cours trouvé",
+      "map": "Map",
+      "playerBadge": "Joueur",
+      "teamBadge": "Équipe"
+    },
+    "OverlaySeason": {
+      "noData": "Aucune donnée de saison",
+      "season": "Saison",
+      "playerBadge": "Joueur",
+      "teamBadge": "Classement saison"
     }
   },
   "jp": {
@@ -1611,6 +1635,18 @@
       "company": "Phlex Plexico",
       "metrics": "メトリック",
       "powered": "Powered by Steam"
+    },
+    "OverlayLive": {
+      "noMatch": "ライブマッチが見つかりません",
+      "map": "マップ",
+      "playerBadge": "プレイヤー",
+      "teamBadge": "チーム"
+    },
+    "OverlaySeason": {
+      "noData": "シーズンデータが見つかりません",
+      "season": "シーズン",
+      "playerBadge": "プレイヤー",
+      "teamBadge": "シーズンランキング"
     }
   }
 }

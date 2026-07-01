@@ -254,6 +254,20 @@ const routes = [
       import(/* webpackChunkName: "Cast" */ "../views/CastView.vue"),
   },
   {
+    path: "/overlay/:steamid/live",
+    name: "OverlayLive",
+    meta: { hideChrome: true },
+    component: () =>
+      import(/* webpackChunkName: "Overlay" */ "../views/OverlayLive.vue"),
+  },
+  {
+    path: "/overlay/:steamid/season/:seasonid",
+    name: "OverlaySeason",
+    meta: { hideChrome: true },
+    component: () =>
+      import(/* webpackChunkName: "Overlay" */ "../views/OverlaySeason.vue"),
+  },
+  {
     path: "/admin/settings",
     name: "AdminSettings",
     component: () =>

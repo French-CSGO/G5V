@@ -299,6 +299,7 @@ export default {
           team2_id: this.prefill.team2.id,
           season_id: this.prefill.season_id,
           challonge_id: this.prefill.challonge_match_id ?? null,
+          challonge_slug: this.prefill.challonge_match?.slug ?? null,
           start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
           max_maps: this.formData.maps_to_win,
           spectator_auths: this.formData.spectators.length

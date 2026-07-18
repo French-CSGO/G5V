@@ -6,7 +6,7 @@
           small
           color="warning"
           :href="apiUrl + '/image/match/' + match_id + '/mvp'"
-          target="_blank"
+          :download="'match-' + match_id + '-mvp.png'"
         >
           <v-icon left small>mdi-star</v-icon>
           MVP Match
@@ -69,7 +69,9 @@
               :href="
                 apiUrl + '/image/match/' + match_id + '/map/' + (index + 1)
               "
-              target="_blank"
+              :download="
+                'match-' + match_id + '-map-' + (index + 1) + '.png'
+              "
               class="mr-2"
             >
               <v-icon left small>mdi-image</v-icon>
@@ -86,7 +88,9 @@
                 (index + 1) +
                 '/mvp'
               "
-              target="_blank"
+              :download="
+                'match-' + match_id + '-map-' + (index + 1) + '-mvp.png'
+              "
             >
               <v-icon left small>mdi-star</v-icon>
               MVP Image
@@ -140,7 +144,7 @@
                   small
                   color="secondary"
                   :href="GetPlayerImageUrl(match_id, item.steam_id)"
-                  target="_blank"
+                  :download="'match-' + match_id + '-player-' + item.steam_id + '.png'"
                   class="mr-2"
                 >
                   <v-icon left small>mdi-image</v-icon>
@@ -158,7 +162,15 @@
                     '/player/' +
                     item.steam_id
                   "
-                  target="_blank"
+                  :download="
+                    'match-' +
+                    match_id +
+                    '-map-' +
+                    (index + 1) +
+                    '-player-' +
+                    item.steam_id +
+                    '.png'
+                  "
                 >
                   <v-icon left small>mdi-image-filter-center-focus</v-icon>
                   Stat Image Map

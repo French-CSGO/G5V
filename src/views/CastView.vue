@@ -140,7 +140,13 @@
                             '/map/' +
                             (map.map_number + 1)
                           "
-                          target="_blank"
+                          :download="
+                            'match-' +
+                            match.id +
+                            '-map-' +
+                            (map.map_number + 1) +
+                            '.png'
+                          "
                         >
                           <v-icon x-small left>mdi-chart-bar</v-icon>Map
                           {{ map.map_number + 1 }}
@@ -156,7 +162,13 @@
                             (map.map_number + 1) +
                             '/mvp'
                           "
-                          target="_blank"
+                          :download="
+                            'match-' +
+                            match.id +
+                            '-map-' +
+                            (map.map_number + 1) +
+                            '-mvp.png'
+                          "
                         >
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
@@ -167,7 +179,7 @@
                           dark
                           color="teal darken-2"
                           :href="'/api/image/match/' + match.id"
-                          target="_blank"
+                          :download="'match-' + match.id + '.png'"
                         >
                           <v-icon x-small left>mdi-chart-bar</v-icon>Stats Match
                         </v-btn>
@@ -176,7 +188,7 @@
                           dark
                           color="warning"
                           :href="'/api/image/match/' + match.id + '/mvp'"
-                          target="_blank"
+                          :download="'match-' + match.id + '-mvp.png'"
                         >
                           <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
                         </v-btn>
@@ -274,7 +286,13 @@
                             '/map/' +
                             (map.map_number + 1)
                           "
-                          target="_blank"
+                          :download="
+                            'match-' +
+                            match.id +
+                            '-map-' +
+                            (map.map_number + 1) +
+                            '.png'
+                          "
                         >
                           <v-icon x-small left>mdi-chart-bar</v-icon>Map
                           {{ map.map_number + 1 }}
@@ -290,7 +308,13 @@
                             (map.map_number + 1) +
                             '/mvp'
                           "
-                          target="_blank"
+                          :download="
+                            'match-' +
+                            match.id +
+                            '-map-' +
+                            (map.map_number + 1) +
+                            '-mvp.png'
+                          "
                         >
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
@@ -301,7 +325,7 @@
                           dark
                           color="teal darken-2"
                           :href="'/api/image/match/' + match.id"
-                          target="_blank"
+                          :download="'match-' + match.id + '.png'"
                         >
                           <v-icon x-small left>mdi-chart-bar</v-icon>Stats Match
                         </v-btn>
@@ -310,7 +334,7 @@
                           dark
                           color="warning"
                           :href="'/api/image/match/' + match.id + '/mvp'"
-                          target="_blank"
+                          :download="'match-' + match.id + '-mvp.png'"
                         >
                           <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
                         </v-btn>

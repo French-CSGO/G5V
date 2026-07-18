@@ -12,6 +12,16 @@
           MVP Match
         </v-btn>
       </div>
+      <div class="image-preview text-center mb-3">
+        <div class="text-caption grey--text mb-1">
+          {{ $t("PlayerStats.MvpMatchImagePreview") }}
+        </div>
+        <img
+          :src="apiUrl + '/image/match/' + match_id + '/mvp?t=' + imageTs"
+          class="image-preview-img"
+          alt="Match MVP"
+        />
+      </div>
       <v-container
         v-for="(playerMapStats, index) in playerstats"
         :key="playerMapStats[0].id"
@@ -102,6 +112,44 @@
             align="left"
           ></div>
         </v-container>
+        <v-row class="image-preview mb-2" justify="center" dense>
+          <v-col cols="12" sm="6" class="text-center">
+            <div class="text-caption grey--text mb-1">
+              {{ $t("PlayerStats.MapImagePreview") }}
+            </div>
+            <img
+              :src="
+                apiUrl +
+                '/image/match/' +
+                match_id +
+                '/map/' +
+                (index + 1) +
+                '?t=' +
+                imageTs
+              "
+              class="image-preview-img"
+              alt="Map Stats"
+            />
+          </v-col>
+          <v-col cols="12" sm="6" class="text-center">
+            <div class="text-caption grey--text mb-1">
+              {{ $t("PlayerStats.MvpImagePreview") }}
+            </div>
+            <img
+              :src="
+                apiUrl +
+                '/image/match/' +
+                match_id +
+                '/map/' +
+                (index + 1) +
+                '/mvp?t=' +
+                imageTs
+              "
+              class="image-preview-img"
+              alt="Map MVP"
+            />
+          </v-col>
+        </v-row>
         <v-data-table
           item-key="id"
           class="elevation-1"
@@ -203,6 +251,7 @@ export default {
       timeoutId: -1,
       isFinished: false,
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
+      imageTs: Date.now(),
     };
   },
   created() {
@@ -511,3 +560,15 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.image-preview {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 8px;
+  padding: 8px 0;
+}
+.image-preview-img {
+  max-width: 100%;
+  height: auto;
+}
+</style>

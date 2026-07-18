@@ -116,9 +116,10 @@
                         x-small
                         dark
                         color="deep-purple"
-                        @click="copyConnectText(match)"
+                        :href="connectUrl(match, 'tv0')"
+                        target="_blank"
                       >
-                        <v-icon x-small left>mdi-content-copy</v-icon>TV 0s
+                        <v-icon x-small left>mdi-television-play</v-icon>TV 0s
                       </v-btn>
                     </div>
                   </td>
@@ -402,10 +403,6 @@
         </v-col>
       </v-row>
     </template>
-
-    <v-snackbar v-model="copySnackbar" :color="copySnackbarColor" timeout="3000">
-      {{ copyMessage }}
-    </v-snackbar>
   </v-container>
 </template>
 
@@ -422,9 +419,6 @@ export default {
       activeMatches: [],
       finishedMatches: [],
       sseClient: null,
-      copySnackbar: false,
-      copyMessage: "",
-      copySnackbarColor: "success",
     };
   },
   computed: {
@@ -476,49 +470,10 @@ export default {
         return `${base}+connect%20${ip}:${match.port}`;
       }
       if (!match.gotv_port) return "#";
-      return `${base}+connect%20${ip}:${match.gotv_port}`;
-    },
-
-    gotvConnectText(match) {
-      const ip = match.ip_cast || match.ip_string;
-      if (!ip || !match.gotv_port) return "";
-      return `connect ${ip}:${match.gotv_port + 100}; password croissant`;
-    },
-
-    legacyCopyToClipboard(text) {
-      const textarea = document.createElement("textarea");
-      textarea.value = text;
-      textarea.setAttribute("readonly", "");
-      textarea.style.position = "fixed";
-      textarea.style.top = "0";
-      textarea.style.left = "0";
-      textarea.style.opacity = "0";
-      document.body.appendChild(textarea);
-      textarea.focus();
-      textarea.select();
-      textarea.setSelectionRange(0, text.length);
-      const succeeded = document.execCommand("copy");
-      document.body.removeChild(textarea);
-      if (!succeeded) throw new Error("execCommand copy failed");
-    },
-
-    async copyConnectText(match) {
-      const text = this.gotvConnectText(match);
-      if (!text) return;
-      try {
-        if (navigator.clipboard && window.isSecureContext) {
-          await navigator.clipboard.writeText(text);
-        } else {
-          this.legacyCopyToClipboard(text);
-        }
-        this.copyMessage = "Commande copiée : " + text;
-        this.copySnackbarColor = "success";
-      } catch (error) {
-        void error;
-        this.copyMessage = "Échec de la copie";
-        this.copySnackbarColor = "error";
+      if (type === "tv90") {
+        return `${base}+connect%20${ip}:${match.gotv_port}`;
       }
-      this.copySnackbar = true;
+      return `${base}+connect%20${ip}:${match.gotv_port + 100}; password croissant`;
     },
 
     mapShortName(map) {

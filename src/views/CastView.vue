@@ -449,7 +449,7 @@ export default {
       if (type === "tv90") {
         return `${base}+connect%20${ip}:${match.gotv_port}`;
       }
-      return `${base}+connect%20${ip}:${match.gotv_port + 100}`;
+      return `${base}+connect%20${ip}:${match.gotv_port + 100}; password croissant`;
     },
 
     mapShortName(map) {

@@ -169,7 +169,10 @@
       "MVP": "MVPs",
       "RefreshData": "Stats will refresh in {sec} seconds.",
       "RefreshForce": "Force Refresh",
-      "PlayerStatImage": "Player Stat Image"
+      "PlayerStatImage": "Player Stat Image",
+      "MapImagePreview": "Map Stats Image",
+      "MvpImagePreview": "MVP Image",
+      "MvpMatchImagePreview": "Match MVP Image"
     },
     "Seasons": {
       "Title": "Seasons/Tournaments",
@@ -778,7 +781,10 @@
       "MVP": "MVPs",
       "RefreshData": "Les statistiques vont être mises à jour dans {sec} secondes.",
       "RefreshForce": "Forcer la mise à jour",
-      "PlayerStatImage": "Image Statistique Joueur"
+      "PlayerStatImage": "Image Statistique Joueur",
+      "MapImagePreview": "Image des stats de la map",
+      "MvpImagePreview": "Image MVP",
+      "MvpMatchImagePreview": "Image MVP du match"
     },
     "Seasons": {
       "Title": "Saisons/Tournois",
@@ -1383,7 +1389,10 @@
       "MVP": "M V P",
       "RefreshData": "統計情報は{sec}秒後に更新されます。",
       "RefreshForce": "強制リフレッシュ",
-      "PlayerStatImage": "プレイヤー統計画像"
+      "PlayerStatImage": "プレイヤー統計画像",
+      "MapImagePreview": "マップ統計画像",
+      "MvpImagePreview": "MVP画像",
+      "MvpMatchImagePreview": "試合MVP画像"
     },
     "Seasons": {
       "Title": "シーズンズ/トーナメント",

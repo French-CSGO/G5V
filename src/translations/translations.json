@@ -399,7 +399,12 @@
       "BracketSlugHint": "The slug from the Challonge URL (e.g. my-tournament)",
       "BracketLabel": "Bracket Label",
       "BracketLabelPlaceholder": "e.g. Amateur",
-      "NoBracket": "No bracket configured for this season."
+      "NoBracket": "No bracket configured for this season.",
+      "Group": "Group",
+      "RoundFormatLabel": "Default format for this round",
+      "FormatAuto": "Auto (BO1)",
+      "FormatSave": "Save",
+      "ScheduleError": "Error saving format"
     },
     "Toornament": {
       "MatchesTitle": "Toornament Matches",
@@ -1014,7 +1019,12 @@
       "BracketSlugHint": "Le slug dans l'URL Challonge (ex: mon-tournoi)",
       "BracketLabel": "Nom du bracket",
       "BracketLabelPlaceholder": "ex: Amateur",
-      "NoBracket": "Aucun bracket configuré pour cette saison."
+      "NoBracket": "Aucun bracket configuré pour cette saison.",
+      "Group": "Groupe",
+      "RoundFormatLabel": "Format par défaut de ce round",
+      "FormatAuto": "Auto (BO1)",
+      "FormatSave": "Enregistrer",
+      "ScheduleError": "Erreur lors de la sauvegarde du format"
     },
     "Toornament": {
       "MatchesTitle": "Matchs Toornament",
@@ -1623,7 +1633,12 @@
       "BracketSlugHint": "Challonge URLのslug（例: my-tournament）",
       "BracketLabel": "ブラケット名",
       "BracketLabelPlaceholder": "例: アマチュア",
-      "NoBracket": "このシーズンにはブラケットが設定されていません。"
+      "NoBracket": "このシーズンにはブラケットが設定されていません。",
+      "Group": "グループ",
+      "RoundFormatLabel": "このラウンドのデフォルトフォーマット",
+      "FormatAuto": "自動 (BO1)",
+      "FormatSave": "保存",
+      "ScheduleError": "フォーマットの保存エラー"
     },
     "Toornament": {
       "MatchesTitle": "Toornamentマッチ",

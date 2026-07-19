@@ -943,6 +943,42 @@ export default {
         return error.response?.data || null;
       }
     },
+    async GetToornamentRoundFormats(seasonid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/seasons/${seasonid}/toornament/round-formats`,
+        );
+        message = res.data.formats;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async SetToornamentRoundFormat(seasonId, roundId, max_maps) {
+      try {
+        const res = await this.axiosCall.put(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/rounds/${roundId}/format`,
+          { max_maps },
+        );
+        return res.data;
+      } catch (error) {
+        return error.response?.data || null;
+      }
+    },
+    async DeleteToornamentRoundFormat(seasonId, roundId) {
+      try {
+        const res = await this.axiosCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonId}/toornament/rounds/${roundId}/format`,
+        );
+        return res.data;
+      } catch (error) {
+        return error.response?.data || null;
+      }
+    },
     async GetToornamentMatchPrefill(seasonid, toornamentMatchId) {
       let res;
       let message;

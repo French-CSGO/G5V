@@ -3921,6 +3921,8 @@ export default {
           map3: defFC(true, "Arial", "#1a1a2e", 24, true, 1440, 980),
           player_name_l: defFX(true, "Arial", "#1a1a2e", 20, true, 180),
           player_name_r: defFX(true, "Arial", "#1a1a2e", 20, true, 1450),
+          // Schéma unifié KAD : remplace les champs séparés kills_*/assists_*/deaths_*
+          // du schéma legacy. Le renderer doit gérer le champ kad_* (format "K / A / D").
           kad_l: defFX(true, "Arial", "#1a1a2e", 20, false, 700),
           rating_l: defFX(true, "Arial", "#1a1a2e", 20, false, 890),
           kad_r: defFX(true, "Arial", "#1a1a2e", 20, false, 1120),
@@ -4406,16 +4408,14 @@ export default {
       // Lignes joueurs : n'agissent plus que comme interrupteur
       // d'activation + ancrage des fonds (pilules) de chaque ligne.
       s.rows_y.forEach((ry, i) => {
-        if (ry > 0) {
-          pts.push({
-            markerId: `rows_y#${i}`,
-            path: `rows_y.${i}`,
-            label: `Ligne ${i + 1} (fond)`,
-            x: cw / 2,
-            y: ry,
-            axis: "y",
-          });
-        }
+        pts.push({
+          markerId: `rows_y#${i}`,
+          path: `rows_y.${i}`,
+          label: `Ligne ${i + 1} (fond)`,
+          x: cw / 2,
+          y: ry,
+          axis: "y",
+        });
       });
       if (s.team1_logo.enabled) {
         pts.push({

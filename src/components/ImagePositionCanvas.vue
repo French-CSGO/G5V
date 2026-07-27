@@ -14,8 +14,8 @@
       />
       <div v-if="!background || imgError" class="ipc-bg-fallback">
         <v-icon>mdi-image-off</v-icon>
-        <span v-if="!background">Aucun fond configuré</span>
-        <span v-else>Fond introuvable ({{ background }})</span>
+        <span v-if="!background">{{ $t("ImagePositionCanvas.noBackground") }}</span>
+        <span v-else>{{ $t("ImagePositionCanvas.bgNotFound", { path: background }) }}</span>
       </div>
 
       <div
@@ -29,9 +29,6 @@
         <div v-if="p.axis === 'x'" class="ipc-line ipc-line--v"></div>
         <div
           class="ipc-handle"
-          role="button"
-          tabindex="0"
-          :aria-label="p.label"
           :class="{ 'ipc-handle--dragging': draggingId === p.markerId }"
           @pointerdown="startDrag(p, $event)"
         >

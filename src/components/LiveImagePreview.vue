@@ -101,7 +101,6 @@ export default {
         this.imgUrl = "";
         if (oldUrl) URL.revokeObjectURL(oldUrl);
         this.error = message;
-      }
       } finally {
         if (seq === this.requestSeq) this.loading = false;
       }

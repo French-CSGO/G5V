@@ -25,7 +25,8 @@
           <v-subheader class="font-weight-bold">
             Positionnement visuel (glisser-déposer)
             <v-switch
-              v-model="showVisualEditor[0]"
+              :input-value="showVisualEditor[0]"
+              @change="$set(showVisualEditor, 0, $event)"
               color="primary"
               inset
               dense

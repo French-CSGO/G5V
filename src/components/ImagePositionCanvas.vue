@@ -85,17 +85,19 @@ export default {
     },
     startDrag(p, evt) {
       evt.preventDefault();
+      if (this.draggingId !== null) return;
+
       const stage = this.$refs.stage;
       this.draggingId = p.markerId;
 
       const move = (e) => {
         const rect = stage.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+
         const fx = clamp((e.clientX - rect.left) / rect.width, 0, 1);
         const fy = clamp((e.clientY - rect.top) / rect.height, 0, 1);
-        const x =
-          p.axis === "y" ? p.x : Math.round(fx * this.canvasWidth);
-        const y =
-          p.axis === "x" ? p.y : Math.round(fy * this.canvasHeight);
+        const x = p.axis === "y" ? p.x : Math.round(fx * this.canvasWidth);
+        const y = p.axis === "x" ? p.y : Math.round(fy * this.canvasHeight);
         this.$emit("drag", p.path, x, y, p.axis);
       };
       let onDestroy;

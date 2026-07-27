@@ -3,7 +3,10 @@
     <div class="ipc-stage" ref="stage" :style="stageStyle">
       <img
         v-if="background"
+        v-show="!imgError"
         :src="background"
+        alt=""
+        aria-hidden="true"
         class="ipc-bg"
         draggable="false"
         @error="imgError = true"
@@ -104,6 +107,7 @@ export default {
       window.addEventListener("pointermove", move);
       window.addEventListener("pointerup", up);
       window.addEventListener("pointercancel", up);
+      this.$once("hook:beforeDestroy", up);
     },
   },
 };

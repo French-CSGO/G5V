@@ -104,6 +104,7 @@ export default {
       window.addEventListener("pointermove", move);
       window.addEventListener("pointerup", up);
       window.addEventListener("pointercancel", up);
+      this.$once("hook:beforeDestroy", up);
     },
   },
 };

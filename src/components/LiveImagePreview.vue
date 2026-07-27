@@ -7,10 +7,17 @@
       <div class="lip-stage">
         <img v-if="imgUrl" :src="imgUrl" class="lip-img" />
         <div v-if="loading" class="lip-loading">
-          <v-progress-circular indeterminate size="22" width="2" color="primary" />
+          <v-progress-circular
+            indeterminate
+            size="22"
+            width="2"
+            color="primary"
+          />
         </div>
       </div>
-      <v-alert v-if="error" type="error" dense class="mt-2">{{ error }}</v-alert>
+      <v-alert v-if="error" type="error" dense class="mt-2">{{
+        error
+      }}</v-alert>
     </template>
   </div>
 </template>

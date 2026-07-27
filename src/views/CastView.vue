@@ -479,7 +479,11 @@
       </v-row>
     </template>
 
-    <v-snackbar v-model="copySnackbar" :color="copySnackbarColor" timeout="3000">
+    <v-snackbar
+      v-model="copySnackbar"
+      :color="copySnackbarColor"
+      timeout="3000"
+    >
       {{ copyMessage }}
     </v-snackbar>
   </v-container>

@@ -14,8 +14,12 @@
       />
       <div v-if="!background || imgError" class="ipc-bg-fallback">
         <v-icon>mdi-image-off</v-icon>
-        <span v-if="!background">{{ $t("ImagePositionCanvas.noBackground") }}</span>
-        <span v-else>{{ $t("ImagePositionCanvas.bgNotFound", { path: background }) }}</span>
+        <span v-if="!background">{{
+          $t("ImagePositionCanvas.noBackground")
+        }}</span>
+        <span v-else>{{
+          $t("ImagePositionCanvas.bgNotFound", { path: background })
+        }}</span>
       </div>
 
       <div
@@ -70,8 +74,10 @@ export default {
   },
   methods: {
     rootStyle(p) {
-      const leftPct = clamp(p.x, 0, this.canvasWidth) / (this.canvasWidth || 1) * 100;
-      const topPct = clamp(p.y, 0, this.canvasHeight) / (this.canvasHeight || 1) * 100;
+      const leftPct =
+        (clamp(p.x, 0, this.canvasWidth) / (this.canvasWidth || 1)) * 100;
+      const topPct =
+        (clamp(p.y, 0, this.canvasHeight) / (this.canvasHeight || 1)) * 100;
       if (p.axis === "y") {
         return { top: `${topPct}%` };
       }

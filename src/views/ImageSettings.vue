@@ -240,11 +240,7 @@
                     hide-details
                     style="width: 84px"
                     @input="
-                      $set(
-                        settings.match[side.key].x,
-                        i - 1,
-                        Number($event),
-                      )
+                      $set(settings.match[side.key].x, i - 1, Number($event))
                     "
                   />
                   <v-text-field
@@ -256,11 +252,7 @@
                     hide-details
                     style="width: 84px"
                     @input="
-                      $set(
-                        settings.match[side.key].y,
-                        i - 1,
-                        Number($event),
-                      )
+                      $set(settings.match[side.key].y, i - 1, Number($event))
                     "
                   />
                 </div>
@@ -3090,8 +3082,8 @@
           <div v-if="showVisualEditor[4]">
             <v-alert dense outlined type="info" class="caption mb-2">
               Faites glisser chaque point pour repositionner ce champ
-              individuellement (photo, nom, K/A/D, rating de chaque
-              titulaire). Sauvegardez pour appliquer.
+              individuellement (photo, nom, K/A/D, rating de chaque titulaire).
+              Sauvegardez pour appliquer.
             </v-alert>
             <image-position-canvas
               :background="bgUrl('team_match')"
@@ -3264,11 +3256,7 @@
                     hide-details
                     style="width: 84px"
                     @input="
-                      $set(
-                        settings.team_match.photos.x,
-                        i - 1,
-                        Number($event),
-                      )
+                      $set(settings.team_match.photos.x, i - 1, Number($event))
                     "
                   />
                   <v-text-field
@@ -3280,11 +3268,7 @@
                     hide-details
                     style="width: 84px"
                     @input="
-                      $set(
-                        settings.team_match.photos.y,
-                        i - 1,
-                        Number($event),
-                      )
+                      $set(settings.team_match.photos.y, i - 1, Number($event))
                     "
                   />
                 </div>
@@ -5049,15 +5033,20 @@ export default {
           if (sectionKey === "match") {
             // Compat avec les anciens exports (X partagé par colonne, pas de Y par champ)
             const rowsYFallback = parsed.rows_y || this.settings.match.rows_y;
-            ["player_name_l", "player_name_r", "kad_l", "rating_l", "kad_r", "rating_r"].forEach(
-              (k) => {
-                parsed[k] = normalizeFX(
-                  this.settings.match[k],
-                  parsed[k],
-                  rowsYFallback,
-                );
-              },
-            );
+            [
+              "player_name_l",
+              "player_name_r",
+              "kad_l",
+              "rating_l",
+              "kad_r",
+              "rating_r",
+            ].forEach((k) => {
+              parsed[k] = normalizeFX(
+                this.settings.match[k],
+                parsed[k],
+                rowsYFallback,
+              );
+            });
             ["player_photo_l", "player_photo_r"].forEach((k) => {
               parsed[k] = normalizePlayerPhoto(
                 this.settings.match[k],

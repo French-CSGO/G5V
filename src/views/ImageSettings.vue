@@ -4398,6 +4398,12 @@ export default {
         return;
       }
       // Champ par ligne joueur, ex. "kills_l.2" → ligne 3
+      if (path.startsWith("photos.")) {
+        const i = parseInt(path.split(".")[1], 10);
+        if (axis !== "y") this.$set(s.photos.x, i, x);
+        if (axis !== "x") this.$set(s.photos.y, i, y);
+        return;
+      }
       const rowFieldMatch = path.match(/^([a-zA-Z0-9_]+)\.(\d)$/);
       if (rowFieldMatch && s[rowFieldMatch[1]]?.x && s[rowFieldMatch[1]]?.y) {
         const key = rowFieldMatch[1];

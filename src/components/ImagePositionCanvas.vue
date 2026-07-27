@@ -26,12 +26,12 @@
         <div v-if="p.axis === 'x'" class="ipc-line ipc-line--v"></div>
         <div
           class="ipc-handle"
+          role="button"
+          tabindex="0"
+          :aria-label="p.label"
           :class="{ 'ipc-handle--dragging': draggingId === p.markerId }"
           @pointerdown="startDrag(p, $event)"
         >
-          <span class="ipc-dot"></span>
-          <span class="ipc-label">{{ p.label }}</span>
-        </div>
       </div>
     </div>
   </div>

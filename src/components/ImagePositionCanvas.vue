@@ -212,6 +212,7 @@ export default {
 .ipc-point--y .ipc-handle {
   left: 10px;
   top: 0;
+  transform: translate(0, -50%);
 }
 .ipc-point--x .ipc-handle {
   top: 10px;

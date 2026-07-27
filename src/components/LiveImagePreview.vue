@@ -62,6 +62,9 @@ export default {
     },
     async refresh() {
       if (!this.url) {
+        // Invalide toute requête en vol pour éviter qu'une réponse tardive réaffiche l'image
+        this.requestSeq += 1;
+        this.loading = false;
         if (this.imgUrl) URL.revokeObjectURL(this.imgUrl);
         this.imgUrl = "";
         this.error = "";

@@ -17,12 +17,13 @@
           <v-autocomplete
             v-model="selectedPlayer"
             :items="autocompleteItems"
-            :loading="searching"
+            :loading="loadingPlayers"
             :search-input.sync="searchQuery"
             item-text="name"
             item-value="steam_id"
             return-object
             clearable
+            no-filter
             :label="$t('PlayerImages.searchLabel')"
             :no-data-text="$t('PlayerImages.noResults')"
             prepend-icon="mdi-magnify"
@@ -92,7 +93,7 @@
 
         <v-row class="pa-4" v-if="!loadingImages && images.length">
           <v-col
-            v-for="img in images"
+            v-for="img in decoratedImages"
             :key="img.filename"
             cols="6"
             sm="4"
@@ -102,9 +103,12 @@
           >
             <v-card outlined>
               <v-img :src="img.url" aspect-ratio="1" contain />
-              <v-card-subtitle class="pb-0 text-truncate">{{
-                img.steamId
-              }}</v-card-subtitle>
+              <v-card-subtitle class="pb-0 text-truncate">
+                <div>{{ img.name || $t("PlayerImages.unknownPlayer") }}</div>
+                <div class="caption grey--text text-truncate">
+                  {{ img.steamId }}
+                </div>
+              </v-card-subtitle>
               <v-card-actions>
                 <v-spacer />
                 <v-btn
@@ -149,8 +153,8 @@ export default {
       user: { id: null, admin: 0, super_admin: 0, cast: 0 },
       loadingUser: true,
       searchQuery: "",
-      searching: false,
-      playerResults: [],
+      loadingPlayers: false,
+      allPlayers: [],
       selectedPlayer: null,
       uploadFile: null,
       uploading: false,
@@ -161,7 +165,6 @@ export default {
       deleteDialog: false,
       imageToDelete: null,
       deleting: false,
-      searchDebounce: null,
     };
   },
   computed: {
@@ -172,8 +175,24 @@ export default {
         Number(this.user.super_admin) === 1
       );
     },
+    playerNameBySteamId() {
+      const map = {};
+      this.allPlayers.forEach((p) => {
+        map[p.steam_id] = p.name;
+      });
+      return map;
+    },
+    filteredPlayers() {
+      const query = (this.searchQuery || "").trim().toLowerCase();
+      if (!query) return this.allPlayers;
+      return this.allPlayers.filter(
+        (p) =>
+          (p.name || "").toLowerCase().includes(query) ||
+          (p.steam_id || "").toLowerCase().includes(query),
+      );
+    },
     autocompleteItems() {
-      const items = [...this.playerResults];
+      const items = [...this.filteredPlayers];
       if (
         this.selectedPlayer &&
         !items.find((i) => i.steam_id === this.selectedPlayer.steam_id)
@@ -189,31 +208,32 @@ export default {
       );
       return match ? match.url : null;
     },
-  },
-  watch: {
-    searchQuery(val) {
-      clearTimeout(this.searchDebounce);
-      if (!val) {
-        this.playerResults = [];
-        return;
-      }
-      this.searchDebounce = setTimeout(() => this.doSearch(val), 300);
+    decoratedImages() {
+      return this.images.map((img) => ({
+        ...img,
+        name: this.playerNameBySteamId[img.steamId] || null,
+      }));
     },
   },
   async mounted() {
     this.user = await this.IsLoggedIn();
     this.loadingUser = false;
-    if (this.canAccess) await this.loadImages();
+    if (this.canAccess) {
+      // Charger la liste des joueurs avant les avatars pour pouvoir
+      // afficher leur nom dans la galerie.
+      await this.loadPlayers();
+      await this.loadImages();
+    }
   },
   methods: {
-    async doSearch(query) {
-      this.searching = true;
+    async loadPlayers() {
+      this.loadingPlayers = true;
       try {
-        this.playerResults = await this.SearchPlayers(query);
+        this.allPlayers = await this.SearchPlayers("");
       } catch {
-        this.playerResults = [];
+        this.allPlayers = [];
       } finally {
-        this.searching = false;
+        this.loadingPlayers = false;
       }
     },
     async loadImages() {

@@ -645,7 +645,8 @@
       "steamId": "Steam ID",
       "name": "Name",
       "actions": "Actions",
-      "noResults": "No player found."
+      "noResults": "No player found.",
+      "unknownPlayer": "Unknown player"
     }
   },
   "fr": {
@@ -1294,7 +1295,8 @@
       "steamId": "Steam ID",
       "name": "Nom",
       "actions": "Actions",
-      "noResults": "Aucun joueur trouvé."
+      "noResults": "Aucun joueur trouvé.",
+      "unknownPlayer": "Joueur inconnu"
     }
   },
   "jp": {
@@ -1937,7 +1939,8 @@
       "steamId": "Steam ID",
       "name": "名前",
       "actions": "操作",
-      "noResults": "選手が見つかりません。"
+      "noResults": "選手が見つかりません。",
+      "unknownPlayer": "不明な選手"
     }
   }
 }

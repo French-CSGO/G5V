@@ -52,6 +52,39 @@
           </div>
 
           <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Aperçu en direct (sans sauvegarder)
+            <v-switch
+              :input-value="showLivePreview[0]"
+              @change="$set(showLivePreview, 0, $event)"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showLivePreview[0]">
+            <v-row dense align="center">
+              <v-col cols="3">
+                <v-text-field
+                  v-model="previewMatchId"
+                  label="ID du match (pour l'aperçu)"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+            <live-image-preview
+              :url="matchLivePreviewUrl"
+              :settings="settings"
+              class="mt-2"
+            />
+          </div>
+
+          <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">Canvas</v-subheader>
           <v-row>
             <v-col cols="6"
@@ -913,6 +946,48 @@
           </div>
 
           <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Aperçu en direct (sans sauvegarder)
+            <v-switch
+              :input-value="showLivePreview[1]"
+              @change="$set(showLivePreview, 1, $event)"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showLivePreview[1]">
+            <v-row dense align="center">
+              <v-col cols="3">
+                <v-text-field
+                  v-model="previewMatchId"
+                  label="ID du match"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="5">
+                <v-text-field
+                  v-model="previewSteamId"
+                  label="Steam ID du joueur"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+            <live-image-preview
+              :url="playerLivePreviewUrl"
+              :settings="settings"
+              class="mt-2"
+            />
+          </div>
+
+          <v-divider class="my-3" />
           <image-f-c-table
             :fields="playerFields"
             :section="settings.player"
@@ -1431,6 +1506,39 @@
               :canvas-height="settings.canvas.height"
               :points="mvpPoints"
               @drag="onMvpDrag"
+            />
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Aperçu en direct (sans sauvegarder)
+            <v-switch
+              :input-value="showLivePreview[2]"
+              @change="$set(showLivePreview, 2, $event)"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showLivePreview[2]">
+            <v-row dense align="center">
+              <v-col cols="3">
+                <v-text-field
+                  v-model="previewMatchId"
+                  label="ID du match (match complet)"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+            <live-image-preview
+              :url="mvpLivePreviewUrl"
+              :settings="settings"
+              class="mt-2"
             />
           </div>
 
@@ -2145,6 +2253,49 @@
               :canvas-height="settings.canvas.height"
               :points="teamSeasonPoints"
               @drag="onTeamSeasonDrag"
+            />
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Aperçu en direct (sans sauvegarder)
+            <v-switch
+              :input-value="showLivePreview[3]"
+              @change="$set(showLivePreview, 3, $event)"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showLivePreview[3]">
+            <v-row dense align="center">
+              <v-col cols="3">
+                <v-text-field
+                  v-model="previewSeasonId"
+                  label="ID de la saison"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  v-model="previewTeamId"
+                  label="ID de l'équipe"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+            <live-image-preview
+              :url="teamSeasonLivePreviewUrl"
+              :settings="settings"
+              class="mt-2"
             />
           </div>
 
@@ -2953,6 +3104,62 @@
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
+            Aperçu en direct (sans sauvegarder)
+            <v-switch
+              :input-value="showLivePreview[4]"
+              @change="$set(showLivePreview, 4, $event)"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showLivePreview[4]">
+            <v-row dense align="center">
+              <v-col cols="3">
+                <v-text-field
+                  v-model="previewMatchId"
+                  label="ID du match"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-select
+                  v-model="previewTeamNumber"
+                  :items="[
+                    { text: 'Équipe 1', value: 1 },
+                    { text: 'Équipe 2', value: 2 },
+                  ]"
+                  label="Équipe"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field
+                  v-model="previewTeamMatchMap"
+                  label="N° map (optionnel)"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+            <live-image-preview
+              :url="teamMatchLivePreviewUrl"
+              :settings="settings"
+              class="mt-2"
+            />
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
             Logo &amp; nom de l'équipe
           </v-subheader>
           <v-row dense align="center">
@@ -3593,6 +3800,7 @@
 import ImageFCTable from "@/components/ImageFCTable.vue";
 import ImageFXTable from "@/components/ImageFXTable.vue";
 import ImagePositionCanvas from "@/components/ImagePositionCanvas.vue";
+import LiveImagePreview from "@/components/LiveImagePreview.vue";
 
 const ROWS_Y_DEFAULT = [485, 625, 770, 0, 0];
 
@@ -3680,15 +3888,22 @@ function normalizePlayerPhoto(def, saved, rowsYFallback = def.y) {
 
 export default {
   name: "ImageSettings",
-  components: { ImageFCTable, ImageFXTable, ImagePositionCanvas },
+  components: {
+    ImageFCTable,
+    ImageFXTable,
+    ImagePositionCanvas,
+    LiveImagePreview,
+  },
   data() {
     return {
       loading: true,
       saving: false,
       tab: 0,
 
-      // Éditeur visuel (drag & drop) — un par onglet [match, player, mvp, team_season]
+      // Éditeur visuel (drag & drop) — un par onglet [match, player, mvp, team_season, team_match]
       showVisualEditor: [true, true, true, true, true],
+      // Aperçu en direct (settings non sauvegardés) — un par onglet
+      showLivePreview: [true, true, true, true, true],
 
       settings: {
         canvas: { width: 1920, height: 1080 },
@@ -4463,6 +4678,30 @@ export default {
       return this.previewTeamMatchMap
         ? `${this.apiUrl}/image/match/${this.previewMatchId}/map/${this.previewTeamMatchMap}/team/${this.previewTeamNumber}`
         : `${this.apiUrl}/image/match/${this.previewMatchId}/team/${this.previewTeamNumber}`;
+    },
+
+    // ── URLs de l'aperçu en direct (POST, settings non sauvegardés) ──────────
+    matchLivePreviewUrl() {
+      if (!this.previewMatchId) return "";
+      return `${this.apiUrl}/image/match/${this.previewMatchId}/preview`;
+    },
+    playerLivePreviewUrl() {
+      if (!this.previewMatchId || !this.previewSteamId) return "";
+      return `${this.apiUrl}/image/match/${this.previewMatchId}/player/${this.previewSteamId}/preview`;
+    },
+    mvpLivePreviewUrl() {
+      if (!this.previewMatchId) return "";
+      return `${this.apiUrl}/image/match/${this.previewMatchId}/mvp/preview`;
+    },
+    teamSeasonLivePreviewUrl() {
+      if (!this.previewSeasonId || !this.previewTeamId) return "";
+      return `${this.apiUrl}/image/season/${this.previewSeasonId}/team/${this.previewTeamId}/preview`;
+    },
+    teamMatchLivePreviewUrl() {
+      if (!this.previewMatchId || !this.previewTeamNumber) return "";
+      return this.previewTeamMatchMap
+        ? `${this.apiUrl}/image/match/${this.previewMatchId}/map/${this.previewTeamMatchMap}/team/${this.previewTeamNumber}/preview`
+        : `${this.apiUrl}/image/match/${this.previewMatchId}/team/${this.previewTeamNumber}/preview`;
     },
   },
 

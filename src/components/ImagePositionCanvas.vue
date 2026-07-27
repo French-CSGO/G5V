@@ -2,16 +2,18 @@
   <div class="ipc-wrapper">
     <div class="ipc-stage" ref="stage" :style="stageStyle">
       <img
+        v-if="background"
         :src="background"
         class="ipc-bg"
         draggable="false"
         @error="imgError = true"
         @load="imgError = false"
       />
-      <div v-if="imgError" class="ipc-bg-fallback">
+      <div v-if="!background || imgError" class="ipc-bg-fallback">
         <v-icon>mdi-image-off</v-icon>
-        <span>Fond introuvable ({{ background }})</span>
-      </div>
+        <span v-if="!background">Aucun fond configuré</span>
+        <span v-else>Fond introuvable ({{ background }})</span>
+      </div
 
       <div
         v-for="p in points"

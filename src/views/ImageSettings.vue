@@ -3069,8 +3069,8 @@
             <v-row dense class="mt-1">
               <v-col cols="3">
                 <v-text-field
-                  v-model="settings.team_match.row_labels.kills_label"
-                  label="Label Kills"
+                  v-model="settings.team_match.row_labels.kad_label"
+                  label="Label K / A / D"
                   outlined
                   dense
                   hide-details
@@ -3078,47 +3078,7 @@
               </v-col>
               <v-col cols="2">
                 <v-text-field
-                  v-model.number="settings.team_match.row_labels.kills_y"
-                  label="Y"
-                  type="number"
-                  outlined
-                  dense
-                  hide-details
-                />
-              </v-col>
-              <v-col cols="3">
-                <v-text-field
-                  v-model="settings.team_match.row_labels.assists_label"
-                  label="Label Assists"
-                  outlined
-                  dense
-                  hide-details
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-text-field
-                  v-model.number="settings.team_match.row_labels.assists_y"
-                  label="Y"
-                  type="number"
-                  outlined
-                  dense
-                  hide-details
-                />
-              </v-col>
-            </v-row>
-            <v-row dense class="mt-1">
-              <v-col cols="3">
-                <v-text-field
-                  v-model="settings.team_match.row_labels.deaths_label"
-                  label="Label Morts"
-                  outlined
-                  dense
-                  hide-details
-                />
-              </v-col>
-              <v-col cols="2">
-                <v-text-field
-                  v-model.number="settings.team_match.row_labels.deaths_y"
+                  v-model.number="settings.team_match.row_labels.kad_y"
                   label="Y"
                   type="number"
                   outlined
@@ -3929,7 +3889,7 @@ export default {
             PLAYER_COLUMNS_X,
             520,
           ),
-          kills: defFXRow(
+          kad: defFXRow(
             true,
             "Arial",
             "#1a1a2e",
@@ -3938,7 +3898,7 @@ export default {
             PLAYER_COLUMNS_X,
             590,
           ),
-          assists: defFXRow(
+          rating: defFXRow(
             true,
             "Arial",
             "#1a1a2e",
@@ -3947,24 +3907,6 @@ export default {
             PLAYER_COLUMNS_X,
             650,
           ),
-          deaths: defFXRow(
-            true,
-            "Arial",
-            "#1a1a2e",
-            26,
-            false,
-            PLAYER_COLUMNS_X,
-            710,
-          ),
-          rating: defFXRow(
-            true,
-            "Arial",
-            "#1a1a2e",
-            26,
-            false,
-            PLAYER_COLUMNS_X,
-            770,
-          ),
           row_labels: {
             enabled: true,
             font: "Arial",
@@ -3972,14 +3914,10 @@ export default {
             size: 20,
             bold: true,
             x: 80,
-            kills_label: "Kills",
-            kills_y: 590,
-            assists_label: "Assists",
-            assists_y: 650,
-            deaths_label: "Morts",
-            deaths_y: 710,
+            kad_label: "K / A / D",
+            kad_y: 590,
             rating_label: "Rating",
-            rating_y: 770,
+            rating_y: 650,
           },
         },
       },
@@ -4109,9 +4047,7 @@ export default {
       teamMatchFCFields: [{ key: "team_name", label: "Nom d'équipe" }],
       teamMatchFXFields: [
         { key: "player_name", label: "Nom joueur" },
-        { key: "kills", label: "Kills" },
-        { key: "assists", label: "Assists" },
-        { key: "deaths", label: "Morts" },
+        { key: "kad", label: "K / A / D" },
         { key: "rating", label: "Rating" },
       ],
     };
@@ -4399,9 +4335,7 @@ export default {
       });
       if (s.row_labels.enabled) {
         [
-          ["kills", "Kills"],
-          ["assists", "Assists"],
-          ["deaths", "Morts"],
+          ["kad", "K / A / D"],
           ["rating", "Rating"],
         ].forEach(([f, label]) => {
           pts.push({
@@ -4697,9 +4631,7 @@ export default {
               def.team_match.player_name,
               stm.player_name,
             ),
-            kills: normalizeFX(def.team_match.kills, stm.kills),
-            assists: normalizeFX(def.team_match.assists, stm.assists),
-            deaths: normalizeFX(def.team_match.deaths, stm.deaths),
+            kad: normalizeFX(def.team_match.kad, stm.kad),
             rating: normalizeFX(def.team_match.rating, stm.rating),
             row_labels: {
               ...def.team_match.row_labels,
@@ -4803,7 +4735,7 @@ export default {
             });
           } else if (sectionKey === "team_match") {
             const def = this.settings.team_match;
-            ["player_name", "kills", "assists", "deaths", "rating"].forEach(
+            ["player_name", "kad", "rating"].forEach(
               (k) => {
                 parsed[k] = normalizeFX(def[k], parsed[k]);
               },

@@ -21,6 +21,33 @@
         <!-- Tab 0 : Image Match                                           -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 0" flat class="pa-4">
+          <v-subheader class="font-weight-bold">
+            Positionnement visuel (glisser-déposer)
+            <v-switch
+              v-model="showVisualEditor[0]"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showVisualEditor[0]">
+            <v-alert dense outlined type="info" class="caption mb-2">
+              Faites glisser les points pour repositionner les champs. Les
+              lignes en pointillés (rangées de joueurs) et les colonnes se
+              déplacent en un seul axe. Sauvegardez pour appliquer.
+            </v-alert>
+            <image-position-canvas
+              :background="bgUrl('match')"
+              :canvas-width="settings.canvas.width"
+              :canvas-height="settings.canvas.height"
+              :points="matchPoints"
+              @drag="onMatchDrag"
+            />
+          </div>
+
+          <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">Canvas</v-subheader>
           <v-row>
             <v-col cols="6"
@@ -778,6 +805,32 @@
         <!-- Tab 1 : Image Joueur                                          -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 1" flat class="pa-4">
+          <v-subheader class="font-weight-bold">
+            Positionnement visuel (glisser-déposer)
+            <v-switch
+              v-model="showVisualEditor[1]"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showVisualEditor[1]">
+            <v-alert dense outlined type="info" class="caption mb-2">
+              Faites glisser les points pour repositionner les champs.
+              Sauvegardez pour appliquer.
+            </v-alert>
+            <image-position-canvas
+              :background="bgUrl('player')"
+              :canvas-width="settings.canvas.width"
+              :canvas-height="settings.canvas.height"
+              :points="playerPoints"
+              @drag="onPlayerDrag"
+            />
+          </div>
+
+          <v-divider class="my-3" />
           <image-f-c-table
             :fields="playerFields"
             :section="settings.player"
@@ -1273,6 +1326,32 @@
         <!-- Tab 2 : Image MVP                                             -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 2" flat class="pa-4">
+          <v-subheader class="font-weight-bold">
+            Positionnement visuel (glisser-déposer)
+            <v-switch
+              v-model="showVisualEditor[2]"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showVisualEditor[2]">
+            <v-alert dense outlined type="info" class="caption mb-2">
+              Faites glisser les points pour repositionner les champs.
+              Sauvegardez pour appliquer.
+            </v-alert>
+            <image-position-canvas
+              :background="bgUrl('mvp')"
+              :canvas-width="settings.canvas.width"
+              :canvas-height="settings.canvas.height"
+              :points="mvpPoints"
+              @drag="onMvpDrag"
+            />
+          </div>
+
+          <v-divider class="my-3" />
           <!-- ── Photos joueurs ─────────────────────────────────────────── -->
           <v-subheader class="font-weight-bold">
             <v-icon left small>mdi-account-circle</v-icon>
@@ -1960,6 +2039,32 @@
         <!-- Tab 3 : Image Équipe Saison                                   -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 3" flat class="pa-4">
+          <v-subheader class="font-weight-bold">
+            Positionnement visuel (glisser-déposer)
+            <v-switch
+              v-model="showVisualEditor[3]"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showVisualEditor[3]">
+            <v-alert dense outlined type="info" class="caption mb-2">
+              Faites glisser les points pour repositionner les champs.
+              Sauvegardez pour appliquer.
+            </v-alert>
+            <image-position-canvas
+              :background="bgUrl('team_season')"
+              :canvas-width="settings.canvas.width"
+              :canvas-height="settings.canvas.height"
+              :points="teamSeasonPoints"
+              @drag="onTeamSeasonDrag"
+            />
+          </div>
+
+          <v-divider class="my-3" />
           <image-f-c-table
             :fields="teamSeasonFields"
             :section="settings.team_season"
@@ -2989,6 +3094,7 @@
 <script>
 import ImageFCTable from "@/components/ImageFCTable.vue";
 import ImageFXTable from "@/components/ImageFXTable.vue";
+import ImagePositionCanvas from "@/components/ImagePositionCanvas.vue";
 
 const defFC = (enabled, font, color, size, bold, x, y) => ({
   enabled,
@@ -3010,12 +3116,15 @@ const defFX = (enabled, font, color, size, bold, x) => ({
 
 export default {
   name: "ImageSettings",
-  components: { ImageFCTable, ImageFXTable },
+  components: { ImageFCTable, ImageFXTable, ImagePositionCanvas },
   data() {
     return {
       loading: true,
       saving: false,
       tab: 0,
+
+      // Éditeur visuel (drag & drop) — un par onglet [match, player, mvp, team_season]
+      showVisualEditor: [true, true, true, true],
 
       settings: {
         canvas: { width: 1920, height: 1080 },
@@ -3429,7 +3538,265 @@ export default {
     await this.load();
   },
 
+  computed: {
+    // Points glissables de l'onglet "Image Match"
+    matchPoints() {
+      const s = this.settings.match;
+      const cw = this.settings.canvas.width;
+      const pts = [];
+      this.matchFCFields.forEach((f) => {
+        const v = s[f.key];
+        if (v && v.enabled) {
+          pts.push({
+            markerId: f.key,
+            path: f.key,
+            label: f.label,
+            x: v.x,
+            y: v.y,
+            axis: "both",
+          });
+        }
+      });
+      this.matchFXFields.forEach((f) => {
+        const v = s[f.key];
+        if (!v || !v.enabled) return;
+        s.rows_y.forEach((ry, i) => {
+          if (ry > 0) {
+            pts.push({
+              markerId: `${f.key}#${i}`,
+              path: f.key,
+              label: f.label,
+              x: v.x,
+              y: ry,
+              axis: "x",
+            });
+          }
+        });
+      });
+      s.rows_y.forEach((ry, i) => {
+        if (ry > 0) {
+          pts.push({
+            markerId: `rows_y#${i}`,
+            path: `rows_y.${i}`,
+            label: `Ligne ${i + 1}`,
+            x: cw / 2,
+            y: ry,
+            axis: "y",
+          });
+        }
+      });
+      if (s.team1_logo.enabled) {
+        pts.push({
+          markerId: "team1_logo",
+          path: "team1_logo",
+          label: "Logo 1",
+          x: s.team1_logo.x,
+          y: s.team1_logo.y,
+          axis: "both",
+        });
+      }
+      if (s.team2_logo.enabled) {
+        pts.push({
+          markerId: "team2_logo",
+          path: "team2_logo",
+          label: "Logo 2",
+          x: s.team2_logo.x,
+          y: s.team2_logo.y,
+          axis: "both",
+        });
+      }
+      return pts;
+    },
+
+    // Points glissables de l'onglet "Image Joueur"
+    playerPoints() {
+      const s = this.settings.player;
+      const pts = [];
+      this.playerFields.forEach((f) => {
+        const v = s[f.key];
+        if (v && v.enabled) {
+          pts.push({
+            markerId: f.key,
+            path: f.key,
+            label: f.label,
+            x: v.x,
+            y: v.y,
+            axis: "both",
+          });
+        }
+      });
+      return pts;
+    },
+
+    // Points glissables de l'onglet "Image MVP"
+    mvpPoints() {
+      const s = this.settings.mvp;
+      const pts = [];
+      this.mvpFields.forEach((f) => {
+        const v = s[f.key];
+        if (v && v.enabled) {
+          pts.push({
+            markerId: f.key,
+            path: f.key,
+            label: f.label,
+            x: v.x,
+            y: v.y,
+            axis: "both",
+          });
+        }
+      });
+      if (s.team1_logo.enabled) {
+        pts.push({
+          markerId: "team1_logo",
+          path: "team1_logo",
+          label: "Logo 1",
+          x: s.team1_logo.x,
+          y: s.team1_logo.y,
+          axis: "both",
+        });
+      }
+      if (s.team2_logo.enabled) {
+        pts.push({
+          markerId: "team2_logo",
+          path: "team2_logo",
+          label: "Logo 2",
+          x: s.team2_logo.x,
+          y: s.team2_logo.y,
+          axis: "both",
+        });
+      }
+      if (s.player_image.enabled) {
+        pts.push({
+          markerId: "player_image",
+          path: "player_image",
+          label: "Photo joueur",
+          x: s.player_image.x,
+          y: s.player_image.y,
+          axis: "both",
+        });
+      }
+      return pts;
+    },
+
+    // Points glissables de l'onglet "Image Équipe Saison"
+    teamSeasonPoints() {
+      const s = this.settings.team_season;
+      const cw = this.settings.canvas.width;
+      const pts = [];
+      this.teamSeasonFields.forEach((f) => {
+        const v = s[f.key];
+        if (v && v.enabled) {
+          pts.push({
+            markerId: f.key,
+            path: f.key,
+            label: f.label,
+            x: v.x,
+            y: v.y,
+            axis: "both",
+          });
+        }
+      });
+      if (s.players.enabled) {
+        s.players.x.forEach((px, i) => {
+          pts.push({
+            markerId: `players_name#${i}`,
+            path: `players.x.${i}`,
+            label: `Joueur ${i + 1}`,
+            x: px,
+            y: s.players.name_y,
+            axis: "x",
+          });
+          if (s.players.show_rating) {
+            pts.push({
+              markerId: `players_rating#${i}`,
+              path: `players.x.${i}`,
+              label: `Joueur ${i + 1} (rating)`,
+              x: px,
+              y: s.players.rating_y,
+              axis: "x",
+            });
+          }
+        });
+        pts.push({
+          markerId: "players_name_y",
+          path: "players.name_y",
+          label: "Ligne noms",
+          x: cw / 2,
+          y: s.players.name_y,
+          axis: "y",
+        });
+        if (s.players.show_rating) {
+          pts.push({
+            markerId: "players_rating_y",
+            path: "players.rating_y",
+            label: "Ligne rating",
+            x: cw / 2,
+            y: s.players.rating_y,
+            axis: "y",
+          });
+        }
+      }
+      if (s.map_image.enabled) {
+        pts.push({
+          markerId: "map_image",
+          path: "map_image",
+          label: "Image map",
+          x: s.map_image.x,
+          y: s.map_image.y,
+          axis: "both",
+        });
+      }
+      return pts;
+    },
+  },
+
   methods: {
+    // URL de l'image de fond brute (sans texte) pour l'éditeur visuel
+    bgUrl(section) {
+      const filename = this.settings[section]?.background;
+      if (!filename) return "";
+      return `${this.apiUrl}/static/img/${encodeURIComponent(filename)}`;
+    },
+
+    // Applique un déplacement (drag & drop) sur le champ ciblé par `path`
+    setPointXY(section, path, x, y, axis) {
+      const s = this.settings[section];
+      if (path.startsWith("rows_y.")) {
+        const i = parseInt(path.split(".")[1], 10);
+        this.$set(s.rows_y, i, y);
+        return;
+      }
+      if (path.startsWith("players.x.")) {
+        const i = parseInt(path.split(".")[2], 10);
+        this.$set(s.players.x, i, x);
+        return;
+      }
+      if (path === "players.name_y") {
+        s.players.name_y = y;
+        return;
+      }
+      if (path === "players.rating_y") {
+        s.players.rating_y = y;
+        return;
+      }
+      const obj = s[path];
+      if (!obj) return;
+      if (axis !== "y") obj.x = x;
+      if (axis !== "x") obj.y = y;
+    },
+    onMatchDrag(path, x, y, axis) {
+      this.setPointXY("match", path, x, y, axis);
+    },
+    onPlayerDrag(path, x, y, axis) {
+      this.setPointXY("player", path, x, y, axis);
+    },
+    onMvpDrag(path, x, y, axis) {
+      this.setPointXY("mvp", path, x, y, axis);
+    },
+    onTeamSeasonDrag(path, x, y, axis) {
+      this.setPointXY("team_season", path, x, y, axis);
+    },
+
     async load() {
       this.loading = true;
       try {

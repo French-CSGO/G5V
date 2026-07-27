@@ -98,16 +98,19 @@ export default {
           p.axis === "x" ? p.y : Math.round(fy * this.canvasHeight);
         this.$emit("drag", p.path, x, y, p.axis);
       };
+      let onDestroy;
       const up = () => {
         this.draggingId = null;
         window.removeEventListener("pointermove", move);
         window.removeEventListener("pointerup", up);
         window.removeEventListener("pointercancel", up);
+        if (onDestroy) this.$off("hook:beforeDestroy", onDestroy);
       };
+      onDestroy = () => up();
+      this.$on("hook:beforeDestroy", onDestroy);
       window.addEventListener("pointermove", move);
       window.addEventListener("pointerup", up);
       window.addEventListener("pointercancel", up);
-      this.$once("hook:beforeDestroy", up);
     },
   },
 };

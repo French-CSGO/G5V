@@ -16,7 +16,8 @@
       "DarkMode": "Toggle Dark Mode",
       "PlayerLeader": "Player Leaderboard",
       "ImageSettings": "Image Settings",
-      "Home": "Home"
+      "Home": "Home",
+      "PlayerImages": "Player Avatars"
     },
     "Login": {
       "title": "Login/Register",
@@ -609,6 +610,30 @@
       "ReadyPending": "Not ready yet",
       "TeamTurnBan": "{team}: pick a map to ban.",
       "TeamTurnPick": "{team}: pick a map to play."
+    },
+    "PlayerImages": {
+      "title": "Player Avatars",
+      "accessDenied": "Access reserved to cast/observer or admin users.",
+      "searchLabel": "Search a player (name, Steam ID)",
+      "chooseFile": "Choose an image",
+      "upload": "Upload",
+      "uploadSuccess": "Image uploaded successfully.",
+      "uploadError": "Error while uploading the image.",
+      "selectPlayerFirst": "Select a player before uploading.",
+      "chooseFileFirst": "Choose a file before uploading.",
+      "existingImages": "Existing images",
+      "noImages": "No player image has been uploaded yet.",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete this image?",
+      "deleteConfirmBody": "This will permanently delete this player's avatar.",
+      "deleteSuccess": "Image deleted successfully.",
+      "deleteError": "Error while deleting the image.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "steamId": "Steam ID",
+      "name": "Name",
+      "actions": "Actions",
+      "noResults": "No player found."
     }
   },
   "fr": {
@@ -628,7 +653,8 @@
       "DarkMode": "Action le mode sombre",
       "PlayerLeader": "Classement des joueurs",
       "ImageSettings": "Paramètres des images",
-      "Home": "Accueil"
+      "Home": "Accueil",
+      "PlayerImages": "Avatars des joueurs"
     },
     "Login": {
       "title": "S'identifier / S'incrire",
@@ -1221,6 +1247,30 @@
       "ReadyPending": "Pas encore prêt",
       "TeamTurnBan": "{team} : choisissez une map à bannir.",
       "TeamTurnPick": "{team} : choisissez une map à jouer."
+    },
+    "PlayerImages": {
+      "title": "Avatars des joueurs",
+      "accessDenied": "Accès réservé aux utilisateurs cast/observateur ou administrateurs.",
+      "searchLabel": "Rechercher un joueur (nom, Steam ID)",
+      "chooseFile": "Choisir une image",
+      "upload": "Envoyer",
+      "uploadSuccess": "Image envoyée avec succès.",
+      "uploadError": "Erreur lors de l'envoi de l'image.",
+      "selectPlayerFirst": "Sélectionnez un joueur avant d'envoyer une image.",
+      "chooseFileFirst": "Choisissez un fichier avant d'envoyer.",
+      "existingImages": "Images existantes",
+      "noImages": "Aucune image de joueur n'a encore été envoyée.",
+      "delete": "Supprimer",
+      "deleteConfirmTitle": "Supprimer cette image ?",
+      "deleteConfirmBody": "L'avatar de ce joueur sera définitivement supprimé.",
+      "deleteSuccess": "Image supprimée avec succès.",
+      "deleteError": "Erreur lors de la suppression de l'image.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "steamId": "Steam ID",
+      "name": "Nom",
+      "actions": "Actions",
+      "noResults": "Aucun joueur trouvé."
     }
   },
   "jp": {
@@ -1240,7 +1290,8 @@
       "DarkMode": "ダークモードを切り替えます",
       "PlayerLeader": "プレイヤーリーダーボード",
       "ImageSettings": "画像設定",
-      "Home": "ホーム"
+      "Home": "ホーム",
+      "PlayerImages": "選手アバター"
     },
     "Login": {
       "title": "ログイン/登録",
@@ -1827,6 +1878,30 @@
       "ReadyPending": "まだ準備できていません",
       "TeamTurnBan": "{team}：禁止するマップを選んでください。",
       "TeamTurnPick": "{team}：プレイするマップを選んでください。"
+    },
+    "PlayerImages": {
+      "title": "選手アバター",
+      "accessDenied": "キャスト・観戦者または管理者のみアクセスできます。",
+      "searchLabel": "選手を検索（名前、Steam ID）",
+      "chooseFile": "画像を選択",
+      "upload": "アップロード",
+      "uploadSuccess": "画像が正常にアップロードされました。",
+      "uploadError": "画像のアップロード中にエラーが発生しました。",
+      "selectPlayerFirst": "アップロードする前に選手を選択してください。",
+      "chooseFileFirst": "アップロードする前にファイルを選択してください。",
+      "existingImages": "既存の画像",
+      "noImages": "まだ選手の画像はアップロードされていません。",
+      "delete": "削除",
+      "deleteConfirmTitle": "この画像を削除しますか？",
+      "deleteConfirmBody": "この選手のアバターは完全に削除されます。",
+      "deleteSuccess": "画像が正常に削除されました。",
+      "deleteError": "画像の削除中にエラーが発生しました。",
+      "cancel": "キャンセル",
+      "confirm": "確認",
+      "steamId": "Steam ID",
+      "name": "名前",
+      "actions": "操作",
+      "noResults": "選手が見つかりません。"
     }
   }
 }

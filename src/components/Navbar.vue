@@ -120,6 +120,14 @@
           <v-list-item-title>Cast / Observer</v-list-item-title>
         </v-list-item>
 
+        <v-list-item
+          v-if="isCast || isAdmin"
+          index="player_images"
+          :to="'/cast/players'"
+        >
+          <v-list-item-title>{{ $t("Navbar.PlayerImages") }}</v-list-item-title>
+        </v-list-item>
+
         <!-- Menu Administration (super_admin uniquement) -->
         <template v-if="user.super_admin == 1">
           <v-divider class="my-2" />

@@ -261,6 +261,13 @@ const routes = [
       import(/* webpackChunkName: "Cast" */ "../views/CastView.vue"),
   },
   {
+    path: "/cast/players",
+    name: "PlayerImages",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/PlayerImages.vue"),
+  },
+  {
     path: "/overlay/:steamid/live",
     name: "OverlayLive",
     meta: { hideChrome: true },

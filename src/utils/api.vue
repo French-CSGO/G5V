@@ -2018,6 +2018,40 @@ export default {
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/season/${seasonId}/team/${teamId}`;
     },
+    async SearchPlayers(query = "") {
+      const url = query
+        ? `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/playerstats/search?search=${encodeURIComponent(query)}`
+        : `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/search`;
+      const res = await this.axiosCall.get(url);
+      return res.data.players || [];
+    },
+    async GetPlayerImages() {
+      const res = await this.axiosCall.get(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/players`,
+      );
+      return res.data;
+    },
+    GetPlayerAvatarUrl(filename) {
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/static/img/players/${filename}`;
+    },
+    async UploadPlayerImage(formData) {
+      const res = await this.axiosCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/upload/player`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+      return res.data;
+    },
+    async DeletePlayerImage(steamId) {
+      const res = await this.axiosCall.delete(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/player/${steamId}`,
+      );
+      return res.data;
+    },
     EstimateMatchEndTime(team1Score, team2Score, remainingMaps = 0) {
       const ROUND_DURATION_SEC = 115;
       const EXTRA_MAP_DURATION_SEC = 40 * 60;

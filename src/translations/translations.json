@@ -576,6 +576,10 @@
       "playerBadge": "Player",
       "teamBadge": "Season Leaderboard"
     },
+    "ImagePositionCanvas": {
+      "noBackground": "No background configured",
+      "bgNotFound": "Background not found ({path})"
+    },
     "PreMatchVeto": {
       "Loading": "Loading veto session...",
       "NotFound": "This veto session could not be found.",
@@ -1196,6 +1200,10 @@
       "playerBadge": "Joueur",
       "teamBadge": "Classement saison"
     },
+    "ImagePositionCanvas": {
+      "noBackground": "Aucun fond configuré",
+      "bgNotFound": "Fond introuvable ({path})"
+    },
     "PreMatchVeto": {
       "Loading": "Chargement du véto...",
       "NotFound": "Cette session de véto est introuvable.",
@@ -1809,6 +1817,10 @@
       "season": "シーズン",
       "playerBadge": "プレイヤー",
       "teamBadge": "シーズンランキング"
+    },
+    "ImagePositionCanvas": {
+      "noBackground": "背景が設定されていません",
+      "bgNotFound": "背景が見つかりません（{path}）"
     },
     "PreMatchVeto": {
       "Loading": "ベトセッションを読み込み中...",

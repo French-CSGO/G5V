@@ -3,6 +3,7 @@
     <div class="ipc-stage" ref="stage" :style="stageStyle">
       <img
         v-if="background"
+        v-show="!imgError"
         :src="background"
         alt=""
         aria-hidden="true"

@@ -32,7 +32,7 @@
           :class="{ 'ipc-handle--dragging': draggingId === p.markerId }"
           @pointerdown="startDrag(p, $event)"
         >
-          <span class="ipc-dot"></span>
+          <span class="ipc-dot" aria-hidden="true"></span>
           <span class="ipc-label">{{ p.label }}</span>
         </div>
       </div>

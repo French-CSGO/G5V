@@ -160,6 +160,36 @@
                         >
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal"
+                          :href="
+                            GetTeamMatchImageUrl(
+                              match.id,
+                              1,
+                              map.map_number + 1,
+                            )
+                          "
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Éq. 1
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal darken-2"
+                          :href="
+                            GetTeamMatchImageUrl(
+                              match.id,
+                              2,
+                              map.map_number + 1,
+                            )
+                          "
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Éq. 2
+                        </v-btn>
                       </div>
                       <div class="d-flex" style="gap: 3px">
                         <v-btn
@@ -179,6 +209,26 @@
                           target="_blank"
                         >
                           <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal"
+                          :href="GetTeamMatchImageUrl(match.id, 1)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Stats
+                          Éq. 1
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal darken-2"
+                          :href="GetTeamMatchImageUrl(match.id, 2)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Stats
+                          Éq. 2
                         </v-btn>
                         <v-btn
                           x-small
@@ -294,6 +344,36 @@
                         >
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal"
+                          :href="
+                            GetTeamMatchImageUrl(
+                              match.id,
+                              1,
+                              map.map_number + 1,
+                            )
+                          "
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Éq. 1
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal darken-2"
+                          :href="
+                            GetTeamMatchImageUrl(
+                              match.id,
+                              2,
+                              map.map_number + 1,
+                            )
+                          "
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Éq. 2
+                        </v-btn>
                       </div>
                       <div class="d-flex" style="gap: 3px">
                         <v-btn
@@ -313,6 +393,26 @@
                           target="_blank"
                         >
                           <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal"
+                          :href="GetTeamMatchImageUrl(match.id, 1)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Stats
+                          Éq. 1
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal darken-2"
+                          :href="GetTeamMatchImageUrl(match.id, 2)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Stats
+                          Éq. 2
                         </v-btn>
                       </div>
                     </div>

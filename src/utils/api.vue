@@ -2018,6 +2018,12 @@ export default {
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/season/${seasonId}/team/${teamId}`;
     },
+    GetTeamMatchImageUrl(matchId, teamNumber, mapNumber) {
+      const base = process.env?.VUE_APP_G5V_API_URL || "/api";
+      return mapNumber
+        ? `${base}/image/match/${matchId}/map/${mapNumber}/team/${teamNumber}`
+        : `${base}/image/match/${matchId}/team/${teamNumber}`;
+    },
     EstimateMatchEndTime(team1Score, team2Score, remainingMaps = 0) {
       const ROUND_DURATION_SEC = 115;
       const EXTRA_MAP_DURATION_SEC = 40 * 60;

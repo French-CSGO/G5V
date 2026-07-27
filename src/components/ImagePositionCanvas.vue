@@ -4,6 +4,8 @@
       <img
         v-if="background"
         :src="background"
+        alt=""
+        aria-hidden="true"
         class="ipc-bg"
         draggable="false"
         @error="imgError = true"

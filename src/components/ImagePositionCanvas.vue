@@ -13,7 +13,7 @@
         <v-icon>mdi-image-off</v-icon>
         <span v-if="!background">Aucun fond configuré</span>
         <span v-else>Fond introuvable ({{ background }})</span>
-      </div
+      </div>
 
       <div
         v-for="p in points"
@@ -32,6 +32,9 @@
           :class="{ 'ipc-handle--dragging': draggingId === p.markerId }"
           @pointerdown="startDrag(p, $event)"
         >
+          <span class="ipc-dot"></span>
+          <span class="ipc-label">{{ p.label }}</span>
+        </div>
       </div>
     </div>
   </div>

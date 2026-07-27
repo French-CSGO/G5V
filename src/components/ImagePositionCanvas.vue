@@ -45,7 +45,7 @@ function clamp(v, min, max) {
 export default {
   name: "ImagePositionCanvas",
   props: {
-    background: { type: String, required: true },
+    background: { type: String, default: "" },
     canvasWidth: { type: Number, required: true },
     canvasHeight: { type: Number, required: true },
     // points: [{ markerId, path, label, x, y, axis: 'both'|'x'|'y' }]

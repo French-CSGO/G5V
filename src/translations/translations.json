@@ -400,7 +400,12 @@
       "BracketSlugHint": "The slug from the Challonge URL (e.g. my-tournament)",
       "BracketLabel": "Bracket Label",
       "BracketLabelPlaceholder": "e.g. Amateur",
-      "NoBracket": "No bracket configured for this season."
+      "NoBracket": "No bracket configured for this season.",
+      "Group": "Group",
+      "RoundFormatLabel": "Default format for this round",
+      "FormatAuto": "Auto (BO1)",
+      "FormatSave": "Save",
+      "ScheduleError": "Error saving format"
     },
     "Toornament": {
       "MatchesTitle": "Toornament Matches",
@@ -430,6 +435,9 @@
       "ScheduleError": "Error saving schedule",
       "ServerStarting": "Starting server...",
       "SuggestedFormat": "Suggested: Bo{n}",
+      "RoundFormatLabel": "Default format for this round",
+      "FormatAuto": "Auto (Toornament)",
+      "FormatSave": "Save",
       "MatchInfo": "This match is linked to Toornament match",
       "StepVerify": "Verify",
       "StepDetails": "Details",
@@ -568,6 +576,10 @@
       "season": "Season",
       "playerBadge": "Player",
       "teamBadge": "Season Leaderboard"
+    },
+    "ImagePositionCanvas": {
+      "noBackground": "No background configured",
+      "bgNotFound": "Background not found ({path})"
     },
     "PreMatchVeto": {
       "Loading": "Loading veto session...",
@@ -1037,7 +1049,12 @@
       "BracketSlugHint": "Le slug dans l'URL Challonge (ex: mon-tournoi)",
       "BracketLabel": "Nom du bracket",
       "BracketLabelPlaceholder": "ex: Amateur",
-      "NoBracket": "Aucun bracket configuré pour cette saison."
+      "NoBracket": "Aucun bracket configuré pour cette saison.",
+      "Group": "Groupe",
+      "RoundFormatLabel": "Format par défaut de ce round",
+      "FormatAuto": "Auto (BO1)",
+      "FormatSave": "Enregistrer",
+      "ScheduleError": "Erreur lors de la sauvegarde du format"
     },
     "Toornament": {
       "MatchesTitle": "Matchs Toornament",
@@ -1067,6 +1084,9 @@
       "ScheduleError": "Erreur lors de la sauvegarde du planning",
       "ServerStarting": "Démarrage du serveur...",
       "SuggestedFormat": "Format suggéré : Bo{n}",
+      "RoundFormatLabel": "Format par défaut de ce round",
+      "FormatAuto": "Auto (Toornament)",
+      "FormatSave": "Enregistrer",
       "MatchInfo": "Ce match est lié au match Toornament",
       "StepVerify": "Vérifier",
       "StepDetails": "Détails",
@@ -1205,6 +1225,10 @@
       "season": "Saison",
       "playerBadge": "Joueur",
       "teamBadge": "Classement saison"
+    },
+    "ImagePositionCanvas": {
+      "noBackground": "Aucun fond configuré",
+      "bgNotFound": "Fond introuvable ({path})"
     },
     "PreMatchVeto": {
       "Loading": "Chargement du véto...",
@@ -1668,7 +1692,12 @@
       "BracketSlugHint": "Challonge URLのslug（例: my-tournament）",
       "BracketLabel": "ブラケット名",
       "BracketLabelPlaceholder": "例: アマチュア",
-      "NoBracket": "このシーズンにはブラケットが設定されていません。"
+      "NoBracket": "このシーズンにはブラケットが設定されていません。",
+      "Group": "グループ",
+      "RoundFormatLabel": "このラウンドのデフォルトフォーマット",
+      "FormatAuto": "自動 (BO1)",
+      "FormatSave": "保存",
+      "ScheduleError": "フォーマットの保存エラー"
     },
     "Toornament": {
       "MatchesTitle": "Toornamentマッチ",
@@ -1698,6 +1727,9 @@
       "ScheduleError": "スケジュール保存エラー",
       "ServerStarting": "サーバーを起動中...",
       "SuggestedFormat": "推奨: Bo{n}",
+      "RoundFormatLabel": "このラウンドのデフォルトフォーマット",
+      "FormatAuto": "自動 (Toornament)",
+      "FormatSave": "保存",
       "MatchInfo": "このマッチはToornamentマッチにリンクされています",
       "StepVerify": "確認",
       "StepDetails": "詳細",
@@ -1836,6 +1868,10 @@
       "season": "シーズン",
       "playerBadge": "プレイヤー",
       "teamBadge": "シーズンランキング"
+    },
+    "ImagePositionCanvas": {
+      "noBackground": "背景が設定されていません",
+      "bgNotFound": "背景が見つかりません（{path}）"
     },
     "PreMatchVeto": {
       "Loading": "ベトセッションを読み込み中...",

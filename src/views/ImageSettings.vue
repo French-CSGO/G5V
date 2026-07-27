@@ -3592,7 +3592,7 @@ export default {
       saving: false,
       tab: 0,
 
-      // Éditeur visuel (drag & drop) — un par onglet [match, player, mvp, team_season]
+      // Éditeur visuel (drag & drop) — un par onglet [match, player, mvp, team_season, team_match]
       showVisualEditor: [true, true, true, true, true],
 
       settings: {

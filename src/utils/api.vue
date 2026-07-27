@@ -2024,6 +2024,18 @@ export default {
         ? `${base}/image/match/${matchId}/map/${mapNumber}/team/${teamNumber}`
         : `${base}/image/match/${matchId}/team/${teamNumber}`;
     },
+    // Même gabarit que GetTeamMatchImageUrl (logo + 5 titulaires), mais agrégé sur toute la saison
+    GetSeasonTeamRosterImageUrl(seasonId, teamId) {
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/image/season/${seasonId}/team/${teamId}/roster`;
+    },
+    // Même gabarit que l'image de match complet (les deux équipes face à face), agrégé sur la saison
+    GetSeasonVersusImageUrl(seasonId, team1Id, team2Id) {
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/image/season/${seasonId}/versus/${team1Id}/${team2Id}`;
+    },
     EstimateMatchEndTime(team1Score, team2Score, remainingMaps = 0) {
       const ROUND_DURATION_SEC = 115;
       const EXTRA_MAP_DURATION_SEC = 40 * 60;

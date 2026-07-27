@@ -14,6 +14,7 @@
           <v-tab>Image Joueur</v-tab>
           <v-tab>Image MVP</v-tab>
           <v-tab>Image Équipe Saison</v-tab>
+          <v-tab>Image Équipe (Match)</v-tab>
           <v-tab>Aperçu</v-tab>
         </v-tabs>
 
@@ -2841,9 +2842,391 @@
         </v-card>
 
         <!-- ══════════════════════════════════════════════════════════════ -->
-        <!-- Tab 4 : Aperçu                                                -->
+        <!-- Tab 4 : Image Équipe (Match)                                  -->
         <!-- ══════════════════════════════════════════════════════════════ -->
         <v-card v-if="tab === 4" flat class="pa-4">
+          <v-subheader class="font-weight-bold">
+            Positionnement visuel (glisser-déposer)
+            <v-switch
+              v-model="showVisualEditor[4]"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="showVisualEditor[4]">
+            <v-alert dense outlined type="info" class="caption mb-2">
+              Faites glisser chaque point pour repositionner ce champ
+              individuellement (photo, nom, kills, assists, morts, rating de
+              chaque titulaire). Sauvegardez pour appliquer.
+            </v-alert>
+            <image-position-canvas
+              :background="bgUrl('team_match')"
+              :canvas-width="settings.canvas.width"
+              :canvas-height="settings.canvas.height"
+              :points="teamMatchPoints"
+              @drag="onTeamMatchDrag"
+            />
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Logo &amp; nom de l'équipe
+          </v-subheader>
+          <v-row dense align="center">
+            <v-col cols="1" class="d-flex align-center">
+              <v-switch
+                v-model="settings.team_match.team_logo.enabled"
+                label="Logo"
+                color="primary"
+                inset
+                dense
+                hide-details
+                class="mt-0 pt-0"
+              />
+            </v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.team_match.team_logo.x"
+                label="Logo X"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.team_match.team_logo.y"
+                label="Logo Y"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+            <v-col cols="2"
+              ><v-text-field
+                v-model.number="settings.team_match.team_logo.size"
+                label="Logo Taille"
+                type="number"
+                outlined
+                dense
+                hide-details
+            /></v-col>
+          </v-row>
+          <image-f-c-table
+            :fields="teamMatchFCFields"
+            :section="settings.team_match"
+            :font-list="fontList"
+          />
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Photos des titulaires
+            <v-switch
+              v-model="settings.team_match.photos.enabled"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.team_match.photos.enabled">
+            <v-row dense>
+              <v-col cols="2"
+                ><v-text-field
+                  v-model.number="settings.team_match.photos.width"
+                  label="Largeur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="2"
+                ><v-text-field
+                  v-model.number="settings.team_match.photos.height"
+                  label="Hauteur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="2" class="d-flex align-center">
+                <v-checkbox
+                  v-model="settings.team_match.photos.circle"
+                  label="Découpe circulaire"
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-2">
+              <v-col v-for="i in 5" :key="i" cols="auto">
+                <span class="caption grey--text d-block text-center"
+                  >Joueur {{ i }}</span
+                >
+                <div class="d-flex" style="gap: 6px">
+                  <v-text-field
+                    :value="settings.team_match.photos.x[i - 1]"
+                    label="X"
+                    type="number"
+                    outlined
+                    dense
+                    hide-details
+                    style="width: 84px"
+                    @input="
+                      $set(settings.team_match.photos.x, i - 1, Number($event))
+                    "
+                  />
+                  <v-text-field
+                    :value="settings.team_match.photos.y[i - 1]"
+                    label="Y"
+                    type="number"
+                    outlined
+                    dense
+                    hide-details
+                    style="width: 84px"
+                    @input="
+                      $set(settings.team_match.photos.y, i - 1, Number($event))
+                    "
+                  />
+                </div>
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold"
+            >Nom &amp; stats par joueur (position individuelle)</v-subheader
+          >
+          <image-f-x-table
+            :fields="teamMatchFXFields"
+            :section="settings.team_match"
+            :font-list="fontList"
+          />
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold">
+            Étiquettes de stats (à gauche)
+            <v-switch
+              v-model="settings.team_match.row_labels.enabled"
+              color="primary"
+              inset
+              dense
+              hide-details
+              class="ml-4 mt-0 pt-0"
+            />
+          </v-subheader>
+          <div v-if="settings.team_match.row_labels.enabled">
+            <v-row dense>
+              <v-col cols="2">
+                <v-text-field
+                  v-model.number="settings.team_match.row_labels.x"
+                  label="X (partagé)"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-combobox
+                  v-model="settings.team_match.row_labels.font"
+                  :items="fontList"
+                  label="Police"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <input
+                  type="color"
+                  v-model="settings.team_match.row_labels.color"
+                  class="color-input"
+                />
+              </v-col>
+              <v-col cols="1">
+                <v-text-field
+                  v-model.number="settings.team_match.row_labels.size"
+                  label="Taille"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="1" class="d-flex align-center">
+                <v-checkbox
+                  v-model="settings.team_match.row_labels.bold"
+                  label="Gras"
+                  hide-details
+                  class="mt-0 pt-0"
+                />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1">
+              <v-col cols="3">
+                <v-text-field
+                  v-model="settings.team_match.row_labels.kills_label"
+                  label="Label Kills"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field
+                  v-model.number="settings.team_match.row_labels.kills_y"
+                  label="Y"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  v-model="settings.team_match.row_labels.assists_label"
+                  label="Label Assists"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field
+                  v-model.number="settings.team_match.row_labels.assists_y"
+                  label="Y"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1">
+              <v-col cols="3">
+                <v-text-field
+                  v-model="settings.team_match.row_labels.deaths_label"
+                  label="Label Morts"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field
+                  v-model.number="settings.team_match.row_labels.deaths_y"
+                  label="Y"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="3">
+                <v-text-field
+                  v-model="settings.team_match.row_labels.rating_label"
+                  label="Label Rating"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field
+                  v-model.number="settings.team_match.row_labels.rating_y"
+                  label="Y"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+          </div>
+
+          <v-divider class="my-3" />
+          <v-subheader class="font-weight-bold"
+            >Fond &amp; Police personnalisée</v-subheader
+          >
+          <v-row align="center">
+            <v-col cols="4"
+              ><v-text-field
+                v-model="settings.team_match.background"
+                label="Fichier de fond (public/img/)"
+                outlined
+                dense
+            /></v-col>
+            <v-col cols="4">
+              <v-file-input
+                v-model="bgFile[4]"
+                label="Uploader un fond"
+                accept="image/png,image/jpeg"
+                outlined
+                dense
+                hide-details
+                prepend-icon="mdi-image"
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-btn
+                :disabled="!bgFile[4]"
+                color="secondary"
+                small
+                @click="uploadBg(4)"
+                :loading="uploadingBg[4]"
+              >
+                <v-icon left>mdi-upload</v-icon>Uploader
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-row align="center">
+            <v-col cols="4"
+              ><v-text-field
+                v-model="settings.team_match.fontFile"
+                label="Fichier police (public/fonts/)"
+                outlined
+                dense
+            /></v-col>
+            <v-col cols="4">
+              <v-file-input
+                v-model="fontFileInput[4]"
+                label="Uploader une police"
+                accept=".ttf,.otf"
+                outlined
+                dense
+                hide-details
+                prepend-icon="mdi-format-font"
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-btn
+                :disabled="!fontFileInput[4]"
+                color="secondary"
+                small
+                @click="uploadFont(4)"
+                :loading="uploadingFont[4]"
+              >
+                <v-icon left>mdi-upload</v-icon>Uploader
+              </v-btn>
+            </v-col>
+          </v-row>
+          <v-alert
+            v-if="uploadMsg[4]"
+            :type="uploadMsgType[4]"
+            dense
+            class="mt-2"
+            >{{ uploadMsg[4] }}</v-alert
+          >
+        </v-card>
+
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <!-- Tab 5 : Aperçu                                                -->
+        <!-- ══════════════════════════════════════════════════════════════ -->
+        <v-card v-if="tab === 5" flat class="pa-4">
           <v-subheader class="font-weight-bold">Image Match</v-subheader>
           <v-row align="center">
             <v-col cols="4">
@@ -3061,15 +3444,77 @@
               >Impossible de charger l'image.</v-alert
             >
           </div>
+
+          <v-divider class="my-4" />
+          <v-subheader class="font-weight-bold"
+            >Image Équipe (Match) — stats d'une seule équipe</v-subheader
+          >
+          <v-row align="center">
+            <v-col cols="3">
+              <v-text-field
+                v-model="previewMatchId"
+                label="ID du match"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-select
+                v-model="previewTeamNumber"
+                :items="[
+                  { text: 'Équipe 1', value: 1 },
+                  { text: 'Équipe 2', value: 2 },
+                ]"
+                label="Équipe"
+                outlined
+                dense
+                hide-details
+              />
+            </v-col>
+            <v-col cols="2">
+              <v-text-field
+                v-model="previewTeamMatchMap"
+                label="N° de map (vide = match entier)"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
+            </v-col>
+            <v-col cols="auto">
+              <v-btn
+                color="primary"
+                :href="teamMatchPreviewUrl"
+                target="_blank"
+                :disabled="!previewMatchId || !previewTeamNumber"
+                small
+              >
+                <v-icon left small>mdi-open-in-new</v-icon>Ouvrir
+              </v-btn>
+            </v-col>
+          </v-row>
+          <div v-if="previewMatchId && previewTeamNumber" class="mt-3">
+            <img
+              :src="`${teamMatchPreviewUrl}?t=${previewTs}`"
+              style="max-width: 100%; border: 1px solid #ccc"
+              @error="previewTeamMatchError = true"
+              @load="previewTeamMatchError = false"
+            />
+            <v-alert v-if="previewTeamMatchError" type="error" dense
+              >Impossible de charger l'image.</v-alert
+            >
+          </div>
         </v-card>
 
         <!-- ── Actions ───────────────────────────────────────────────── -->
         <v-card-actions class="pa-4">
-          <v-btn outlined @click="exportConfig" v-if="tab < 4">
+          <v-btn outlined @click="exportConfig" v-if="tab < 5">
             <v-icon left>mdi-download</v-icon>
             Exporter
           </v-btn>
-          <v-btn outlined @click="$refs.importFile.click()" v-if="tab < 4">
+          <v-btn outlined @click="$refs.importFile.click()" v-if="tab < 5">
             <v-icon left>mdi-upload</v-icon>
             Importer
           </v-btn>
@@ -3122,6 +3567,29 @@ const defFX = (enabled, font, color, size, bold, x) => ({
   y: [...ROWS_Y_DEFAULT],
 });
 
+const PLAYER_COLUMNS_X = [320, 640, 960, 1280, 1600];
+
+// Champ avec un X différent par joueur (colonne) mais un Y partagé (ligne) —
+// l'inverse de defFX, pour une mise en page "colonnes joueurs" (photos en rangée).
+const defFXRow = (enabled, font, color, size, bold, xs, y) => ({
+  enabled,
+  font,
+  color,
+  size,
+  bold,
+  x: [...xs],
+  y: [y, y, y, y, y],
+});
+
+const defPhotoRow = (enabled, width, height, circle, xs, y) => ({
+  enabled,
+  width,
+  height,
+  circle,
+  x: [...xs],
+  y: [y, y, y, y, y],
+});
+
 // Ramène une valeur sauvegardée (ancien scalaire, nouveau tableau, ou absente)
 // à un tableau de 5 positions, une par ligne joueur.
 function normalizeFXArr(val, fallback, def) {
@@ -3133,7 +3601,7 @@ function normalizeFXArr(val, fallback, def) {
   }
   return [0, 1, 2, 3, 4].map((i) => fallback[i] ?? def[i]);
 }
-function normalizeFX(def, saved, rowsYFallback) {
+function normalizeFX(def, saved, rowsYFallback = def.y) {
   const s = saved || {};
   return {
     ...def,
@@ -3142,6 +3610,15 @@ function normalizeFX(def, saved, rowsYFallback) {
     // Anciennes configs sans Y sauvegardé : on part des rows_y déjà en place
     // pour ne pas déplacer les champs déjà positionnés par l'admin.
     y: normalizeFXArr(s.y, rowsYFallback, def.y),
+  };
+}
+function normalizePhotoRow(def, saved) {
+  const s = saved || {};
+  return {
+    ...def,
+    ...s,
+    x: normalizeFXArr(s.x, def.x, def.x),
+    y: normalizeFXArr(s.y, def.y, def.y),
   };
 }
 
@@ -3155,7 +3632,7 @@ export default {
       tab: 0,
 
       // Éditeur visuel (drag & drop) — un par onglet [match, player, mvp, team_season]
-      showVisualEditor: [true, true, true, true],
+      showVisualEditor: [true, true, true, true, true],
 
       settings: {
         canvas: { width: 1920, height: 1080 },
@@ -3436,6 +3913,75 @@ export default {
             },
           },
         },
+
+        team_match: {
+          background: "marble.png",
+          fontFile: "",
+          team_logo: { enabled: true, x: 960, y: 130, size: 120 },
+          team_name: defFC(true, "Arial", "#1a1a2e", 46, true, 960, 230),
+          photos: defPhotoRow(true, 220, 220, true, PLAYER_COLUMNS_X, 380),
+          player_name: defFXRow(
+            true,
+            "Arial",
+            "#1a1a2e",
+            24,
+            true,
+            PLAYER_COLUMNS_X,
+            520,
+          ),
+          kills: defFXRow(
+            true,
+            "Arial",
+            "#1a1a2e",
+            26,
+            false,
+            PLAYER_COLUMNS_X,
+            590,
+          ),
+          assists: defFXRow(
+            true,
+            "Arial",
+            "#1a1a2e",
+            26,
+            false,
+            PLAYER_COLUMNS_X,
+            650,
+          ),
+          deaths: defFXRow(
+            true,
+            "Arial",
+            "#1a1a2e",
+            26,
+            false,
+            PLAYER_COLUMNS_X,
+            710,
+          ),
+          rating: defFXRow(
+            true,
+            "Arial",
+            "#1a1a2e",
+            26,
+            false,
+            PLAYER_COLUMNS_X,
+            770,
+          ),
+          row_labels: {
+            enabled: true,
+            font: "Arial",
+            color: "#888888",
+            size: 20,
+            bold: true,
+            x: 80,
+            kills_label: "Kills",
+            kills_y: 590,
+            assists_label: "Assists",
+            assists_y: 650,
+            deaths_label: "Morts",
+            deaths_y: 710,
+            rating_label: "Rating",
+            rating_y: 770,
+          },
+        },
       },
 
       // Upload map images
@@ -3453,13 +3999,13 @@ export default {
       uploadPhotoMsgType: "success",
       playerPhotos: [],
 
-      // Upload state — index 0=match, 1=joueur, 2=mvp, 3=équipe
-      bgFile: [null, null, null, null],
-      fontFileInput: [null, null, null, null],
-      uploadingBg: [false, false, false, false],
-      uploadingFont: [false, false, false, false],
-      uploadMsg: ["", "", "", ""],
-      uploadMsgType: ["success", "success", "success", "success"],
+      // Upload state — index 0=match, 1=joueur, 2=mvp, 3=équipe saison, 4=équipe (match)
+      bgFile: [null, null, null, null, null],
+      fontFileInput: [null, null, null, null, null],
+      uploadingBg: [false, false, false, false, false],
+      uploadingFont: [false, false, false, false, false],
+      uploadMsg: ["", "", "", "", ""],
+      uploadMsgType: ["success", "success", "success", "success", "success"],
 
       // Aperçu
       previewTs: Date.now(),
@@ -3468,11 +4014,14 @@ export default {
       previewMvpMap: "",
       previewSeasonId: "",
       previewTeamId: "",
+      previewTeamNumber: 1,
+      previewTeamMatchMap: "",
       previewMatchError: false,
       previewPlayerError: false,
       previewMvpError: false,
       previewMvpMatchError: false,
       previewTeamError: false,
+      previewTeamMatchError: false,
 
       snack: false,
       snackMsg: "",
@@ -3556,6 +4105,14 @@ export default {
         { key: "rounds_lost", label: "Rounds -" },
         { key: "wins", label: "Victoires" },
         { key: "losses", label: "Défaites" },
+      ],
+      teamMatchFCFields: [{ key: "team_name", label: "Nom d'équipe" }],
+      teamMatchFXFields: [
+        { key: "player_name", label: "Nom joueur" },
+        { key: "kills", label: "Kills" },
+        { key: "assists", label: "Assists" },
+        { key: "deaths", label: "Morts" },
+        { key: "rating", label: "Rating" },
       ],
     };
   },
@@ -3784,6 +4341,89 @@ export default {
       }
       return pts;
     },
+
+    // Points glissables de l'onglet "Image Équipe (Match)"
+    teamMatchPoints() {
+      const s = this.settings.team_match;
+      const pts = [];
+      this.teamMatchFCFields.forEach((f) => {
+        const v = s[f.key];
+        if (v && v.enabled) {
+          pts.push({
+            markerId: f.key,
+            path: f.key,
+            label: f.label,
+            x: v.x,
+            y: v.y,
+            axis: "both",
+          });
+        }
+      });
+      if (s.team_logo.enabled) {
+        pts.push({
+          markerId: "team_logo",
+          path: "team_logo",
+          label: "Logo équipe",
+          x: s.team_logo.x,
+          y: s.team_logo.y,
+          axis: "both",
+        });
+      }
+      if (s.photos.enabled) {
+        for (let i = 0; i < 5; i++) {
+          pts.push({
+            markerId: `photo#${i}`,
+            path: `photos.${i}`,
+            label: `Photo — J${i + 1}`,
+            x: s.photos.x[i],
+            y: s.photos.y[i],
+            axis: "both",
+          });
+        }
+      }
+      // Chaque stat de chaque joueur (nom, kills, assists, morts, rating) se
+      // positionne individuellement — pas de ligne/colonne partagée.
+      this.teamMatchFXFields.forEach((f) => {
+        const v = s[f.key];
+        if (!v || !v.enabled) return;
+        for (let i = 0; i < 5; i++) {
+          pts.push({
+            markerId: `${f.key}#${i}`,
+            path: `${f.key}.${i}`,
+            label: `${f.label} — J${i + 1}`,
+            x: v.x[i],
+            y: v.y[i],
+            axis: "both",
+          });
+        }
+      });
+      if (s.row_labels.enabled) {
+        [
+          ["kills", "Kills"],
+          ["assists", "Assists"],
+          ["deaths", "Morts"],
+          ["rating", "Rating"],
+        ].forEach(([f, label]) => {
+          pts.push({
+            markerId: `row_label_${f}`,
+            path: `row_labels.${f}`,
+            label: `Étiquette ${label}`,
+            x: s.row_labels.x,
+            y: s.row_labels[`${f}_y`],
+            axis: "both",
+          });
+        });
+      }
+      return pts;
+    },
+
+    // URL de l'aperçu "Image Équipe (Match)", avec ou sans map précise
+    teamMatchPreviewUrl() {
+      const base = this.previewTeamMatchMap
+        ? `${this.apiUrl}/image/match/${this.previewMatchId}/map/${this.previewTeamMatchMap}/team/${this.previewTeamNumber}`
+        : `${this.apiUrl}/image/match/${this.previewMatchId}/team/${this.previewTeamNumber}`;
+      return base;
+    },
   },
 
   methods: {
@@ -3815,6 +4455,13 @@ export default {
         s.players.rating_y = y;
         return;
       }
+      // Étiquette de ligne (X partagé entre les 4 étiquettes, Y individuel)
+      if (path.startsWith("row_labels.")) {
+        const field = path.split(".")[1];
+        if (axis !== "y") s.row_labels.x = x;
+        if (axis !== "x") s.row_labels[`${field}_y`] = y;
+        return;
+      }
       // Champ par ligne joueur, ex. "kills_l.2" → ligne 3
       const rowFieldMatch = path.match(/^([a-zA-Z0-9_]+)\.(\d)$/);
       if (rowFieldMatch && s[rowFieldMatch[1]]?.x && s[rowFieldMatch[1]]?.y) {
@@ -3840,6 +4487,9 @@ export default {
     },
     onTeamSeasonDrag(path, x, y, axis) {
       this.setPointXY("team_season", path, x, y, axis);
+    },
+    onTeamMatchDrag(path, x, y, axis) {
+      this.setPointXY("team_match", path, x, y, axis);
     },
 
     async load() {
@@ -3867,6 +4517,7 @@ export default {
         const sp = s.player || {};
         const sv = s.mvp || {};
         const st = s.team_season || {};
+        const stm = s.team_match || {};
         // Number of player slots for the X positions
         const MAX_PLAYERS = 5;
         this.settings = {
@@ -4029,6 +4680,32 @@ export default {
               },
             },
           },
+
+          team_match: {
+            ...def.team_match,
+            ...stm,
+            team_logo: {
+              ...def.team_match.team_logo,
+              ...(stm.team_logo || {}),
+            },
+            team_name: {
+              ...def.team_match.team_name,
+              ...(stm.team_name || {}),
+            },
+            photos: normalizePhotoRow(def.team_match.photos, stm.photos),
+            player_name: normalizeFX(
+              def.team_match.player_name,
+              stm.player_name,
+            ),
+            kills: normalizeFX(def.team_match.kills, stm.kills),
+            assists: normalizeFX(def.team_match.assists, stm.assists),
+            deaths: normalizeFX(def.team_match.deaths, stm.deaths),
+            rating: normalizeFX(def.team_match.rating, stm.rating),
+            row_labels: {
+              ...def.team_match.row_labels,
+              ...(stm.row_labels || {}),
+            },
+          },
         };
         const systemFonts = [
           "Arial",
@@ -4064,7 +4741,13 @@ export default {
     },
 
     exportConfig() {
-      const sectionKey = ["match", "player", "mvp", "team_season"][this.tab];
+      const sectionKey = [
+        "match",
+        "player",
+        "mvp",
+        "team_season",
+        "team_match",
+      ][this.tab];
       const data = JSON.stringify(this.settings[sectionKey], null, 2);
       const blob = new Blob([data], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -4085,7 +4768,13 @@ export default {
       const inputEl = event.target;
       const file = inputEl.files[0];
       if (!file) return;
-      const sectionKey = ["match", "player", "mvp", "team_season"][this.tab];
+      const sectionKey = [
+        "match",
+        "player",
+        "mvp",
+        "team_season",
+        "team_match",
+      ][this.tab];
       const reader = new FileReader();
       reader.onload = (e) => {
         try {
@@ -4112,6 +4801,14 @@ export default {
                 rowsYFallback,
               );
             });
+          } else if (sectionKey === "team_match") {
+            const def = this.settings.team_match;
+            ["player_name", "kills", "assists", "deaths", "rating"].forEach(
+              (k) => {
+                parsed[k] = normalizeFX(def[k], parsed[k]);
+              },
+            );
+            parsed.photos = normalizePhotoRow(def.photos, parsed.photos);
           }
           this.$set(this.settings, sectionKey, parsed);
           this.notify(
@@ -4141,10 +4838,14 @@ export default {
           { headers: { "Content-Type": "multipart/form-data" } },
         );
         const filename = res.data.filename;
-        if (idx === 0) this.settings.match.background = filename;
-        else if (idx === 1) this.settings.player.background = filename;
-        else if (idx === 2) this.settings.mvp.background = filename;
-        else this.settings.team_season.background = filename;
+        const sectionKey = [
+          "match",
+          "player",
+          "mvp",
+          "team_season",
+          "team_match",
+        ][idx];
+        this.settings[sectionKey].background = filename;
         this.$set(this.uploadMsg, idx, `Fond uploadé : ${filename}`);
         this.$set(this.uploadMsgType, idx, "success");
         this.$set(this.bgFile, idx, null);
@@ -4171,19 +4872,15 @@ export default {
         );
         const filename = res.data.filename;
         const family = filename.replace(/\.[^.]+$/, "");
-        if (idx === 0) {
-          this.settings.match.fontFile = filename;
-          this.applyFontFamily("match", family);
-        } else if (idx === 1) {
-          this.settings.player.fontFile = filename;
-          this.applyFontFamily("player", family);
-        } else if (idx === 2) {
-          this.settings.mvp.fontFile = filename;
-          this.applyFontFamily("mvp", family);
-        } else {
-          this.settings.team_season.fontFile = filename;
-          this.applyFontFamily("team_season", family);
-        }
+        const sectionKey = [
+          "match",
+          "player",
+          "mvp",
+          "team_season",
+          "team_match",
+        ][idx];
+        this.settings[sectionKey].fontFile = filename;
+        this.applyFontFamily(sectionKey, family);
         await this.SaveImageSettings(this.settings);
         this.$set(
           this.uploadMsg,

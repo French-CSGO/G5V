@@ -7,6 +7,16 @@
         </v-btn>
         {{ seasonName }} — {{ $t("Challonge.MatchesTitle") }}
         <v-spacer />
+        <v-btn
+          small
+          outlined
+          color="primary"
+          class="mr-2"
+          :to="`/season/${seasonId}/swiss`"
+        >
+          <v-icon left small>mdi-image-multiple</v-icon>
+          {{ $t("Swiss.Title") }}
+        </v-btn>
         <v-chip small color="primary">Challonge</v-chip>
       </v-card-title>
 

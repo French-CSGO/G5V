@@ -1140,6 +1140,51 @@ export default {
         return error.response?.data || null;
       }
     },
+    async GetSwissPositions(seasonid, tournamentId) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments/${tournamentId}/positions`,
+        );
+        message = res.data.positions;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async SaveSwissPositions(seasonid, tournamentId, positions) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.put(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments/${tournamentId}/positions`,
+          { positions },
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    async DeleteSwissPosition(seasonid, tournamentId, challongeMatchId) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.delete(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/seasons/${seasonid}/challonge/tournaments/${tournamentId}/positions/${challongeMatchId}`,
+        );
+        message = res.data;
+      } catch (error) {
+        message = error.response.data.message;
+      }
+      return message;
+    },
+    GetSwissImageUrl(seasonid, tournamentId) {
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/image/season/${seasonid}/swiss/${tournamentId}`;
+    },
     // END SEASON CALLS
     // BEGIN PLAYER STATS
     async GetUserPlayerStats(steamid) {
@@ -2070,6 +2115,14 @@ export default {
       const res = await this.axiosCall.put(
         `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/settings`,
         settings,
+      );
+      return res.data;
+    },
+    async UploadImageFile(formData) {
+      const res = await this.axiosCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/upload/img`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } },
       );
       return res.data;
     },

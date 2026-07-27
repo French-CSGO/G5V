@@ -102,7 +102,9 @@
             class="text-center"
           >
             <v-card outlined>
-              <v-img :src="img.url" aspect-ratio="1" contain />
+              <div class="player-image-thumb">
+                <img :src="img.url" :alt="img.name || img.steamId" />
+              </div>
               <v-card-subtitle class="pb-0 text-truncate">
                 <div>{{ img.name || $t("PlayerImages.unknownPlayer") }}</div>
                 <div class="caption grey--text text-truncate">
@@ -299,3 +301,19 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.player-image-thumb {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.player-image-thumb img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+</style>

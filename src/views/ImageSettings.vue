@@ -35,9 +35,11 @@
           </v-subheader>
           <div v-if="showVisualEditor[0]">
             <v-alert dense outlined type="info" class="caption mb-2">
-              Faites glisser les points pour repositionner les champs. Les
-              lignes en pointillés (rangées de joueurs) et les colonnes se
-              déplacent en un seul axe. Sauvegardez pour appliquer.
+              Faites glisser chaque point pour repositionner ce champ
+              individuellement (photo, nom, K/A/D, rating de chaque ligne
+              joueur). Les lignes en pointillés « Ligne N (fond) » déplacent
+              uniquement le fond/l'activation de la ligne, pas le contenu.
+              Sauvegardez pour appliquer.
             </v-alert>
             <image-position-canvas
               :background="bgUrl('match')"
@@ -80,9 +82,11 @@
           />
 
           <v-subheader class="font-weight-bold mt-2"
-            >Lignes joueurs — Y
+            >Lignes joueurs — activation &amp; fond
             <span class="caption grey--text ml-2"
-              >(Y = 0 → désactivé)</span
+              >(Y = 0 → ligne désactivée ; sert aussi de position pour les
+              pilules de fond. Chaque champ ci-dessous se positionne
+              individuellement.)</span
             ></v-subheader
           >
           <v-row>
@@ -129,7 +133,7 @@
           </v-row>
 
           <v-subheader class="font-weight-bold"
-            >Colonnes joueurs (X seul, Y = ligne)</v-subheader
+            >Champs joueurs (position X/Y individuelle par ligne)</v-subheader
           >
           <image-f-x-table
             :fields="matchFXFields"
@@ -139,102 +143,96 @@
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold"
-            >Photos des joueurs (position &amp; taille)</v-subheader
+            >Photos des joueurs (taille partagée, position individuelle par
+            ligne)</v-subheader
           >
-          <v-row dense align="center">
-            <v-col cols="1" class="d-flex align-center">
-              <v-switch
-                v-model="settings.match.player_photo_l.enabled"
-                label="Gauche"
-                color="primary"
-                inset
-                dense
-                hide-details
-                class="mt-0 pt-0"
-              />
-            </v-col>
-            <v-col cols="2"
-              ><v-text-field
-                v-model.number="settings.match.player_photo_l.x"
-                label="X"
-                type="number"
-                outlined
-                dense
-                hide-details
-            /></v-col>
-            <v-col cols="2"
-              ><v-text-field
-                v-model.number="settings.match.player_photo_l.width"
-                label="Largeur"
-                type="number"
-                outlined
-                dense
-                hide-details
-            /></v-col>
-            <v-col cols="2"
-              ><v-text-field
-                v-model.number="settings.match.player_photo_l.height"
-                label="Hauteur"
-                type="number"
-                outlined
-                dense
-                hide-details
-            /></v-col>
-            <v-col cols="2" class="d-flex align-center">
-              <v-checkbox
-                v-model="settings.match.player_photo_l.circle"
-                label="Découpe circulaire"
-                hide-details
-              />
-            </v-col>
-          </v-row>
-          <v-row dense align="center" class="mt-1">
-            <v-col cols="1" class="d-flex align-center">
-              <v-switch
-                v-model="settings.match.player_photo_r.enabled"
-                label="Droite"
-                color="primary"
-                inset
-                dense
-                hide-details
-                class="mt-0 pt-0"
-              />
-            </v-col>
-            <v-col cols="2"
-              ><v-text-field
-                v-model.number="settings.match.player_photo_r.x"
-                label="X"
-                type="number"
-                outlined
-                dense
-                hide-details
-            /></v-col>
-            <v-col cols="2"
-              ><v-text-field
-                v-model.number="settings.match.player_photo_r.width"
-                label="Largeur"
-                type="number"
-                outlined
-                dense
-                hide-details
-            /></v-col>
-            <v-col cols="2"
-              ><v-text-field
-                v-model.number="settings.match.player_photo_r.height"
-                label="Hauteur"
-                type="number"
-                outlined
-                dense
-                hide-details
-            /></v-col>
-            <v-col cols="2" class="d-flex align-center">
-              <v-checkbox
-                v-model="settings.match.player_photo_r.circle"
-                label="Découpe circulaire"
-                hide-details
-              />
-            </v-col>
-          </v-row>
+          <div
+            v-for="side in [
+              { key: 'player_photo_l', label: 'Gauche' },
+              { key: 'player_photo_r', label: 'Droite' },
+            ]"
+            :key="side.key"
+          >
+            <v-row dense align="center" class="mt-1">
+              <v-col cols="2" class="d-flex align-center">
+                <v-switch
+                  v-model="settings.match[side.key].enabled"
+                  :label="side.label"
+                  color="primary"
+                  inset
+                  dense
+                  hide-details
+                  class="mt-0 pt-0"
+                />
+              </v-col>
+              <v-col cols="2"
+                ><v-text-field
+                  v-model.number="settings.match[side.key].width"
+                  label="Largeur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="2"
+                ><v-text-field
+                  v-model.number="settings.match[side.key].height"
+                  label="Hauteur"
+                  type="number"
+                  outlined
+                  dense
+                  hide-details
+              /></v-col>
+              <v-col cols="3" class="d-flex align-center">
+                <v-checkbox
+                  v-model="settings.match[side.key].circle"
+                  label="Découpe circulaire"
+                  hide-details
+                />
+              </v-col>
+            </v-row>
+            <v-row dense class="mt-1 mb-2">
+              <v-col v-for="i in 5" :key="i" cols="auto">
+                <span class="caption grey--text d-block text-center"
+                  >Joueur {{ i }}</span
+                >
+                <div class="d-flex" style="gap: 6px">
+                  <v-text-field
+                    :value="settings.match[side.key].x[i - 1]"
+                    label="X"
+                    type="number"
+                    outlined
+                    dense
+                    hide-details
+                    style="width: 84px"
+                    @input="
+                      $set(
+                        settings.match[side.key].x,
+                        i - 1,
+                        Number($event),
+                      )
+                    "
+                  />
+                  <v-text-field
+                    :value="settings.match[side.key].y[i - 1]"
+                    label="Y"
+                    type="number"
+                    outlined
+                    dense
+                    hide-details
+                    style="width: 84px"
+                    @input="
+                      $set(
+                        settings.match[side.key].y,
+                        i - 1,
+                        Number($event),
+                      )
+                    "
+                  />
+                </div>
+              </v-col>
+            </v-row>
+          </div>
 
           <v-divider class="my-3" />
           <v-subheader class="font-weight-bold">
@@ -3181,6 +3179,8 @@ import ImageFCTable from "@/components/ImageFCTable.vue";
 import ImageFXTable from "@/components/ImageFXTable.vue";
 import ImagePositionCanvas from "@/components/ImagePositionCanvas.vue";
 
+const ROWS_Y_DEFAULT = [485, 625, 770, 0, 0];
+
 const defFC = (enabled, font, color, size, bold, x, y) => ({
   enabled,
   font,
@@ -3190,14 +3190,56 @@ const defFC = (enabled, font, color, size, bold, x, y) => ({
   x,
   y,
 });
+// Champ positionnable individuellement pour chacune des 5 lignes joueurs
 const defFX = (enabled, font, color, size, bold, x) => ({
   enabled,
   font,
   color,
   size,
   bold,
-  x,
+  x: [x, x, x, x, x],
+  y: [...ROWS_Y_DEFAULT],
 });
+const defPlayerPhoto = (enabled, x, width, height, circle) => ({
+  enabled,
+  x: [x, x, x, x, x],
+  y: [...ROWS_Y_DEFAULT],
+  width,
+  height,
+  circle,
+});
+
+// Ramène une valeur sauvegardée (ancien scalaire, nouveau tableau, ou absente)
+// à un tableau de 5 positions, une par ligne joueur.
+function normalizeFXArr(val, fallback, def) {
+  if (Array.isArray(val)) {
+    return [0, 1, 2, 3, 4].map((i) => val[i] ?? fallback[i] ?? def[i]);
+  }
+  if (typeof val === "number") {
+    return [val, val, val, val, val];
+  }
+  return [0, 1, 2, 3, 4].map((i) => fallback[i] ?? def[i]);
+}
+function normalizeFX(def, saved, rowsYFallback = def.y) {
+  const s = saved || {};
+  return {
+    ...def,
+    ...s,
+    x: normalizeFXArr(s.x, def.x, def.x),
+    // Anciennes configs sans Y sauvegardé : on part des rows_y déjà en place
+    // pour ne pas déplacer les champs déjà positionnés par l'admin.
+    y: normalizeFXArr(s.y, rowsYFallback, def.y),
+  };
+}
+function normalizePlayerPhoto(def, saved, rowsYFallback = def.y) {
+  const s = saved || {};
+  return {
+    ...def,
+    ...s,
+    x: normalizeFXArr(s.x, def.x, def.x),
+    y: normalizeFXArr(s.y, rowsYFallback, def.y),
+  };
+}
 
 export default {
   name: "ImageSettings",
@@ -3217,7 +3259,7 @@ export default {
         match: {
           background: "marble.png",
           fontFile: "",
-          rows_y: [485, 625, 770, 0, 0],
+          rows_y: [...ROWS_Y_DEFAULT],
           team1_name: defFC(true, "Arial", "#1a1a2e", 30, true, 415, 302),
           team1_score: defFC(true, "Arial", "#1a1a2e", 30, true, 806, 302),
           team2_score: defFC(true, "Arial", "#1a1a2e", 30, true, 1114, 302),
@@ -3231,20 +3273,8 @@ export default {
           rating_l: defFX(true, "Arial", "#1a1a2e", 20, false, 890),
           kad_r: defFX(true, "Arial", "#1a1a2e", 20, false, 1120),
           rating_r: defFX(true, "Arial", "#1a1a2e", 20, false, 1280),
-          player_photo_l: {
-            enabled: true,
-            x: 110,
-            width: 56,
-            height: 56,
-            circle: true,
-          },
-          player_photo_r: {
-            enabled: true,
-            x: 1520,
-            width: 56,
-            height: 56,
-            circle: true,
-          },
+          player_photo_l: defPlayerPhoto(true, 110, 56, 56, true),
+          player_photo_r: defPlayerPhoto(true, 1520, 56, 56, true),
           column_headers: {
             enabled: false,
             y: 400,
@@ -3646,6 +3676,9 @@ export default {
           });
         }
       });
+      // Chaque champ par ligne (nom, K/A/D, rating — gauche et droite) est
+      // positionnable individuellement (X et Y indépendants), pas seulement
+      // par colonne/ligne partagée.
       this.matchFXFields.forEach((f) => {
         const v = s[f.key];
         if (!v || !v.enabled) return;
@@ -3653,21 +3686,23 @@ export default {
           if (ry > 0) {
             pts.push({
               markerId: `${f.key}#${i}`,
-              path: f.key,
-              label: f.label,
-              x: v.x,
-              y: ry,
-              axis: "x",
+              path: `${f.key}.${i}`,
+              label: `${f.label} — J${i + 1}`,
+              x: v.x[i],
+              y: v.y[i],
+              axis: "both",
             });
           }
         });
       });
+      // Lignes joueurs : n'agissent plus que comme interrupteur
+      // d'activation + ancrage des fonds (pilules) de chaque ligne.
       s.rows_y.forEach((ry, i) => {
         if (ry > 0) {
           pts.push({
             markerId: `rows_y#${i}`,
             path: `rows_y.${i}`,
-            label: `Ligne ${i + 1}`,
+            label: `Ligne ${i + 1} (fond)`,
             x: cw / 2,
             y: ry,
             axis: "y",
@@ -3704,11 +3739,11 @@ export default {
           if (ry > 0) {
             pts.push({
               markerId: `${key}#${i}`,
-              path: key,
-              label,
-              x: v.x,
-              y: ry,
-              axis: "x",
+              path: `${key}.${i}`,
+              label: `${label} — J${i + 1}`,
+              x: v.x[i],
+              y: v.y[i],
+              axis: "both",
             });
           }
         });
@@ -3887,6 +3922,15 @@ export default {
         s.players.rating_y = y;
         return;
       }
+      // Champ par ligne joueur, ex. "kad_l.2" ou "player_photo_r.0" → ligne N
+      const rowFieldMatch = path.match(/^([a-zA-Z0-9_]+)\.(\d)$/);
+      if (rowFieldMatch && s[rowFieldMatch[1]]?.x && s[rowFieldMatch[1]]?.y) {
+        const key = rowFieldMatch[1];
+        const i = parseInt(rowFieldMatch[2], 10);
+        if (axis !== "y") this.$set(s[key].x, i, x);
+        if (axis !== "x") this.$set(s[key].y, i, y);
+        return;
+      }
       const obj = s[path];
       if (!obj) return;
       if (axis !== "y") obj.x = x;
@@ -3937,16 +3981,48 @@ export default {
           match: {
             ...def.match,
             ...sm,
+            player_name_l: normalizeFX(
+              def.match.player_name_l,
+              sm.player_name_l,
+              sm.rows_y || def.match.rows_y,
+            ),
+            player_name_r: normalizeFX(
+              def.match.player_name_r,
+              sm.player_name_r,
+              sm.rows_y || def.match.rows_y,
+            ),
+            kad_l: normalizeFX(
+              def.match.kad_l,
+              sm.kad_l,
+              sm.rows_y || def.match.rows_y,
+            ),
+            rating_l: normalizeFX(
+              def.match.rating_l,
+              sm.rating_l,
+              sm.rows_y || def.match.rows_y,
+            ),
+            kad_r: normalizeFX(
+              def.match.kad_r,
+              sm.kad_r,
+              sm.rows_y || def.match.rows_y,
+            ),
+            rating_r: normalizeFX(
+              def.match.rating_r,
+              sm.rating_r,
+              sm.rows_y || def.match.rows_y,
+            ),
             team1_logo: { ...def.match.team1_logo, ...(sm.team1_logo || {}) },
             team2_logo: { ...def.match.team2_logo, ...(sm.team2_logo || {}) },
-            player_photo_l: {
-              ...def.match.player_photo_l,
-              ...(sm.player_photo_l || {}),
-            },
-            player_photo_r: {
-              ...def.match.player_photo_r,
-              ...(sm.player_photo_r || {}),
-            },
+            player_photo_l: normalizePlayerPhoto(
+              def.match.player_photo_l,
+              sm.player_photo_l,
+              sm.rows_y || def.match.rows_y,
+            ),
+            player_photo_r: normalizePlayerPhoto(
+              def.match.player_photo_r,
+              sm.player_photo_r,
+              sm.rows_y || def.match.rows_y,
+            ),
             column_headers: {
               ...def.match.column_headers,
               ...(sm.column_headers || {}),
@@ -4111,6 +4187,26 @@ export default {
       reader.onload = (e) => {
         try {
           const parsed = JSON.parse(e.target.result);
+          if (sectionKey === "match") {
+            // Compat avec les anciens exports (X partagé par colonne, pas de Y par champ)
+            const rowsYFallback = parsed.rows_y || this.settings.match.rows_y;
+            ["player_name_l", "player_name_r", "kad_l", "rating_l", "kad_r", "rating_r"].forEach(
+              (k) => {
+                parsed[k] = normalizeFX(
+                  this.settings.match[k],
+                  parsed[k],
+                  rowsYFallback,
+                );
+              },
+            );
+            ["player_photo_l", "player_photo_r"].forEach((k) => {
+              parsed[k] = normalizePlayerPhoto(
+                this.settings.match[k],
+                parsed[k],
+                rowsYFallback,
+              );
+            });
+          }
           this.$set(this.settings, sectionKey, parsed);
           this.notify(
             `Configuration "${sectionKey}" importée — pensez à sauvegarder.`,

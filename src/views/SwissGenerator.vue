@@ -60,6 +60,19 @@
         >
           Actualiser les résultats
         </button>
+        <button
+          type="button"
+          :disabled="!currentSeasonId || !importedMatches.length"
+          @click="autoPlaceAll"
+        >
+          Placer automatiquement
+        </button>
+        <div class="swiss-gen__caption" style="margin-bottom: 6px">
+          Déduit le round de chaque match importé à partir des résultats déjà
+          entrés (victoires/défaites) et place les matchs — ainsi que les
+          équipes qualifiées (3-0/3-1/3-2) ou éliminées (0-3/1-3/2-3) — dans les
+          bonnes cases.
+        </div>
         <div class="swiss-gen__caption">{{ importStatus }}</div>
 
         <template v-if="importedMatches.length">
@@ -216,7 +229,10 @@
             :class="{ 'swiss-gen__team--active': team.id === selectedTeamId }"
             @click="selectTeam(team)"
           >
-            <img :src="team.src" />
+            <img v-if="team.src" :src="team.src" />
+            <div v-else class="swiss-gen__team-tag">
+              {{ teamTagText(team) }}
+            </div>
             <span :title="team.name"
               >{{ team.name
               }}<span v-if="team.g5Id != null" class="swiss-gen__badge"
@@ -410,6 +426,18 @@ export default {
       if (!side) return null;
       return this.getMatchBase(slotId) + "-" + (side === "A" ? "B" : "A");
     },
+    // Boxes where the record already has 3 wins or 3 losses (e.g. 3-0, 1-3)
+    // don't host a match: each of their A/B slots shows one qualified or
+    // eliminated team, independent of the other slot in the same box.
+    terminalKind(base) {
+      const m = base.match(/^(\d+)-(\d+)-\d+$/);
+      if (!m) return null;
+      const wins = parseInt(m[1], 10);
+      const losses = parseInt(m[2], 10);
+      if (wins === 3) return "win";
+      if (losses === 3) return "loss";
+      return null;
+    },
     setBackground(src) {
       if (!src) return;
       this.bgSrc = src;
@@ -432,10 +460,16 @@ export default {
         : "Aucune équipe sélectionnée.";
     },
     loadTeamImage(team) {
+      if (!team.src) return;
       const img = new Image();
       img.onload = () => this.draw();
+      img.onerror = () => this.draw();
       img.src = team.src;
       this.teamImages.set(team.id, img);
+    },
+    teamTagText(team) {
+      if (team.tag) return team.tag;
+      return (team.name || "?").trim().slice(0, 4).toUpperCase();
     },
     draw() {
       const ctx = this.ctx;
@@ -458,7 +492,8 @@ export default {
         const teamId = this.assignments[slot.id];
         const team = this.teams.find((t) => t.id === teamId);
         const img = teamId ? this.teamImages.get(teamId) : null;
-        if (team && img && img.complete) {
+        const hasLogo = !!(img && img.complete && img.naturalWidth > 0);
+        if (team) {
           if (this.readabilityFill) {
             ctx.save();
             ctx.fillStyle = this.hexToRgba(
@@ -471,7 +506,16 @@ export default {
 
           const base = this.getMatchBase(slot.id);
           const side = this.getSlotSide(slot.id);
-          if (this.matchResults[base]) {
+          const terminal = this.terminalKind(base);
+          if (terminal) {
+            ctx.save();
+            ctx.fillStyle = this.hexToRgba(
+              terminal === "win" ? this.winnerColor : this.loserColor,
+              this.resultOpacity,
+            );
+            ctx.fillRect(slot.x + 1, slot.y + 1, slot.w - 2, slot.h - 2);
+            ctx.restore();
+          } else if (this.matchResults[base]) {
             ctx.save();
             const isWinner = this.matchResults[base] === side;
             ctx.fillStyle = this.hexToRgba(
@@ -482,21 +526,45 @@ export default {
             ctx.restore();
           }
 
-          const r = this.fitRect(
-            img.naturalWidth,
-            img.naturalHeight,
-            slot,
-            this.showNames ? 13 : 7,
-          );
-          ctx.save();
-          if (this.readabilityShadow) {
-            ctx.shadowColor = "rgba(0,0,0,0.55)";
-            ctx.shadowBlur = 8;
-            ctx.shadowOffsetX = 1;
-            ctx.shadowOffsetY = 2;
+          if (hasLogo) {
+            const r = this.fitRect(
+              img.naturalWidth,
+              img.naturalHeight,
+              slot,
+              this.showNames ? 13 : 7,
+            );
+            ctx.save();
+            if (this.readabilityShadow) {
+              ctx.shadowColor = "rgba(0,0,0,0.55)";
+              ctx.shadowBlur = 8;
+              ctx.shadowOffsetX = 1;
+              ctx.shadowOffsetY = 2;
+            }
+            ctx.drawImage(img, r.x, r.y, r.w, r.h);
+            ctx.restore();
+          } else {
+            // No logo (or it failed to load): fall back to the team tag so
+            // the slot never renders blank.
+            ctx.save();
+            const fontSize = Math.max(14, Math.min(slot.w, slot.h) * 0.34);
+            ctx.font = `bold ${fontSize}px Arial`;
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillStyle = "white";
+            if (this.readabilityShadow) {
+              ctx.shadowColor = "rgba(0,0,0,0.55)";
+              ctx.shadowBlur = 6;
+              ctx.shadowOffsetX = 1;
+              ctx.shadowOffsetY = 1;
+            }
+            ctx.fillText(
+              this.teamTagText(team),
+              slot.x + slot.w / 2,
+              slot.y + slot.h / 2 - (this.showNames ? 6 : 0),
+              slot.w - 10,
+            );
+            ctx.restore();
           }
-          ctx.drawImage(img, r.x, r.y, r.w, r.h);
-          ctx.restore();
 
           if (this.showNames) {
             ctx.save();
@@ -546,6 +614,7 @@ export default {
           id: t.id,
           name: t.name,
           src: t.src,
+          tag: t.tag ?? null,
           g5Id: t.g5Id ?? null,
         })),
         assignments: { ...this.assignments },
@@ -615,6 +684,11 @@ export default {
       }
 
       if (this.winnerMode) {
+        if (this.terminalKind(base)) {
+          this.status =
+            "Cette case affiche une équipe qualifiée/éliminée : la couleur est automatique, il n'y a pas de gagnant à désigner.";
+          return;
+        }
         if (this.lockedMatches[base]) {
           this.status =
             "Ce match est verrouillé. Déverrouille-le avant de modifier le résultat.";
@@ -645,6 +719,11 @@ export default {
       }
 
       if (this.selectedMatchId) {
+        if (this.terminalKind(base)) {
+          this.status =
+            "Cette case affiche des équipes individuelles (qualifiée/éliminée), pas un match. Sélectionne une équipe seule pour la placer ici.";
+          return;
+        }
         if (this.lockedMatches[base]) {
           this.status =
             "Ce match est verrouillé. Déverrouille-le avant de modifier ses équipes.";
@@ -847,13 +926,20 @@ export default {
             id: this.uid(),
             g5Id: t.id,
             name: t.name,
+            tag: t.tag || null,
             src: t.logo ? `${this.apiUrl}/static/img/logos/${t.logo}.png` : "",
           };
           this.loadTeamImage(team);
           return team;
         });
         const customTeams = ((board && board.customTeams) || []).map((t) => {
-          const team = { id: t.id, g5Id: null, name: t.name, src: t.src };
+          const team = {
+            id: t.id,
+            g5Id: null,
+            name: t.name,
+            tag: t.tag || null,
+            src: t.src,
+          };
           this.loadTeamImage(team);
           return team;
         });
@@ -1011,6 +1097,7 @@ export default {
       this.draw();
     },
     autoFillResult(base) {
+      if (this.terminalKind(base)) return;
       const slotA = SLOTS.find((s) => s.id === base + "-A");
       const slotB = SLOTS.find((s) => s.id === base + "-B");
       if (!slotA || !slotB) return;
@@ -1029,6 +1116,132 @@ export default {
       if (match.winner === teamA.g5Id) this.$set(this.matchResults, base, "A");
       else if (match.winner === teamB.g5Id)
         this.$set(this.matchResults, base, "B");
+    },
+    // Boxes are grouped by "W-L" record (e.g. "2-1"), each box being one
+    // real match except for terminal records (3 wins or 3 losses) whose
+    // boxes just display individual teams. Walking the imported matches in
+    // chronological order lets us derive each team's record *before* every
+    // match they play, so every match (and every team that finishes with a
+    // terminal record) can be dropped into its correct box automatically —
+    // exactly what the previous rounds' results already imply.
+    slotBucketBoxes() {
+      const buckets = new Map();
+      const seenBases = new Set();
+      for (const slot of SLOTS) {
+        const base = this.getMatchBase(slot.id);
+        if (seenBases.has(base)) continue;
+        seenBases.add(base);
+        const m = base.match(/^(\d+)-(\d+)-(\d+)$/);
+        if (!m) continue;
+        const key = `${m[1]}-${m[2]}`;
+        const n = parseInt(m[3], 10);
+        if (!buckets.has(key)) buckets.set(key, []);
+        buckets.get(key).push({ base, n });
+      }
+      buckets.forEach((arr) => arr.sort((a, b) => a.n - b.n));
+      return buckets;
+    },
+    autoPlaceAll() {
+      if (!this.importedMatches.length) {
+        this.notify("Aucun match importé à placer.", "error");
+        return;
+      }
+      this.pushHistory();
+
+      const buckets = this.slotBucketBoxes();
+      const isBoxUsable = (base) =>
+        !this.lockedMatches[base] &&
+        !this.assignments[base + "-A"] &&
+        !this.assignments[base + "-B"];
+      const nextEmptyBox = (key) =>
+        (buckets.get(key) || []).find((b) => isBoxUsable(b.base));
+      const nextEmptyTerminalSlot = (key) => {
+        for (const b of buckets.get(key) || []) {
+          if (this.lockedMatches[b.base]) continue;
+          if (!this.assignments[b.base + "-A"]) return b.base + "-A";
+          if (!this.assignments[b.base + "-B"]) return b.base + "-B";
+        }
+        return null;
+      };
+
+      const matches = this.importedMatches
+        .filter((m) => !m.cancelled)
+        .slice()
+        .sort((a, b) => {
+          const ta = a.end_time
+            ? new Date(a.end_time).getTime()
+            : Number.POSITIVE_INFINITY;
+          const tb = b.end_time
+            ? new Date(b.end_time).getTime()
+            : Number.POSITIVE_INFINITY;
+          if (ta !== tb) return ta - tb;
+          return a.id - b.id;
+        });
+
+      const records = new Map(); // g5Id -> { w, l }
+      const getRecord = (gid) => records.get(gid) || { w: 0, l: 0 };
+
+      let placedCount = 0;
+      let skipped = 0;
+
+      for (const m of matches) {
+        const teamA = this.teams.find((t) => t.g5Id === m.team1_id);
+        const teamB = this.teams.find((t) => t.g5Id === m.team2_id);
+        if (!teamA || !teamB) {
+          skipped++;
+        } else {
+          const pairKey = [teamA.g5Id, teamB.g5Id].sort().join(":");
+          if (!this.placedPairKeys.has(pairKey)) {
+            const recA = getRecord(teamA.g5Id);
+            const recB = getRecord(teamB.g5Id);
+            const key = `${recA.w}-${recA.l}`;
+            if (key === `${recB.w}-${recB.l}` && buckets.has(key)) {
+              const box = nextEmptyBox(key);
+              if (box) {
+                this.$set(this.assignments, box.base + "-A", teamA.id);
+                this.$set(this.assignments, box.base + "-B", teamB.id);
+                this.$delete(this.matchResults, box.base);
+                this.autoFillResult(box.base);
+                placedCount++;
+              } else {
+                skipped++;
+              }
+            } else {
+              skipped++;
+            }
+          }
+
+          if (m.end_time && m.winner != null) {
+            const recA = getRecord(teamA.g5Id);
+            const recB = getRecord(teamB.g5Id);
+            if (m.winner === teamA.g5Id) {
+              records.set(teamA.g5Id, { w: recA.w + 1, l: recA.l });
+              records.set(teamB.g5Id, { w: recB.w, l: recB.l + 1 });
+            } else if (m.winner === teamB.g5Id) {
+              records.set(teamB.g5Id, { w: recB.w + 1, l: recB.l });
+              records.set(teamA.g5Id, { w: recA.w, l: recA.l + 1 });
+            }
+          }
+        }
+      }
+
+      let terminalPlaced = 0;
+      const placedTeamIds = new Set(Object.values(this.assignments));
+      records.forEach((rec, gid) => {
+        if (rec.w !== 3 && rec.l !== 3) return;
+        const team = this.teams.find((t) => t.g5Id === gid);
+        if (!team || placedTeamIds.has(team.id)) return;
+        const slotId = nextEmptyTerminalSlot(`${rec.w}-${rec.l}`);
+        if (slotId) {
+          this.$set(this.assignments, slotId, team.id);
+          placedTeamIds.add(team.id);
+          terminalPlaced++;
+        }
+      });
+
+      this.reapplyResults();
+      this.status = `Placement automatique : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (équipe manquante ou case occupée)` : ""}.`;
+      this.notify(this.status);
     },
     onKeydown(e) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
@@ -1158,6 +1371,19 @@ export default {
   object-fit: contain;
   background: #15171d;
   border-radius: 5px;
+}
+
+.swiss-gen__team-tag {
+  width: 46px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #15171d;
+  border-radius: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--sg-text);
 }
 
 .swiss-gen__team span {

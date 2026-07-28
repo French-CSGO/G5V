@@ -2101,6 +2101,40 @@ export default {
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/season/${seasonId}/team/${teamId}`;
     },
+    async SearchPlayers(query = "") {
+      const url = query
+        ? `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/playerstats/search?search=${encodeURIComponent(query)}`
+        : `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/search`;
+      const res = await this.axiosCall.get(url);
+      return res.data.players || [];
+    },
+    async GetPlayerImages() {
+      const res = await this.axiosCall.get(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/players`,
+      );
+      return res.data;
+    },
+    GetPlayerAvatarUrl(filename) {
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/static/img/players/${filename}`;
+    },
+    async UploadPlayerImage(formData) {
+      const res = await this.axiosCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/upload/player`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+      return res.data;
+    },
+    async DeletePlayerImage(steamId) {
+      const res = await this.axiosCall.delete(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/player/${steamId}`,
+      );
+      return res.data;
+    },
     GetTeamMatchImageUrl(matchId, teamNumber, mapNumber) {
       const base = process.env?.VUE_APP_G5V_API_URL || "/api";
       return mapNumber
@@ -2118,6 +2152,38 @@ export default {
       return `${
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/season/${seasonId}/versus/${team1Id}/${team2Id}`;
+    },
+    // OBS SLOTS — liens fixes réassignables à un match depuis le panel
+    async GetObsSlots() {
+      const res = await this.axiosCall.get(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/obs-slots`,
+      );
+      return res.data.slots || [];
+    },
+    async CreateObsSlot(label) {
+      const res = await this.axiosCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/obs-slots`,
+        { label },
+      );
+      return res.data.slot;
+    },
+    async UpdateObsSlot(slotId, payload) {
+      const res = await this.axiosCall.put(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/obs-slots/${slotId}`,
+        payload,
+      );
+      return res.data.slot;
+    },
+    async DeleteObsSlot(slotId) {
+      const res = await this.axiosCall.delete(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/obs-slots/${slotId}`,
+      );
+      return res.data;
+    },
+    GetObsSlotImageUrl(slug, path) {
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/image/slot/${slug}${path}`;
     },
     EstimateMatchEndTime(team1Score, team2Score, remainingMaps = 0) {
       const ROUND_DURATION_SEC = 115;

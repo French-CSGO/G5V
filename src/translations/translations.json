@@ -408,21 +408,6 @@
       "FormatSave": "Save",
       "ScheduleError": "Error saving format"
     },
-    "Swiss": {
-      "Title": "Swiss Image",
-      "Download": "Download image",
-      "UploadBackground": "Upload background",
-      "DragHint": "Drag a match box to reposition it",
-      "Unplaced": "Matches to place",
-      "AllPlaced": "All matches are placed.",
-      "BackgroundSaved": "Background saved.",
-      "BackgroundError": "Error uploading background.",
-      "BoxWidth": "Box width",
-      "BoxHeight": "Box height",
-      "SaveStyle": "Save style",
-      "StyleSaved": "Style saved.",
-      "StyleError": "Error saving style."
-    },
     "Toornament": {
       "MatchesTitle": "Toornament Matches",
       "ScheduleTitle": "Schedule Matches",
@@ -1112,21 +1097,6 @@
       "FormatSave": "Enregistrer",
       "ScheduleError": "Erreur lors de la sauvegarde du format"
     },
-    "Swiss": {
-      "Title": "Image Swiss",
-      "Download": "Télécharger l'image",
-      "UploadBackground": "Uploader le fond",
-      "DragHint": "Faites glisser une case de match pour la repositionner",
-      "Unplaced": "Matchs à placer",
-      "AllPlaced": "Tous les matchs sont placés.",
-      "BackgroundSaved": "Fond enregistré.",
-      "BackgroundError": "Erreur lors de l'upload du fond.",
-      "BoxWidth": "Largeur de la case",
-      "BoxHeight": "Hauteur de la case",
-      "SaveStyle": "Enregistrer le style",
-      "StyleSaved": "Style enregistré.",
-      "StyleError": "Erreur lors de l'enregistrement du style."
-    },
     "Toornament": {
       "MatchesTitle": "Matchs Toornament",
       "ScheduleTitle": "Planifier des matchs",
@@ -1809,21 +1779,6 @@
       "FormatAuto": "自動 (BO1)",
       "FormatSave": "保存",
       "ScheduleError": "フォーマットの保存エラー"
-    },
-    "Swiss": {
-      "Title": "スイス画像",
-      "Download": "画像をダウンロード",
-      "UploadBackground": "背景をアップロード",
-      "DragHint": "マッチボックスをドラッグして位置を調整",
-      "Unplaced": "配置待ちのマッチ",
-      "AllPlaced": "すべてのマッチが配置されました。",
-      "BackgroundSaved": "背景を保存しました。",
-      "BackgroundError": "背景のアップロードに失敗しました。",
-      "BoxWidth": "ボックスの幅",
-      "BoxHeight": "ボックスの高さ",
-      "SaveStyle": "スタイルを保存",
-      "StyleSaved": "スタイルを保存しました。",
-      "StyleError": "スタイルの保存に失敗しました。"
     },
     "Toornament": {
       "MatchesTitle": "Toornamentマッチ",

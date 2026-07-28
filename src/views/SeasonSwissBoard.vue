@@ -72,6 +72,40 @@
             </v-col>
           </v-row>
 
+          <v-row v-if="canEdit && settings" align="center" dense class="mb-2">
+            <v-col cols="6" sm="3">
+              <v-text-field
+                v-model.number="settings.swiss.box.width"
+                :label="$t('Swiss.BoxWidth')"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
+            </v-col>
+            <v-col cols="6" sm="3">
+              <v-text-field
+                v-model.number="settings.swiss.box.height"
+                :label="$t('Swiss.BoxHeight')"
+                type="number"
+                outlined
+                dense
+                hide-details
+              />
+            </v-col>
+            <v-col cols="12" sm="auto">
+              <v-btn
+                small
+                color="secondary"
+                :loading="savingStyle"
+                @click="saveStyle"
+              >
+                <v-icon left small>mdi-content-save</v-icon>
+                {{ $t("Swiss.SaveStyle") }}
+              </v-btn>
+            </v-col>
+          </v-row>
+
           <div ref="board" class="swiss-board" :style="boardStyle">
             <div
               v-for="placed in placedMatches"
@@ -81,25 +115,41 @@
               :style="chipStyle(placed)"
               @pointerdown="canEdit && startDrag($event, placed)"
             >
-              <div class="swiss-chip__row">
+              <div
+                class="swiss-chip__slot"
+                :style="{ background: slotFill(placed.match, 0) }"
+              >
+                <img
+                  v-if="logoUrl(placed.match, 0)"
+                  :src="logoUrl(placed.match, 0)"
+                  class="swiss-chip__logo"
+                />
                 <span
-                  :class="{ 'swiss-chip__winner': isWinner(placed.match, 0) }"
+                  v-if="settings && settings.swiss.team_name.enabled"
+                  class="swiss-chip__name"
+                  >{{ teamName(placed.match, 0) }}</span
                 >
-                  {{ teamName(placed.match, 0) }}
-                </span>
-                <span v-if="scoreOf(placed.match)">{{
-                  scoreOf(placed.match)[0]
-                }}</span>
               </div>
-              <div class="swiss-chip__row">
-                <span
-                  :class="{ 'swiss-chip__winner': isWinner(placed.match, 1) }"
-                >
-                  {{ teamName(placed.match, 1) }}
-                </span>
+              <div class="swiss-chip__mid">
                 <span v-if="scoreOf(placed.match)">{{
-                  scoreOf(placed.match)[1]
+                  scoreOf(placed.match).join(" - ")
                 }}</span>
+                <span v-else>VS</span>
+              </div>
+              <div
+                class="swiss-chip__slot"
+                :style="{ background: slotFill(placed.match, 1) }"
+              >
+                <img
+                  v-if="logoUrl(placed.match, 1)"
+                  :src="logoUrl(placed.match, 1)"
+                  class="swiss-chip__logo"
+                />
+                <span
+                  v-if="settings && settings.swiss.team_name.enabled"
+                  class="swiss-chip__name"
+                  >{{ teamName(placed.match, 1) }}</span
+                >
               </div>
               <v-icon
                 v-if="canEdit"
@@ -172,6 +222,7 @@ export default {
       settings: null,
       bgFile: null,
       uploadingBg: false,
+      savingStyle: false,
       previewTs: Date.now(),
       snack: false,
       snackMsg: "",
@@ -300,11 +351,42 @@ export default {
         [0, 0],
       );
     },
-    isWinner(match, side) {
-      if (match?.state !== "complete") return false;
-      const score = this.scoreOf(match);
-      if (!score) return false;
-      return side === 0 ? score[0] > score[1] : score[1] > score[0];
+    logoUrl(match, side) {
+      const p = side === 0 ? match?.player1 : match?.player2;
+      const logo = p?.local_team?.logo;
+      return logo ? `${this.apiUrl}/static/img/logos/${logo}.png` : null;
+    },
+    hexToRgba(hex, alpha) {
+      const clean = (hex || "").replace("#", "");
+      if (!/^[0-9a-f]{6}$/i.test(clean)) return `rgba(0,0,0,${alpha ?? 0.5})`;
+      const bigint = parseInt(clean, 16);
+      const r = (bigint >> 16) & 255;
+      const g = (bigint >> 8) & 255;
+      const b = bigint & 255;
+      return `rgba(${r},${g},${b},${alpha ?? 0.5})`;
+    },
+    slotFill(match, side) {
+      const box = this.settings?.swiss?.box;
+      if (!box) return "rgba(0,0,0,0.55)";
+      const score = match?.state === "complete" ? this.scoreOf(match) : null;
+      if (!score) return this.hexToRgba(box.fill_default, box.alpha);
+      const won = side === 0 ? score[0] > score[1] : score[1] > score[0];
+      const lost = side === 0 ? score[1] > score[0] : score[0] > score[1];
+      if (won) return this.hexToRgba(box.fill_win, box.alpha);
+      if (lost) return this.hexToRgba(box.fill_lose, box.alpha);
+      return this.hexToRgba(box.fill_default, box.alpha);
+    },
+    async saveStyle() {
+      this.savingStyle = true;
+      try {
+        await this.SaveImageSettings(this.settings);
+        this.previewTs = Date.now();
+        this.notify(this.$t("Swiss.StyleSaved"));
+      } catch {
+        this.notify(this.$t("Swiss.StyleError"), "error");
+      } finally {
+        this.savingStyle = false;
+      }
     },
     chipStyle(placed) {
       const scaleX = this.boardWidth() / this.canvasSize.width;
@@ -420,13 +502,9 @@ export default {
 
 .swiss-chip {
   position: absolute;
-  background: rgba(0, 0, 0, 0.55);
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 6px;
-  padding: 4px 8px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: stretch;
+  gap: 4px;
   font-size: 12px;
   color: #ffffff;
   user-select: none;
@@ -440,15 +518,43 @@ export default {
   cursor: grabbing;
 }
 
-.swiss-chip__row {
+.swiss-chip__slot {
+  flex: 0 0 auto;
+  aspect-ratio: 1;
+  height: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
   display: flex;
-  justify-content: space-between;
-  gap: 6px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  overflow: hidden;
+  padding: 2px;
 }
 
-.swiss-chip__winner {
-  color: #4caf50;
+.swiss-chip__logo {
+  max-width: 70%;
+  max-height: 60%;
+  object-fit: contain;
+}
+
+.swiss-chip__name {
+  font-size: 10px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+}
+
+.swiss-chip__mid {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
+  white-space: nowrap;
 }
 
 .swiss-chip__remove {

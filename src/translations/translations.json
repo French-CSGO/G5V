@@ -416,7 +416,12 @@
       "Unplaced": "Matches to place",
       "AllPlaced": "All matches are placed.",
       "BackgroundSaved": "Background saved.",
-      "BackgroundError": "Error uploading background."
+      "BackgroundError": "Error uploading background.",
+      "BoxWidth": "Box width",
+      "BoxHeight": "Box height",
+      "SaveStyle": "Save style",
+      "StyleSaved": "Style saved.",
+      "StyleError": "Error saving style."
     },
     "Toornament": {
       "MatchesTitle": "Toornament Matches",
@@ -1115,7 +1120,12 @@
       "Unplaced": "Matchs à placer",
       "AllPlaced": "Tous les matchs sont placés.",
       "BackgroundSaved": "Fond enregistré.",
-      "BackgroundError": "Erreur lors de l'upload du fond."
+      "BackgroundError": "Erreur lors de l'upload du fond.",
+      "BoxWidth": "Largeur de la case",
+      "BoxHeight": "Hauteur de la case",
+      "SaveStyle": "Enregistrer le style",
+      "StyleSaved": "Style enregistré.",
+      "StyleError": "Erreur lors de l'enregistrement du style."
     },
     "Toornament": {
       "MatchesTitle": "Matchs Toornament",
@@ -1808,7 +1818,12 @@
       "Unplaced": "配置待ちのマッチ",
       "AllPlaced": "すべてのマッチが配置されました。",
       "BackgroundSaved": "背景を保存しました。",
-      "BackgroundError": "背景のアップロードに失敗しました。"
+      "BackgroundError": "背景のアップロードに失敗しました。",
+      "BoxWidth": "ボックスの幅",
+      "BoxHeight": "ボックスの高さ",
+      "SaveStyle": "スタイルを保存",
+      "StyleSaved": "スタイルを保存しました。",
+      "StyleError": "スタイルの保存に失敗しました。"
     },
     "Toornament": {
       "MatchesTitle": "Toornamentマッチ",

@@ -33,7 +33,9 @@
         <p class="swiss-gen__hint" style="margin: 4px 0 8px">
           Charge les équipes, les matchs et le tableau déjà enregistré d'une
           saison. Toutes les modifications (placements, résultats, fond, style)
-          se sauvegardent sur le serveur, pour cette saison.
+          se sauvegardent sur le serveur, pour cette saison. Une fois une saison
+          chargée, les résultats se rafraîchissent automatiquement toutes les
+          30s.
         </p>
         <div class="swiss-gen__row">
           <input
@@ -51,8 +53,12 @@
         >
           {{ saving ? "Enregistrement..." : "Enregistrer sur le serveur" }}
         </button>
-        <button type="button" @click="reapplyResultsClick">
-          Réappliquer les résultats importés
+        <button
+          type="button"
+          :disabled="!currentSeasonId"
+          @click="reapplyResultsClick"
+        >
+          Actualiser les résultats
         </button>
         <div class="swiss-gen__caption">{{ importStatus }}</div>
 
@@ -344,6 +350,7 @@ export default {
       this.draw();
     };
     this.bgImage.src = this.bgSrc;
+    this.refreshTimer = null;
   },
   mounted() {
     this.canvas = this.$refs.canvas;
@@ -353,6 +360,7 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener("keydown", this.onKeydown);
+    if (this.refreshTimer) clearInterval(this.refreshTimer);
   },
   methods: {
     notify(msg, color = "success") {
@@ -908,9 +916,43 @@ export default {
         this.selectedTeamId = null;
         this.selectedMatchId = null;
         this.reapplyResults();
+        this.startAutoRefresh();
       } catch (err) {
         this.importStatus = "Erreur : " + (err.message || err);
       }
+    },
+    async refreshMatches(silent = false) {
+      if (!this.currentSeasonId) return;
+      try {
+        const seasonMatches = await this.GetSeasonRecentMatches(
+          this.currentSeasonId,
+        );
+        this.importedMatches = (
+          Array.isArray(seasonMatches) ? seasonMatches : []
+        ).map((m) => ({
+          id: m.id,
+          team1_id: m.team1_id,
+          team2_id: m.team2_id,
+          team1_string: m.team1_string,
+          team2_string: m.team2_string,
+          winner: m.winner,
+          cancelled: !!m.cancelled,
+          end_time: m.end_time,
+        }));
+        this.reapplyResults();
+        if (!silent) this.status = "Résultats des matchs actualisés.";
+      } catch (err) {
+        if (!silent)
+          this.notify("Erreur lors de l'actualisation des résultats.", "error");
+      }
+    },
+    startAutoRefresh() {
+      if (this.refreshTimer) clearInterval(this.refreshTimer);
+      // Picks up matches that finish after the board was loaded/placed, so
+      // the winner/loser coloring appears without anyone clicking anything —
+      // it never overwrites locked matches (reapplyResults skips those) and
+      // never auto-saves, so it can't clobber a concurrent editor's save.
+      this.refreshTimer = setInterval(() => this.refreshMatches(true), 30000);
     },
     async saveBoard() {
       if (!this.currentSeasonId) return;
@@ -958,8 +1000,7 @@ export default {
     },
     reapplyResultsClick() {
       this.pushHistory();
-      this.reapplyResults();
-      this.status = "Résultats importés réappliqués.";
+      this.refreshMatches();
     },
     reapplyResults() {
       const bases = new Set(SLOTS.map((s) => this.getMatchBase(s.id)));

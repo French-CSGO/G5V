@@ -18,7 +18,8 @@
       "ImageSettings": "Image Settings",
       "Home": "Home",
       "PlayerImages": "Player Avatars",
-      "ObsSlots": "OBS Slots"
+      "ObsSlots": "OBS Slots",
+      "SwissGenerator": "Swiss Generator"
     },
     "Login": {
       "title": "Login/Register",
@@ -707,7 +708,8 @@
       "ImageSettings": "Paramètres des images",
       "Home": "Accueil",
       "PlayerImages": "Avatars des joueurs",
-      "ObsSlots": "Slots OBS"
+      "ObsSlots": "Slots OBS",
+      "SwissGenerator": "Générateur Swiss"
     },
     "Login": {
       "title": "S'identifier / S'incrire",
@@ -1396,7 +1398,8 @@
       "ImageSettings": "画像設定",
       "Home": "ホーム",
       "PlayerImages": "選手アバター",
-      "ObsSlots": "OBSスロット"
+      "ObsSlots": "OBSスロット",
+      "SwissGenerator": "スイスジェネレーター"
     },
     "Login": {
       "title": "ログイン/登録",

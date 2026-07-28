@@ -275,6 +275,13 @@ const routes = [
       import(/* webpackChunkName: "Cast" */ "../views/ObsSlots.vue"),
   },
   {
+    path: "/cast/swiss-generator",
+    name: "SwissGenerator",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/SwissGenerator.vue"),
+  },
+  {
     path: "/overlay/:steamid/live",
     name: "OverlayLive",
     meta: { hideChrome: true },

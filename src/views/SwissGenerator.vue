@@ -29,10 +29,11 @@
         </label>
 
         <hr />
-        <strong>Import G5API</strong>
+        <strong>Saison</strong>
         <p class="swiss-gen__hint" style="margin: 4px 0 8px">
-          Charge les équipes (avec logo) et les résultats de matchs d'une
-          saison.
+          Charge les équipes, les matchs et le tableau déjà enregistré d'une
+          saison. Toutes les modifications (placements, résultats, fond, style)
+          se sauvegardent sur le serveur, pour cette saison.
         </p>
         <div class="swiss-gen__row">
           <input
@@ -40,30 +41,53 @@
             type="text"
             placeholder="ID de la saison"
           />
-          <button type="button" @click="importSeason">Importer</button>
+          <button type="button" @click="loadSeason">Charger</button>
         </div>
+        <button
+          type="button"
+          class="primary"
+          :disabled="!currentSeasonId || saving"
+          @click="saveBoard"
+        >
+          {{ saving ? "Enregistrement..." : "Enregistrer sur le serveur" }}
+        </button>
         <button type="button" @click="reapplyResultsClick">
           Réappliquer les résultats importés
         </button>
         <div class="swiss-gen__caption">{{ importStatus }}</div>
+
+        <template v-if="importedMatches.length">
+          <hr />
+          <strong>Matchs importés</strong>
+          <div class="swiss-gen__caption" style="margin-bottom: 6px">
+            Sélectionne un match puis clique sur une case du tableau : les deux
+            équipes sont placées d'un coup.
+          </div>
+          <div class="swiss-gen__match-list">
+            <div
+              v-for="m in unplacedMatches"
+              :key="m.id"
+              class="swiss-gen__match"
+              :class="{ 'swiss-gen__match--active': m.id === selectedMatchId }"
+              @click="selectMatch(m)"
+            >
+              {{ teamNameByG5Id(m.team1_id, m.team1_string) }} vs
+              {{ teamNameByG5Id(m.team2_id, m.team2_string) }}
+              <span v-if="m.end_time && !m.cancelled" class="swiss-gen__badge"
+                >terminé</span
+              >
+            </div>
+            <div v-if="!unplacedMatches.length" class="swiss-gen__empty">
+              Tous les matchs importés sont placés.
+            </div>
+          </div>
+        </template>
 
         <div class="swiss-gen__row">
           <button type="button" class="primary" @click="exportPng">
             Exporter PNG
           </button>
           <button type="button" @click="clearAll">Tout vider</button>
-        </div>
-        <div class="swiss-gen__row">
-          <button type="button" @click="saveProject">Sauver projet</button>
-          <label class="swiss-gen__file-label">
-            Charger projet
-            <input
-              ref="loadInput"
-              type="file"
-              accept=".json,application/json"
-              @change="loadProject"
-            />
-          </label>
         </div>
         <button type="button" :disabled="!historyStack.length" @click="undo">
           Annuler (Ctrl+Z)
@@ -249,6 +273,7 @@ export default {
     return {
       teams: [],
       selectedTeamId: null,
+      selectedMatchId: null,
       assignments: {},
       matchResults: {},
       lockedMatches: {},
@@ -270,7 +295,9 @@ export default {
       status: "Aucune équipe sélectionnée.",
       bgSrc: defaultBg,
       seasonIdInput: "",
-      importStatus: "Aucune saison importée.",
+      currentSeasonId: null,
+      importStatus: "Aucune saison chargée.",
+      saving: false,
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
       snack: false,
       snackMsg: "",
@@ -281,6 +308,28 @@ export default {
     filteredTeams() {
       const q = this.teamSearch.toLowerCase();
       return this.teams.filter((t) => t.name.toLowerCase().includes(q));
+    },
+    placedPairKeys() {
+      const keys = new Set();
+      const bases = new Set(SLOTS.map((s) => this.getMatchBase(s.id)));
+      bases.forEach((base) => {
+        const a = this.teams.find(
+          (t) => t.id === this.assignments[base + "-A"],
+        );
+        const b = this.teams.find(
+          (t) => t.id === this.assignments[base + "-B"],
+        );
+        if (a && b && a.g5Id != null && b.g5Id != null) {
+          keys.add([a.g5Id, b.g5Id].sort().join(":"));
+        }
+      });
+      return keys;
+    },
+    unplacedMatches() {
+      return this.importedMatches.filter(
+        (m) =>
+          !this.placedPairKeys.has([m.team1_id, m.team2_id].sort().join(":")),
+      );
     },
   },
   created() {
@@ -360,7 +409,19 @@ export default {
     },
     clearSelection() {
       this.selectedTeamId = null;
+      this.selectedMatchId = null;
       this.status = "Aucune équipe sélectionnée.";
+    },
+    teamNameByG5Id(gid, fallback) {
+      const t = this.teams.find((team) => team.g5Id === gid);
+      return (t && t.name) || fallback || `#${gid}`;
+    },
+    selectMatch(m) {
+      this.selectedTeamId = null;
+      this.selectedMatchId = this.selectedMatchId === m.id ? null : m.id;
+      this.status = this.selectedMatchId
+        ? `Match sélectionné : ${this.teamNameByG5Id(m.team1_id, m.team1_string)} vs ${this.teamNameByG5Id(m.team2_id, m.team2_string)}`
+        : "Aucune équipe sélectionnée.";
     },
     loadTeamImage(team) {
       const img = new Image();
@@ -484,6 +545,7 @@ export default {
         lockedMatches: { ...this.lockedMatches },
         importedMatches: [...this.importedMatches],
         selectedTeamId: this.selectedTeamId,
+        selectedMatchId: this.selectedMatchId,
         bgSrc: this.bgSrc,
         winnerMode: this.winnerMode,
         lockMode: this.lockMode,
@@ -498,6 +560,7 @@ export default {
       this.lockedMatches = state.lockedMatches || {};
       this.importedMatches = state.importedMatches || [];
       this.selectedTeamId = state.selectedTeamId || null;
+      this.selectedMatchId = state.selectedMatchId || null;
       this.winnerMode = !!state.winnerMode;
       this.lockMode = !!state.lockMode;
       if (state.bgSrc) this.setBackground(state.bgSrc);
@@ -573,6 +636,36 @@ export default {
         return;
       }
 
+      if (this.selectedMatchId) {
+        if (this.lockedMatches[base]) {
+          this.status =
+            "Ce match est verrouillé. Déverrouille-le avant de modifier ses équipes.";
+          return;
+        }
+        const match = this.importedMatches.find(
+          (m) => m.id === this.selectedMatchId,
+        );
+        if (!match) {
+          this.selectedMatchId = null;
+          return;
+        }
+        const teamA = this.teams.find((t) => t.g5Id === match.team1_id);
+        const teamB = this.teams.find((t) => t.g5Id === match.team2_id);
+        if (!teamA || !teamB) {
+          this.status = "Les deux équipes de ce match doivent être importées.";
+          return;
+        }
+        this.pushHistory();
+        this.$set(this.assignments, base + "-A", teamA.id);
+        this.$set(this.assignments, base + "-B", teamB.id);
+        this.$delete(this.matchResults, base);
+        this.status = `${teamA.name} vs ${teamB.name} placés dans ${base}`;
+        this.autoFillResult(base);
+        this.selectedMatchId = null;
+        this.draw();
+        return;
+      }
+
       if (!this.selectedTeamId) {
         const assignedTeamId = this.assignments[slot.id];
         if (assignedTeamId) {
@@ -616,6 +709,7 @@ export default {
       this.draw();
     },
     selectTeam(team) {
+      this.selectedMatchId = null;
       this.selectedTeamId = team.id;
       this.status = "Équipe sélectionnée : " + team.name;
     },
@@ -666,31 +760,41 @@ export default {
       this.lockedMatches = {};
       this.draw();
     },
+    async uploadImage(file) {
+      const form = new FormData();
+      form.append("file", file);
+      const res = await this.axiosCall.post(
+        `${this.apiUrl}/image/upload/img`,
+        form,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+      return `${this.apiUrl}/static/img/${res.data.filename}`;
+    },
     async onBgFileChange(e) {
       const file = e.target.files[0];
       if (!file) return;
       this.pushHistory();
-      const src = await new Promise((resolve) => {
-        const r = new FileReader();
-        r.onload = () => resolve(r.result);
-        r.readAsDataURL(file);
-      });
-      this.setBackground(src);
-      this.status = "Image de fond mise à jour : " + file.name;
+      try {
+        const url = await this.uploadImage(file);
+        this.setBackground(url);
+        this.status = "Image de fond mise à jour : " + file.name;
+      } catch (err) {
+        this.notify("Erreur lors de l'upload du fond.", "error");
+      }
       e.target.value = "";
     },
     async onLogoFilesChange(e) {
       if (e.target.files.length) this.pushHistory();
       for (const file of e.target.files) {
-        const src = await new Promise((resolve) => {
-          const r = new FileReader();
-          r.onload = () => resolve(r.result);
-          r.readAsDataURL(file);
-        });
-        const name = file.name.replace(/\.[^.]+$/, "");
-        const team = { id: this.uid(), g5Id: null, name, src };
-        this.teams.push(team);
-        this.loadTeamImage(team);
+        try {
+          const url = await this.uploadImage(file);
+          const name = file.name.replace(/\.[^.]+$/, "");
+          const team = { id: this.uid(), g5Id: null, name, src: url };
+          this.teams.push(team);
+          this.loadTeamImage(team);
+        } catch (err) {
+          this.notify(`Erreur lors de l'upload de ${file.name}.`, "error");
+        }
       }
       this.draw();
       e.target.value = "";
@@ -706,89 +810,18 @@ export default {
       this.showDebug = prev;
       this.draw();
     },
-    saveProject() {
-      const data = {
-        version: 2,
-        teams: this.teams.map((t) => ({
-          id: t.id,
-          name: t.name,
-          src: t.src,
-          g5Id: t.g5Id ?? null,
-        })),
-        assignments: this.assignments,
-        importedMatches: this.importedMatches,
-        showNames: this.showNames,
-        backgroundSrc: this.bgSrc,
-        readabilityFill: this.readabilityFill,
-        readabilityFillColor: this.readabilityFillColor,
-        readabilityFillOpacity: this.readabilityFillOpacity,
-        readabilityShadow: this.readabilityShadow,
-        logoScale: this.logoScale,
-        matchResults: this.matchResults,
-        lockedMatches: this.lockedMatches,
-        winnerColor: this.winnerColor,
-        loserColor: this.loserColor,
-        resultOpacity: this.resultOpacity,
-      };
-      const blob = new Blob([JSON.stringify(data)], {
-        type: "application/json",
-      });
-      const a = document.createElement("a");
-      a.download = "round-suisse-projet.json";
-      a.href = URL.createObjectURL(blob);
-      a.click();
-      URL.revokeObjectURL(a.href);
-    },
-    async loadProject(e) {
-      try {
-        const data = JSON.parse(await e.target.files[0].text());
-        this.teams = data.teams || [];
-        this.teamImages = new Map();
-        this.teams.forEach((t) => this.loadTeamImage(t));
-        this.assignments = data.assignments || {};
-        this.importedMatches = data.importedMatches || [];
-        this.showNames = !!data.showNames;
-        this.readabilityFill = !!data.readabilityFill;
-        this.readabilityFillColor = data.readabilityFillColor || "#111318";
-        this.readabilityFillOpacity = Number.isFinite(
-          data.readabilityFillOpacity,
-        )
-          ? data.readabilityFillOpacity
-          : 55;
-        this.readabilityShadow =
-          data.readabilityShadow !== undefined
-            ? !!data.readabilityShadow
-            : true;
-        this.logoScale = Number.isFinite(data.logoScale) ? data.logoScale : 100;
-        this.matchResults = data.matchResults || {};
-        this.lockedMatches = data.lockedMatches || {};
-        this.winnerColor = data.winnerColor || "#2fbf71";
-        this.loserColor = data.loserColor || "#c13d4f";
-        this.resultOpacity = Number.isFinite(data.resultOpacity)
-          ? data.resultOpacity
-          : 45;
-        this.selectedTeamId = null;
-        this.winnerMode = false;
-        this.lockMode = false;
-        this.historyStack = [];
-        this.setBackground(data.backgroundSrc || defaultBg);
-        this.draw();
-      } catch (err) {
-        this.notify("Projet invalide : " + err.message, "error");
-      }
-      e.target.value = "";
-    },
-    async importSeason() {
+    async loadSeason() {
       const seasonId = this.seasonIdInput.trim();
       if (!seasonId) {
         this.importStatus = "Indique un ID de saison.";
         return;
       }
-      this.importStatus = "Import en cours...";
+      this.importStatus = "Chargement...";
       try {
-        const [seasonTeams, seasonData] = await Promise.all([
+        const [seasonTeams, seasonMatches, board] = await Promise.all([
           this.GetSeasonTeams(seasonId),
           this.GetSeasonRecentMatches(seasonId),
+          this.GetSwissBoard(seasonId),
         ]);
         if (!Array.isArray(seasonTeams)) {
           throw new Error(
@@ -798,35 +831,129 @@ export default {
           );
         }
         this.pushHistory();
+        this.currentSeasonId = seasonId;
 
-        const existingG5Ids = new Set(
-          this.teams.filter((t) => t.g5Id != null).map((t) => t.g5Id),
-        );
-        const newTeams = seasonTeams
-          .filter((t) => !existingG5Ids.has(t.id))
-          .map((t) => ({
+        this.teamImages = new Map();
+        const g5Teams = seasonTeams.map((t) => {
+          const team = {
             id: this.uid(),
             g5Id: t.id,
             name: t.name,
             src: t.logo ? `${this.apiUrl}/static/img/logos/${t.logo}.png` : "",
-          }));
-        newTeams.forEach((t) => this.loadTeamImage(t));
-        this.teams = [...this.teams, ...newTeams];
+          };
+          this.loadTeamImage(team);
+          return team;
+        });
+        const customTeams = ((board && board.customTeams) || []).map((t) => {
+          const team = { id: t.id, g5Id: null, name: t.name, src: t.src };
+          this.loadTeamImage(team);
+          return team;
+        });
+        this.teams = [...g5Teams, ...customTeams];
 
         this.importedMatches = (
-          Array.isArray(seasonData) ? seasonData : []
+          Array.isArray(seasonMatches) ? seasonMatches : []
         ).map((m) => ({
+          id: m.id,
           team1_id: m.team1_id,
           team2_id: m.team2_id,
+          team1_string: m.team1_string,
+          team2_string: m.team2_string,
           winner: m.winner,
           cancelled: !!m.cancelled,
           end_time: m.end_time,
         }));
 
-        this.importStatus = `${newTeams.length} équipe(s) importée(s), ${this.importedMatches.length} match(s) importé(s) pour la saison ${seasonId}.`;
+        if (board) {
+          const assignments = {};
+          Object.entries(board.assignments || {}).forEach(([slotId, ref]) => {
+            const team =
+              ref && ref.kind === "g5"
+                ? this.teams.find((t) => t.g5Id === ref.value)
+                : this.teams.find((t) => t.g5Id == null && t.id === ref?.value);
+            if (team) assignments[slotId] = team.id;
+          });
+          this.assignments = assignments;
+          this.matchResults = board.matchResults || {};
+          this.lockedMatches = board.lockedMatches || {};
+          this.showNames = !!board.showNames;
+          this.readabilityFill = !!board.readabilityFill;
+          this.readabilityFillColor = board.readabilityFillColor || "#111318";
+          this.readabilityFillOpacity = Number.isFinite(
+            board.readabilityFillOpacity,
+          )
+            ? board.readabilityFillOpacity
+            : 55;
+          this.readabilityShadow =
+            board.readabilityShadow !== undefined
+              ? !!board.readabilityShadow
+              : true;
+          this.logoScale = Number.isFinite(board.logoScale)
+            ? board.logoScale
+            : 100;
+          this.winnerColor = board.winnerColor || "#2fbf71";
+          this.loserColor = board.loserColor || "#c13d4f";
+          this.resultOpacity = Number.isFinite(board.resultOpacity)
+            ? board.resultOpacity
+            : 45;
+          this.setBackground(board.backgroundSrc || defaultBg);
+          this.importStatus = `${g5Teams.length} équipe(s), ${this.importedMatches.length} match(s) — tableau sauvegardé chargé.`;
+        } else {
+          this.assignments = {};
+          this.matchResults = {};
+          this.lockedMatches = {};
+          this.setBackground(defaultBg);
+          this.importStatus = `${g5Teams.length} équipe(s), ${this.importedMatches.length} match(s) importé(s). Aucun tableau sauvegardé pour cette saison.`;
+        }
+        this.selectedTeamId = null;
+        this.selectedMatchId = null;
         this.reapplyResults();
       } catch (err) {
         this.importStatus = "Erreur : " + (err.message || err);
+      }
+    },
+    async saveBoard() {
+      if (!this.currentSeasonId) return;
+      this.saving = true;
+      try {
+        const assignments = {};
+        Object.entries(this.assignments).forEach(([slotId, teamId]) => {
+          const team = this.teams.find((t) => t.id === teamId);
+          if (!team) return;
+          assignments[slotId] =
+            team.g5Id != null
+              ? { kind: "g5", value: team.g5Id }
+              : { kind: "custom", value: team.id };
+        });
+        const customTeams = this.teams
+          .filter((t) => t.g5Id == null)
+          .map((t) => ({ id: t.id, name: t.name, src: t.src }));
+        const board = {
+          version: 1,
+          backgroundSrc: this.bgSrc,
+          customTeams,
+          assignments,
+          matchResults: this.matchResults,
+          lockedMatches: this.lockedMatches,
+          showNames: this.showNames,
+          readabilityFill: this.readabilityFill,
+          readabilityFillColor: this.readabilityFillColor,
+          readabilityFillOpacity: this.readabilityFillOpacity,
+          readabilityShadow: this.readabilityShadow,
+          logoScale: this.logoScale,
+          winnerColor: this.winnerColor,
+          loserColor: this.loserColor,
+          resultOpacity: this.resultOpacity,
+        };
+        await this.SaveSwissBoard(this.currentSeasonId, board);
+        this.notify("Enregistré sur le serveur.");
+      } catch (err) {
+        this.notify(
+          "Erreur lors de l'enregistrement : " + (err.message || err),
+          "error",
+        );
+      } finally {
+        this.saving = false;
       }
     },
     reapplyResultsClick() {
@@ -1018,6 +1145,26 @@ export default {
 .swiss-gen__empty {
   color: var(--sg-muted);
   font-size: 13px;
+}
+
+.swiss-gen__match-list {
+  display: grid;
+  gap: 6px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.swiss-gen__match {
+  padding: 8px 10px;
+  border: 1px solid var(--sg-line);
+  border-radius: 8px;
+  background: #20242e;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.swiss-gen__match--active {
+  outline: 2px solid var(--sg-accent);
 }
 
 .swiss-gen__stage {

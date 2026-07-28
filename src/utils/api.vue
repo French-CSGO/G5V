@@ -844,6 +844,23 @@ export default {
       }
       return message;
     },
+    async GetSwissBoard(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/swiss-board`,
+      );
+      return res.data.board;
+    },
+    async SaveSwissBoard(seasonid, board) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/swiss-board`,
+        { board },
+      );
+      return res.data;
+    },
     async AddTeamsToSeason(seasonid, teamIds) {
       let res;
       let message;

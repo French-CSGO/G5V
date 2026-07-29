@@ -73,6 +73,15 @@
         >
           Actualiser les résultats
         </button>
+        <label class="swiss-gen__small">
+          <input v-model="autoRefreshEnabled" type="checkbox" />
+          Actualisation automatique (toutes les 30s)
+        </label>
+        <div class="swiss-gen__caption" style="margin-bottom: 6px">
+          Désactive-la temporairement si tu modifies le placement à la main — le
+          bouton "Actualiser les résultats" ci-dessus reste disponible pour
+          forcer une actualisation manuelle à tout moment.
+        </div>
         <div
           v-if="challongeTournaments.length > 1"
           class="swiss-gen__row"
@@ -390,6 +399,7 @@ export default {
       currentSeasonId: null,
       challongeTournaments: [],
       challongeTournamentId: null,
+      autoRefreshEnabled: true,
       importStatus: "Aucune saison chargée.",
       saving: false,
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
@@ -1123,7 +1133,11 @@ export default {
       // the winner/loser coloring appears without anyone clicking anything —
       // it never overwrites locked matches (reapplyResults skips those) and
       // never auto-saves, so it can't clobber a concurrent editor's save.
-      this.refreshTimer = setInterval(() => this.refreshMatches(true), 30000);
+      // Gated by autoRefreshEnabled so it can be paused while manually
+      // adjusting placements, without tearing the timer down and back up.
+      this.refreshTimer = setInterval(() => {
+        if (this.autoRefreshEnabled) this.refreshMatches(true);
+      }, 30000);
     },
     async copyOverlayLink() {
       if (!this.currentSeasonId) return;

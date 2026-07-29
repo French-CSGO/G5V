@@ -73,7 +73,11 @@
         >
           Actualiser les résultats
         </button>
-        <button type="button" :disabled="!currentSeasonId" @click="autoPlaceAll">
+        <button
+          type="button"
+          :disabled="!currentSeasonId"
+          @click="autoPlaceAll"
+        >
           Placer automatiquement
         </button>
         <div class="swiss-gen__caption" style="margin-bottom: 6px">
@@ -1011,7 +1015,7 @@ export default {
         }
         this.selectedTeamId = null;
         this.selectedMatchId = null;
-        this.reapplyResults();
+        this.placeFromRecordsQuiet();
         this.startAutoRefresh();
       } catch (err) {
         this.importStatus = "Erreur : " + (err.message || err);
@@ -1035,7 +1039,7 @@ export default {
           cancelled: !!m.cancelled,
           end_time: m.end_time,
         }));
-        this.reapplyResults();
+        this.placeFromRecordsQuiet();
         if (!silent) this.status = "Résultats des matchs actualisés.";
       } catch (err) {
         if (!silent)
@@ -1415,14 +1419,11 @@ export default {
       this.notify(this.status);
       return true;
     },
-    autoPlaceAllFromRecords() {
-      if (!this.importedMatches.length) {
-        this.notify("Aucun match importé à placer.", "error");
-        return;
-      }
-      this.pushHistory();
-
-      const ordered = this.importedMatches
+    // Chronological-record ordering shared by the interactive fallback
+    // button and the silent periodic pass below — derived purely from G5
+    // match data, no Challonge call involved.
+    orderedRecordMatches() {
+      return this.importedMatches
         .filter((m) => !m.cancelled)
         .slice()
         .sort((a, b) => {
@@ -1441,12 +1442,33 @@ export default {
           winnerG5Id: m.winner,
           concluded: !!m.end_time,
         }));
+    },
+    autoPlaceAllFromRecords() {
+      if (!this.importedMatches.length) {
+        this.notify("Aucun match importé à placer.", "error");
+        return;
+      }
+      this.pushHistory();
 
       const { placedCount, terminalPlaced, skipped, skipReasons } =
-        this.fillBoardFromOrderedMatches(ordered);
+        this.fillBoardFromOrderedMatches(this.orderedRecordMatches());
       const skipDetail = this.describeSkips(skipReasons);
       this.status = `Placement automatique : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (${skipDetail})` : ""}.`;
       this.notify(this.status);
+    },
+    // Runs on every load and on every 30s auto-refresh: picks up matches
+    // that now exist internally in G5 (freshly created, or just concluded)
+    // and drops them into any still-empty box their record implies — pure
+    // local G5 data, never touches the Challonge API, so it can run on a
+    // timer without burning through Challonge's rate limit. Non-destructive
+    // (only fills empty boxes) and silent (no history entry, no toast),
+    // since it fires automatically rather than from a user action.
+    placeFromRecordsQuiet() {
+      if (!this.importedMatches.length) {
+        this.reapplyResults();
+        return;
+      }
+      this.fillBoardFromOrderedMatches(this.orderedRecordMatches());
     },
     onKeydown(e) {
       if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {

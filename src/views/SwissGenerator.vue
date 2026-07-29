@@ -116,6 +116,25 @@
           </div>
         </template>
 
+        <template v-if="unplacedChallongeMatches.length">
+          <hr />
+          <strong>Matchs Challonge non placés</strong>
+          <div class="swiss-gen__caption" style="margin-bottom: 6px">
+            Ces matchs viennent du dernier "Placer automatiquement" et n'ont pas
+            pu être placés — la raison est indiquée sous chacun.
+          </div>
+          <div class="swiss-gen__match-list">
+            <div
+              v-for="(m, i) in unplacedChallongeMatches"
+              :key="i"
+              class="swiss-gen__match swiss-gen__match--unplaced"
+            >
+              {{ m.label }}
+              <div class="swiss-gen__match-reason">{{ m.reason }}</div>
+            </div>
+          </div>
+        </template>
+
         <div class="swiss-gen__row">
           <button type="button" class="primary" @click="exportPng">
             Exporter PNG
@@ -314,6 +333,7 @@ export default {
       matchResults: {},
       lockedMatches: {},
       importedMatches: [],
+      unplacedChallongeMatches: [],
       showDebug: false,
       showNames: false,
       teamSearch: "",
@@ -1247,10 +1267,12 @@ export default {
 
       let placedCount = 0;
       const skipReasons = { noTeam: 0, recordMismatch: 0, noBox: 0 };
+      const skippedList = [];
 
-      for (const { teamA, teamB, winnerG5Id, concluded } of matches) {
+      for (const { teamA, teamB, winnerG5Id, concluded, label } of matches) {
         if (!teamA || !teamB) {
           skipReasons.noTeam++;
+          skippedList.push({ label, reason: "équipe non liée" });
         } else {
           const pairKey = [teamA.g5Id, teamB.g5Id].sort().join(":");
           if (overwrite || !this.placedPairKeys.has(pairKey)) {
@@ -1272,9 +1294,15 @@ export default {
                 placedCount++;
               } else {
                 skipReasons.noBox++;
+                skippedList.push({ label, reason: "case indisponible" });
               }
             } else {
               skipReasons.recordMismatch++;
+              skippedList.push({
+                label,
+                reason:
+                  "round pas encore atteint (résultat du round précédent manquant)",
+              });
             }
           }
 
@@ -1309,7 +1337,7 @@ export default {
       this.reapplyResults();
       const skipped =
         skipReasons.noTeam + skipReasons.recordMismatch + skipReasons.noBox;
-      return { placedCount, terminalPlaced, skipped, skipReasons };
+      return { placedCount, terminalPlaced, skipped, skipReasons, skippedList };
     },
     describeSkips(skipReasons) {
       if (!skipReasons) return "";
@@ -1329,6 +1357,7 @@ export default {
     // fails, e.g. season not linked to Challonge at all).
     async autoPlaceAll() {
       if (!this.currentSeasonId) return;
+      this.unplacedChallongeMatches = [];
       let challongeMatches = null;
       try {
         challongeMatches = await this.GetSeasonChallongeMatches(
@@ -1350,23 +1379,44 @@ export default {
       if (sa.length !== sb.length) return sa.length - sb.length;
       return sa < sb ? -1 : sa > sb ? 1 : 0;
     },
+    labelForChallongeMatch(cm) {
+      const name1 = cm.player1?.local_team?.name || cm.player1?.name || "?";
+      const name2 = cm.player2?.local_team?.name || cm.player2?.name || "?";
+      const round = cm.round != null ? `round ${cm.round}` : "round ?";
+      const ident = cm.identifier ? ` (${cm.identifier})` : "";
+      return `${name1} vs ${name2} — ${round}${ident}`;
+    },
     // Returns false when the season has no Challonge swiss/group matches at
     // all (group_id unset), so the caller can fall back to the heuristic.
     autoPlaceAllFromChallonge(challongeMatches) {
       const importedById = new Map(this.importedMatches.map((m) => [m.id, m]));
-      const swissMatches = challongeMatches
-        .filter(
-          (m) =>
-            m.group_id != null &&
-            m.player1?.local_team &&
-            m.player2?.local_team,
-        )
+      const groupMatches = challongeMatches.filter((m) => m.group_id != null);
+      if (!groupMatches.length) return false;
+
+      // Matches whose Challonge participant never resolved to a local G5
+      // team at all (challonge_team_id missing on the G5 side) can't be
+      // placed no matter what — surfaced directly instead of attempted.
+      const unlinked = groupMatches.filter(
+        (m) => !m.player1?.local_team || !m.player2?.local_team,
+      );
+      const swissMatches = groupMatches
+        .filter((m) => m.player1?.local_team && m.player2?.local_team)
         .slice()
         .sort((a, b) => {
           if (a.round !== b.round) return (a.round || 0) - (b.round || 0);
           return this.compareIdentifier(a.identifier, b.identifier);
         });
 
+      this.unplacedChallongeMatches = unlinked.map((m) => ({
+        label: this.labelForChallongeMatch(m),
+        reason:
+          "équipe non liée à Challonge (challonge_team_id manquant côté G5)",
+      }));
+
+      // Even with nothing placeable via Challonge, let the caller still try
+      // the local heuristic — it only depends on G5 data, so it's an
+      // independent recovery path. The unlinked list above stays visible
+      // either way.
       if (!swissMatches.length) return false;
 
       this.pushHistory();
@@ -1432,11 +1482,14 @@ export default {
           teamB,
           winnerG5Id: concluded ? g5m.winner : null,
           concluded,
+          label: this.labelForChallongeMatch(cm),
         };
       });
 
-      const { placedCount, terminalPlaced, skipped, skipReasons } =
+      const { placedCount, terminalPlaced, skipped, skipReasons, skippedList } =
         this.fillBoardFromOrderedMatches(ordered, { overwrite: true });
+      this.unplacedChallongeMatches =
+        this.unplacedChallongeMatches.concat(skippedList);
       const skipDetail = this.describeSkips(skipReasons);
       this.status = `Placement automatique (Challonge) : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (${skipDetail})` : ""}.`;
       this.notify(this.status);
@@ -1682,6 +1735,18 @@ export default {
 
 .swiss-gen__match--active {
   outline: 2px solid var(--sg-accent);
+}
+
+.swiss-gen__match--unplaced {
+  cursor: default;
+  border-color: #6d3a3a;
+  background: #2a2020;
+}
+
+.swiss-gen__match-reason {
+  color: #e08a8a;
+  font-size: 11px;
+  margin-top: 2px;
 }
 
 .swiss-gen__stage {

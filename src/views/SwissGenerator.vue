@@ -135,6 +135,25 @@
           </div>
         </template>
 
+        <template v-if="byeTeams.length">
+          <hr />
+          <strong>Équipes exemptées (bye)</strong>
+          <div class="swiss-gen__caption" style="margin-bottom: 6px">
+            Nombre d'équipes impair dans ce round côté Challonge — ces équipes
+            n'ont pas d'adversaire ce round-là, leur victoire est créditée
+            automatiquement pour débloquer leur round suivant.
+          </div>
+          <div class="swiss-gen__match-list">
+            <div
+              v-for="(b, i) in byeTeams"
+              :key="i"
+              class="swiss-gen__match swiss-gen__match--bye"
+            >
+              {{ b }}
+            </div>
+          </div>
+        </template>
+
         <div class="swiss-gen__row">
           <button type="button" class="primary" @click="exportPng">
             Exporter PNG
@@ -334,6 +353,7 @@ export default {
       lockedMatches: {},
       importedMatches: [],
       unplacedChallongeMatches: [],
+      byeTeams: [],
       showDebug: false,
       showNames: false,
       teamSearch: "",
@@ -1269,8 +1289,23 @@ export default {
       const skipReasons = { noTeam: 0, recordMismatch: 0, noBox: 0 };
       const skippedList = [];
 
-      for (const { teamA, teamB, winnerG5Id, concluded, label } of matches) {
-        if (!teamA || !teamB) {
+      for (const {
+        teamA,
+        teamB,
+        winnerG5Id,
+        concluded,
+        label,
+        isBye,
+      } of matches) {
+        if (isBye) {
+          // A bye isn't a match — nothing to place, just credit the exempt
+          // team's record with an automatic win so its *next* round unlocks
+          // at the right bucket.
+          if (teamA) {
+            const rec = getRecord(teamA.g5Id);
+            records.set(teamA.g5Id, { w: rec.w + 1, l: rec.l });
+          }
+        } else if (!teamA || !teamB) {
           skipReasons.noTeam++;
           skippedList.push({ label, reason: "équipe non liée" });
         } else {
@@ -1368,6 +1403,7 @@ export default {
     async autoPlaceAll() {
       if (!this.currentSeasonId) return;
       this.unplacedChallongeMatches = [];
+      this.byeTeams = [];
       let challongeMatches = null;
       try {
         challongeMatches = await this.GetSeasonChallongeMatches(
@@ -1403,11 +1439,19 @@ export default {
       const groupMatches = challongeMatches.filter((m) => m.group_id != null);
       if (!groupMatches.length) return false;
 
-      // Matches whose Challonge participant never resolved to a local G5
-      // team at all (challonge_team_id missing on the G5 side) can't be
-      // placed no matter what — surfaced directly instead of attempted.
+      // A bye (odd number of teams in a bucket, e.g. 26 teams isn't a power
+      // of 2) has exactly one side present on Challonge — the other is
+      // simply absent, not an unresolved team. Distinguish that from a real
+      // linking problem, where both sides exist but one has no local G5
+      // team: only the latter is actionable/worth flagging as an error.
+      const byeMatches = groupMatches.filter(
+        (m) => (m.player1 == null) !== (m.player2 == null),
+      );
       const unlinked = groupMatches.filter(
-        (m) => !m.player1?.local_team || !m.player2?.local_team,
+        (m) =>
+          m.player1 != null &&
+          m.player2 != null &&
+          (!m.player1.local_team || !m.player2.local_team),
       );
       const swissMatches = groupMatches
         .filter((m) => m.player1?.local_team && m.player2?.local_team)
@@ -1427,7 +1471,7 @@ export default {
       // the local heuristic — it only depends on G5 data, so it's an
       // independent recovery path. The unlinked list above stays visible
       // either way.
-      if (!swissMatches.length) return false;
+      if (!swissMatches.length && !byeMatches.length) return false;
 
       this.pushHistory();
 
@@ -1437,21 +1481,31 @@ export default {
       // bracket without ever having been added to the G5 season roster.
       // Auto-register any such team here instead of silently dropping every
       // match it plays.
+      const registerTeam = (lt) => {
+        if (!lt || this.teams.some((t) => t.g5Id === lt.id)) return;
+        const team = {
+          id: this.uid(),
+          g5Id: lt.id,
+          name: lt.name,
+          tag: lt.tag || null,
+          src: lt.logo ? `${this.apiUrl}/static/img/logos/${lt.logo}.png` : "",
+        };
+        this.teams.push(team);
+        this.loadTeamImage(team);
+      };
       swissMatches.forEach((cm) => {
-        [cm.player1.local_team, cm.player2.local_team].forEach((lt) => {
-          if (this.teams.some((t) => t.g5Id === lt.id)) return;
-          const team = {
-            id: this.uid(),
-            g5Id: lt.id,
-            name: lt.name,
-            tag: lt.tag || null,
-            src: lt.logo
-              ? `${this.apiUrl}/static/img/logos/${lt.logo}.png`
-              : "",
-          };
-          this.teams.push(team);
-          this.loadTeamImage(team);
-        });
+        registerTeam(cm.player1.local_team);
+        registerTeam(cm.player2.local_team);
+      });
+      byeMatches.forEach((cm) => {
+        registerTeam((cm.player1 ?? cm.player2)?.local_team);
+      });
+
+      this.byeTeams = byeMatches.map((cm) => {
+        const present = cm.player1 ?? cm.player2;
+        const name = present?.local_team?.name || present?.name || "?";
+        const round = cm.round != null ? `round ${cm.round}` : "round ?";
+        return `${name} — ${round}${cm.identifier ? ` (${cm.identifier})` : ""}`;
       });
 
       // Challonge is authoritative for every team it references here: wipe
@@ -1462,6 +1516,10 @@ export default {
       swissMatches.forEach((cm) => {
         challongeTeamG5Ids.add(cm.player1.local_team.id);
         challongeTeamG5Ids.add(cm.player2.local_team.id);
+      });
+      byeMatches.forEach((cm) => {
+        const id = (cm.player1 ?? cm.player2)?.local_team?.id;
+        if (id != null) challongeTeamG5Ids.add(id);
       });
       Object.keys(this.assignments).forEach((slotId) => {
         const base = this.getMatchBase(slotId);
@@ -1478,7 +1536,33 @@ export default {
         }
       });
 
-      const ordered = swissMatches.map((cm) => {
+      // Byes must be interleaved with real matches in round/identifier
+      // order, not just appended — the exempt team's credited win has to
+      // land at the right point in the record simulation for its *next*
+      // round to bucket correctly.
+      const combined = [
+        ...swissMatches.map((cm) => ({ cm, isBye: false })),
+        ...byeMatches.map((cm) => ({ cm, isBye: true })),
+      ].sort((a, b) => {
+        if (a.cm.round !== b.cm.round)
+          return (a.cm.round || 0) - (b.cm.round || 0);
+        return this.compareIdentifier(a.cm.identifier, b.cm.identifier);
+      });
+
+      const ordered = combined.map(({ cm, isBye }) => {
+        if (isBye) {
+          const present = cm.player1 ?? cm.player2;
+          const teamA = this.teams.find(
+            (t) => t.g5Id === present?.local_team?.id,
+          );
+          return {
+            teamA,
+            teamB: null,
+            winnerG5Id: null,
+            concluded: false,
+            isBye: true,
+          };
+        }
         const teamA = this.teams.find(
           (t) => t.g5Id === cm.player1.local_team.id,
         );
@@ -1769,6 +1853,12 @@ export default {
   cursor: default;
   border-color: #6d3a3a;
   background: #2a2020;
+}
+
+.swiss-gen__match--bye {
+  cursor: default;
+  border-color: #3a5a6d;
+  background: #1c2830;
 }
 
 .swiss-gen__match-reason {

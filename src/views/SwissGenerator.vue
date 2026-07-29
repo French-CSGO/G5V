@@ -68,10 +68,11 @@
           Placer automatiquement
         </button>
         <div class="swiss-gen__caption" style="margin-bottom: 6px">
-          Déduit le round de chaque match importé à partir des résultats déjà
-          entrés (victoires/défaites) et place les matchs — ainsi que les
-          équipes qualifiées (3-0/3-1/3-2) ou éliminées (0-3/1-3/2-3) — dans les
-          bonnes cases.
+          Si la saison est liée à Challonge, utilise directement le round et
+          l'ordre des matchs du bracket swiss. Sinon, déduit le round de chaque
+          match importé à partir des résultats déjà entrés (victoires/défaites).
+          Dans les deux cas, place les matchs — ainsi que les équipes qualifiées
+          (3-0/3-1/3-2) ou éliminées (0-3/1-3/2-3) — dans les bonnes cases.
         </div>
         <div class="swiss-gen__caption">{{ importStatus }}</div>
 
@@ -1141,13 +1142,12 @@ export default {
       buckets.forEach((arr) => arr.sort((a, b) => a.n - b.n));
       return buckets;
     },
-    autoPlaceAll() {
-      if (!this.importedMatches.length) {
-        this.notify("Aucun match importé à placer.", "error");
-        return;
-      }
-      this.pushHistory();
-
+    // Shared box-filling core for both auto-placement strategies below: walks
+    // `matches` (already in the right processing order) and, for each one,
+    // drops the pair into the next empty box of the W-L bucket implied by
+    // each team's record *before* that match, then updates the running
+    // record from the linked G5 result before moving on.
+    fillBoardFromOrderedMatches(matches) {
       const buckets = this.slotBucketBoxes();
       const isBoxUsable = (base) =>
         !this.lockedMatches[base] &&
@@ -1164,29 +1164,13 @@ export default {
         return null;
       };
 
-      const matches = this.importedMatches
-        .filter((m) => !m.cancelled)
-        .slice()
-        .sort((a, b) => {
-          const ta = a.end_time
-            ? new Date(a.end_time).getTime()
-            : Number.POSITIVE_INFINITY;
-          const tb = b.end_time
-            ? new Date(b.end_time).getTime()
-            : Number.POSITIVE_INFINITY;
-          if (ta !== tb) return ta - tb;
-          return a.id - b.id;
-        });
-
       const records = new Map(); // g5Id -> { w, l }
       const getRecord = (gid) => records.get(gid) || { w: 0, l: 0 };
 
       let placedCount = 0;
       let skipped = 0;
 
-      for (const m of matches) {
-        const teamA = this.teams.find((t) => t.g5Id === m.team1_id);
-        const teamB = this.teams.find((t) => t.g5Id === m.team2_id);
+      for (const { teamA, teamB, winnerG5Id, concluded } of matches) {
         if (!teamA || !teamB) {
           skipped++;
         } else {
@@ -1211,13 +1195,13 @@ export default {
             }
           }
 
-          if (m.end_time && m.winner != null) {
+          if (concluded && winnerG5Id != null) {
             const recA = getRecord(teamA.g5Id);
             const recB = getRecord(teamB.g5Id);
-            if (m.winner === teamA.g5Id) {
+            if (winnerG5Id === teamA.g5Id) {
               records.set(teamA.g5Id, { w: recA.w + 1, l: recA.l });
               records.set(teamB.g5Id, { w: recB.w, l: recB.l + 1 });
-            } else if (m.winner === teamB.g5Id) {
+            } else if (winnerG5Id === teamB.g5Id) {
               records.set(teamB.g5Id, { w: recB.w + 1, l: recB.l });
               records.set(teamA.g5Id, { w: recA.w, l: recA.l + 1 });
             }
@@ -1240,6 +1224,109 @@ export default {
       });
 
       this.reapplyResults();
+      return { placedCount, terminalPlaced, skipped };
+    },
+    // Entry point for the "Placer automatiquement" button: prefers the
+    // authoritative Challonge round/identifier ordering when the season is
+    // Challonge-linked with a swiss/group stage, and falls back to the local
+    // chronological-record heuristic otherwise (or if the Challonge call
+    // fails, e.g. season not linked to Challonge at all).
+    async autoPlaceAll() {
+      if (!this.currentSeasonId) return;
+      let challongeMatches = null;
+      try {
+        challongeMatches = await this.GetSeasonChallongeMatches(
+          this.currentSeasonId,
+        );
+      } catch (err) {
+        challongeMatches = null;
+      }
+      const placed =
+        Array.isArray(challongeMatches) &&
+        this.autoPlaceAllFromChallonge(challongeMatches);
+      if (!placed) this.autoPlaceAllFromRecords();
+    },
+    // Challonge identifiers are short alphabetical codes (A, B, ... Z, AA...)
+    // assigned in match order; compare by length first so "Z" < "AA".
+    compareIdentifier(a, b) {
+      const sa = String(a ?? "");
+      const sb = String(b ?? "");
+      if (sa.length !== sb.length) return sa.length - sb.length;
+      return sa < sb ? -1 : sa > sb ? 1 : 0;
+    },
+    // Returns false when the season has no Challonge swiss/group matches at
+    // all (group_id unset), so the caller can fall back to the heuristic.
+    autoPlaceAllFromChallonge(challongeMatches) {
+      const importedById = new Map(this.importedMatches.map((m) => [m.id, m]));
+      const swissMatches = challongeMatches
+        .filter(
+          (m) =>
+            m.group_id != null &&
+            m.player1?.local_team &&
+            m.player2?.local_team,
+        )
+        .slice()
+        .sort((a, b) => {
+          if (a.round !== b.round) return (a.round || 0) - (b.round || 0);
+          return this.compareIdentifier(a.identifier, b.identifier);
+        });
+
+      if (!swissMatches.length) return false;
+
+      this.pushHistory();
+
+      const ordered = swissMatches.map((cm) => {
+        const teamA = this.teams.find(
+          (t) => t.g5Id === cm.player1.local_team.id,
+        );
+        const teamB = this.teams.find(
+          (t) => t.g5Id === cm.player2.local_team.id,
+        );
+        const g5m = cm.g5_match_id ? importedById.get(cm.g5_match_id) : null;
+        const concluded = !!(g5m && !g5m.cancelled && g5m.end_time);
+        return {
+          teamA,
+          teamB,
+          winnerG5Id: concluded ? g5m.winner : null,
+          concluded,
+        };
+      });
+
+      const { placedCount, terminalPlaced, skipped } =
+        this.fillBoardFromOrderedMatches(ordered);
+      this.status = `Placement automatique (Challonge) : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (équipe manquante ou case occupée)` : ""}.`;
+      this.notify(this.status);
+      return true;
+    },
+    autoPlaceAllFromRecords() {
+      if (!this.importedMatches.length) {
+        this.notify("Aucun match importé à placer.", "error");
+        return;
+      }
+      this.pushHistory();
+
+      const ordered = this.importedMatches
+        .filter((m) => !m.cancelled)
+        .slice()
+        .sort((a, b) => {
+          const ta = a.end_time
+            ? new Date(a.end_time).getTime()
+            : Number.POSITIVE_INFINITY;
+          const tb = b.end_time
+            ? new Date(b.end_time).getTime()
+            : Number.POSITIVE_INFINITY;
+          if (ta !== tb) return ta - tb;
+          return a.id - b.id;
+        })
+        .map((m) => ({
+          teamA: this.teams.find((t) => t.g5Id === m.team1_id),
+          teamB: this.teams.find((t) => t.g5Id === m.team2_id),
+          winnerG5Id: m.winner,
+          concluded: !!m.end_time,
+        }));
+
+      const { placedCount, terminalPlaced, skipped } =
+        this.fillBoardFromOrderedMatches(ordered);
       this.status = `Placement automatique : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (équipe manquante ou case occupée)` : ""}.`;
       this.notify(this.status);
     },

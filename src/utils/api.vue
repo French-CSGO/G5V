@@ -844,6 +844,14 @@ export default {
       }
       return message;
     },
+    async GetSeasonChallongeMatches(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/matches`,
+      );
+      return res.data.matches;
+    },
     async GetSwissBoard(seasonid) {
       const res = await this.axiosCall.get(
         `${

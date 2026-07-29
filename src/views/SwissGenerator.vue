@@ -73,6 +73,22 @@
         >
           Actualiser les résultats
         </button>
+        <div
+          v-if="challongeTournaments.length > 1"
+          class="swiss-gen__row"
+          style="grid-template-columns: 1fr"
+        >
+          <select v-model="challongeTournamentId">
+            <option :value="null">Bracket Challonge : auto</option>
+            <option v-for="t in challongeTournaments" :key="t.id" :value="t.id">
+              {{ t.label || t.challonge_slug }}
+            </option>
+          </select>
+        </div>
+        <div v-if="challongeTournaments.length > 1" class="swiss-gen__caption">
+          Plusieurs brackets Challonge sont liés à cette saison : choisis celui
+          qui correspond au swiss avant de placer automatiquement.
+        </div>
         <button
           type="button"
           :disabled="!currentSeasonId"
@@ -372,6 +388,8 @@ export default {
       bgSrc: defaultBg,
       seasonIdInput: "",
       currentSeasonId: null,
+      challongeTournaments: [],
+      challongeTournamentId: null,
       importStatus: "Aucune saison chargée.",
       saving: false,
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
@@ -959,11 +977,16 @@ export default {
       }
       this.importStatus = "Chargement...";
       try {
-        const [seasonTeams, seasonMatches, board] = await Promise.all([
-          this.GetSeasonTeams(seasonId),
-          this.GetSeasonRecentMatches(seasonId),
-          this.GetSwissBoard(seasonId),
-        ]);
+        const [seasonTeams, seasonMatches, board, challongeTournaments] =
+          await Promise.all([
+            this.GetSeasonTeams(seasonId),
+            this.GetSeasonRecentMatches(seasonId),
+            this.GetSwissBoard(seasonId),
+            this.GetSeasonChallongeTournaments(seasonId).catch(() => []),
+          ]);
+        this.challongeTournaments = Array.isArray(challongeTournaments)
+          ? challongeTournaments
+          : [];
         if (!Array.isArray(seasonTeams)) {
           throw new Error(
             typeof seasonTeams === "string"
@@ -1045,13 +1068,21 @@ export default {
             ? board.resultOpacity
             : 45;
           this.setBackground(board.backgroundSrc || defaultBg);
+          this.challongeTournamentId = board.challongeTournamentId ?? null;
           this.importStatus = `${g5Teams.length} équipe(s), ${this.importedMatches.length} match(s) — tableau sauvegardé chargé.`;
         } else {
           this.assignments = {};
           this.matchResults = {};
           this.lockedMatches = {};
           this.setBackground(defaultBg);
+          this.challongeTournamentId = null;
           this.importStatus = `${g5Teams.length} équipe(s), ${this.importedMatches.length} match(s) importé(s). Aucun tableau sauvegardé pour cette saison.`;
+        }
+        if (
+          this.challongeTournamentId == null &&
+          this.challongeTournaments.length === 1
+        ) {
+          this.challongeTournamentId = this.challongeTournaments[0].id;
         }
         this.selectedTeamId = null;
         this.selectedMatchId = null;
@@ -1159,6 +1190,7 @@ export default {
         const board = {
           version: 1,
           backgroundSrc: this.bgSrc,
+          challongeTournamentId: this.challongeTournamentId,
           customTeams,
           assignments,
           resolvedAssignments,
@@ -1404,10 +1436,23 @@ export default {
       if (!this.currentSeasonId) return;
       this.unplacedChallongeMatches = [];
       this.byeTeams = [];
+      // Several Challonge brackets can be attached to one season (e.g. swiss
+      // + playoffs) — group_id doesn't reliably distinguish a swiss bracket
+      // from any other, so without a chosen tournament we'd silently mix
+      // both. Refuse and fall back rather than guess.
+      if (this.challongeTournaments.length > 1 && !this.challongeTournamentId) {
+        this.notify(
+          "Plusieurs brackets Challonge sont liés à cette saison : choisis lequel est le swiss avant de placer automatiquement.",
+          "error",
+        );
+        this.autoPlaceAllFromRecords();
+        return;
+      }
       let challongeMatches = null;
       try {
         challongeMatches = await this.GetSeasonChallongeMatches(
           this.currentSeasonId,
+          this.challongeTournamentId,
         );
       } catch (err) {
         challongeMatches = null;
@@ -1432,46 +1477,87 @@ export default {
       const ident = cm.identifier ? ` (${cm.identifier})` : "";
       return `${name1} vs ${name2} — ${round}${ident}`;
     },
-    // Returns false when the season has no Challonge swiss/group matches at
-    // all (group_id unset), so the caller can fall back to the heuristic.
+    // A Challonge participant with the literal name "Bye" (or, in some
+    // tournament shapes, a side that's structurally absent entirely) is not
+    // a real opponent.
+    isByePlaceholder(player) {
+      return (
+        !player ||
+        (typeof player.name === "string" &&
+          player.name.trim().toLowerCase() === "bye")
+      );
+    },
+    // Returns false when there's nothing usable from Challonge at all, so
+    // the caller can fall back to the local heuristic.
     autoPlaceAllFromChallonge(challongeMatches) {
       const importedById = new Map(this.importedMatches.map((m) => [m.id, m]));
-      const groupMatches = challongeMatches.filter((m) => m.group_id != null);
-      if (!groupMatches.length) return false;
+      // group_id only distinguishes Challonge's round-robin "Group Stage"
+      // matches — it's null even for real swiss-format matches, so it
+      // can't be used to isolate the swiss bracket. The caller already
+      // scoped the request to a single Challonge tournament (tournament_id)
+      // when the season has more than one, so every match here belongs to
+      // that chosen bracket.
+      if (!challongeMatches.length) return false;
 
-      // A bye (odd number of teams in a bucket, e.g. 26 teams isn't a power
-      // of 2) has exactly one side present on Challonge — the other is
-      // simply absent, not an unresolved team. Distinguish that from a real
-      // linking problem, where both sides exist but one has no local G5
-      // team: only the latter is actionable/worth flagging as an error.
-      const byeMatches = groupMatches.filter(
-        (m) => (m.player1 == null) !== (m.player2 == null),
-      );
-      const unlinked = groupMatches.filter(
-        (m) =>
-          m.player1 != null &&
-          m.player2 != null &&
-          (!m.player1.local_team || !m.player2.local_team),
-      );
-      const swissMatches = groupMatches
-        .filter((m) => m.player1?.local_team && m.player2?.local_team)
-        .slice()
-        .sort((a, b) => {
-          if (a.round !== b.round) return (a.round || 0) - (b.round || 0);
-          return this.compareIdentifier(a.identifier, b.identifier);
-        });
+      // Classify each match: a real match (both sides have a local G5
+      // team), a bye/no-opponent (one side is literally absent or named
+      // "Bye"), a forfeit (both sides exist on Challonge but only one has a
+      // local G5 team — the resolved side's win still needs crediting so
+      // its next round unlocks, but it's flagged as a linking problem
+      // rather than a normal bye), or fully unlinked (neither side
+      // resolved — nothing to credit).
+      const realMatches = [];
+      const creditOnly = []; // { cm, present, reason: "bye" | "forfeit" }
+      const unlinkedEntries = []; // { cm, reason }
+      challongeMatches.forEach((cm) => {
+        const byeSide1 = this.isByePlaceholder(cm.player1);
+        const byeSide2 = this.isByePlaceholder(cm.player2);
+        if (byeSide1 || byeSide2) {
+          const present = byeSide1 ? cm.player2 : cm.player1;
+          if (present?.local_team) {
+            creditOnly.push({ cm, present, reason: "bye" });
+          } else {
+            unlinkedEntries.push({
+              cm,
+              reason: present
+                ? "bye Challonge, mais l'équipe présente n'est pas liée côté G5 (challonge_team_id manquant)"
+                : "équipe non liée à Challonge (challonge_team_id manquant côté G5)",
+            });
+          }
+          return;
+        }
+        const r1 = cm.player1.local_team;
+        const r2 = cm.player2.local_team;
+        if (r1 && r2) realMatches.push(cm);
+        else if (r1 || r2)
+          creditOnly.push({
+            cm,
+            present: r1 ? cm.player1 : cm.player2,
+            reason: "forfeit",
+          });
+        else
+          unlinkedEntries.push({
+            cm,
+            reason:
+              "équipe non liée à Challonge (challonge_team_id manquant côté G5, des deux côtés)",
+          });
+      });
 
-      this.unplacedChallongeMatches = unlinked.map((m) => ({
-        label: this.labelForChallongeMatch(m),
-        reason:
-          "équipe non liée à Challonge (challonge_team_id manquant côté G5)",
+      realMatches.sort((a, b) => {
+        if (a.round !== b.round) return (a.round || 0) - (b.round || 0);
+        return this.compareIdentifier(a.identifier, b.identifier);
+      });
+
+      this.unplacedChallongeMatches = unlinkedEntries.map(({ cm, reason }) => ({
+        label: this.labelForChallongeMatch(cm),
+        reason,
       }));
 
       // Even with nothing placeable via Challonge, let the caller still try
       // the local heuristic — it only depends on G5 data, so it's an
       // independent recovery path. The unlinked list above stays visible
       // either way.
-      if (!swissMatches.length && !byeMatches.length) return false;
+      if (!realMatches.length && !creditOnly.length) return false;
 
       this.pushHistory();
 
@@ -1493,33 +1579,39 @@ export default {
         this.teams.push(team);
         this.loadTeamImage(team);
       };
-      swissMatches.forEach((cm) => {
+      realMatches.forEach((cm) => {
         registerTeam(cm.player1.local_team);
         registerTeam(cm.player2.local_team);
       });
-      byeMatches.forEach((cm) => {
-        registerTeam((cm.player1 ?? cm.player2)?.local_team);
-      });
+      creditOnly.forEach(({ present }) => registerTeam(present.local_team));
 
-      this.byeTeams = byeMatches.map((cm) => {
-        const present = cm.player1 ?? cm.player2;
-        const name = present?.local_team?.name || present?.name || "?";
-        const round = cm.round != null ? `round ${cm.round}` : "round ?";
-        return `${name} — ${round}${cm.identifier ? ` (${cm.identifier})` : ""}`;
-      });
+      this.byeTeams = creditOnly
+        .filter((c) => c.reason === "bye")
+        .map(({ cm, present }) => {
+          const name = present?.local_team?.name || present?.name || "?";
+          const round = cm.round != null ? `round ${cm.round}` : "round ?";
+          return `${name} — ${round}${cm.identifier ? ` (${cm.identifier})` : ""}`;
+        });
+      this.unplacedChallongeMatches = this.unplacedChallongeMatches.concat(
+        creditOnly
+          .filter((c) => c.reason === "forfeit")
+          .map(({ cm, present }) => ({
+            label: this.labelForChallongeMatch(cm),
+            reason: `adversaire non lié à Challonge — forfait probable, victoire créditée à ${present?.local_team?.name || present?.name || "?"}`,
+          })),
+      );
 
       // Challonge is authoritative for every team it references here: wipe
       // their existing non-locked placements first, so a stale/incorrect
       // box from an earlier run can't block (or duplicate) the correct one
       // computed below.
       const challongeTeamG5Ids = new Set();
-      swissMatches.forEach((cm) => {
+      realMatches.forEach((cm) => {
         challongeTeamG5Ids.add(cm.player1.local_team.id);
         challongeTeamG5Ids.add(cm.player2.local_team.id);
       });
-      byeMatches.forEach((cm) => {
-        const id = (cm.player1 ?? cm.player2)?.local_team?.id;
-        if (id != null) challongeTeamG5Ids.add(id);
+      creditOnly.forEach(({ present }) => {
+        if (present.local_team) challongeTeamG5Ids.add(present.local_team.id);
       });
       Object.keys(this.assignments).forEach((slotId) => {
         const base = this.getMatchBase(slotId);
@@ -1536,24 +1628,23 @@ export default {
         }
       });
 
-      // Byes must be interleaved with real matches in round/identifier
-      // order, not just appended — the exempt team's credited win has to
-      // land at the right point in the record simulation for its *next*
-      // round to bucket correctly.
+      // Byes/forfeits must be interleaved with real matches in
+      // round/identifier order, not just appended — the credited win has
+      // to land at the right point in the record simulation for the
+      // credited team's *next* round to bucket correctly.
       const combined = [
-        ...swissMatches.map((cm) => ({ cm, isBye: false })),
-        ...byeMatches.map((cm) => ({ cm, isBye: true })),
+        ...realMatches.map((cm) => ({ cm, isBye: false })),
+        ...creditOnly.map(({ cm, present }) => ({ cm, isBye: true, present })),
       ].sort((a, b) => {
         if (a.cm.round !== b.cm.round)
           return (a.cm.round || 0) - (b.cm.round || 0);
         return this.compareIdentifier(a.cm.identifier, b.cm.identifier);
       });
 
-      const ordered = combined.map(({ cm, isBye }) => {
+      const ordered = combined.map(({ cm, isBye, present }) => {
         if (isBye) {
-          const present = cm.player1 ?? cm.player2;
           const teamA = this.teams.find(
-            (t) => t.g5Id === present?.local_team?.id,
+            (t) => t.g5Id === present.local_team.id,
           );
           return {
             teamA,

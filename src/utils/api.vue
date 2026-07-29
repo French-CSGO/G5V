@@ -844,12 +844,21 @@ export default {
       }
       return message;
     },
-    async GetSeasonChallongeMatches(seasonid) {
+    async GetSeasonChallongeTournaments(seasonid) {
       const res = await this.axiosCall.get(
         `${
           process.env?.VUE_APP_G5V_API_URL || "/api"
-        }/seasons/${seasonid}/challonge/matches`,
+        }/seasons/${seasonid}/challonge/tournaments`,
       );
+      return res.data.tournaments;
+    },
+    async GetSeasonChallongeMatches(seasonid, tournamentId) {
+      const url =
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/matches` +
+        (tournamentId ? `?tournament_id=${tournamentId}` : "");
+      const res = await this.axiosCall.get(url);
       return res.data.matches;
     },
     async GetSwissBoard(seasonid) {

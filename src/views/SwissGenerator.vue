@@ -1371,6 +1371,29 @@ export default {
 
       this.pushHistory();
 
+      // GetSeasonTeams only returns teams explicitly added to the season's
+      // roster, but Challonge's local_team resolution looks teams up
+      // globally by challonge_team_id — a team can be in the Challonge
+      // bracket without ever having been added to the G5 season roster.
+      // Auto-register any such team here instead of silently dropping every
+      // match it plays.
+      swissMatches.forEach((cm) => {
+        [cm.player1.local_team, cm.player2.local_team].forEach((lt) => {
+          if (this.teams.some((t) => t.g5Id === lt.id)) return;
+          const team = {
+            id: this.uid(),
+            g5Id: lt.id,
+            name: lt.name,
+            tag: lt.tag || null,
+            src: lt.logo
+              ? `${this.apiUrl}/static/img/logos/${lt.logo}.png`
+              : "",
+          };
+          this.teams.push(team);
+          this.loadTeamImage(team);
+        });
+      });
+
       // Challonge is authoritative for every team it references here: wipe
       // their existing non-locked placements first, so a stale/incorrect
       // box from an earlier run can't block (or duplicate) the correct one

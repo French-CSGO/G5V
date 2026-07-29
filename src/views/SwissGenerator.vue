@@ -1290,7 +1290,17 @@ export default {
                 this.$set(this.assignments, box.base + "-A", teamA.id);
                 this.$set(this.assignments, box.base + "-B", teamB.id);
                 this.$delete(this.matchResults, box.base);
-                this.autoFillResult(box.base);
+                // Prefer the winner already known from this match's own
+                // source (Challonge's winner_id, or the linked G5 result)
+                // over re-deriving purely from G5 data, since a round can
+                // be resolved on Challonge without any G5 match backing it.
+                if (concluded && winnerG5Id === teamA.g5Id) {
+                  this.$set(this.matchResults, box.base, "A");
+                } else if (concluded && winnerG5Id === teamB.g5Id) {
+                  this.$set(this.matchResults, box.base, "B");
+                } else {
+                  this.autoFillResult(box.base);
+                }
                 placedCount++;
               } else {
                 skipReasons.noBox++;
@@ -1475,12 +1485,30 @@ export default {
         const teamB = this.teams.find(
           (t) => t.g5Id === cm.player2.local_team.id,
         );
-        const g5m = cm.g5_match_id ? importedById.get(cm.g5_match_id) : null;
-        const concluded = !!(g5m && !g5m.cancelled && g5m.end_time);
+        // Prefer Challonge's own winner_id: a round can be resolved
+        // directly on Challonge (score reported there) without a G5 match
+        // ever being created or finished for it, and record progression
+        // needs to know that regardless of G5's state. Fall back to the
+        // linked G5 match's result when Challonge hasn't got one yet.
+        let winnerG5Id = null;
+        if (cm.winner_id != null) {
+          if (cm.winner_id === cm.player1.id)
+            winnerG5Id = cm.player1.local_team.id;
+          else if (cm.winner_id === cm.player2.id)
+            winnerG5Id = cm.player2.local_team.id;
+        }
+        let concluded = winnerG5Id != null;
+        if (!concluded) {
+          const g5m = cm.g5_match_id ? importedById.get(cm.g5_match_id) : null;
+          if (g5m && !g5m.cancelled && g5m.end_time && g5m.winner != null) {
+            concluded = true;
+            winnerG5Id = g5m.winner;
+          }
+        }
         return {
           teamA,
           teamB,
-          winnerG5Id: concluded ? g5m.winner : null,
+          winnerG5Id,
           concluded,
           label: this.labelForChallongeMatch(cm),
         };

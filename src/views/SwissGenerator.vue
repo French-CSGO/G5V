@@ -56,15 +56,24 @@
         <button
           type="button"
           :disabled="!currentSeasonId"
+          @click="copyOverlayLink"
+        >
+          Copier le lien overlay OBS
+        </button>
+        <div class="swiss-gen__caption" style="margin-bottom: 6px">
+          Lien en fond transparent pour une source navigateur OBS : reflète
+          automatiquement le dernier tableau enregistré (clique sur "Enregistrer
+          sur le serveur" après chaque changement) et se rafraîchit tout seul
+          toutes les 30s.
+        </div>
+        <button
+          type="button"
+          :disabled="!currentSeasonId"
           @click="reapplyResultsClick"
         >
           Actualiser les résultats
         </button>
-        <button
-          type="button"
-          :disabled="!currentSeasonId || !importedMatches.length"
-          @click="autoPlaceAll"
-        >
+        <button type="button" :disabled="!currentSeasonId" @click="autoPlaceAll">
           Placer automatiquement
         </button>
         <div class="swiss-gen__caption" style="margin-bottom: 6px">
@@ -1041,6 +1050,38 @@ export default {
       // never auto-saves, so it can't clobber a concurrent editor's save.
       this.refreshTimer = setInterval(() => this.refreshMatches(true), 30000);
     },
+    async copyOverlayLink() {
+      if (!this.currentSeasonId) return;
+      const url = new URL(
+        `/overlay/swiss/${this.currentSeasonId}`,
+        window.location.origin,
+      ).href;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          this.legacyCopy(url);
+        }
+        this.notify("Lien overlay copié : " + url);
+      } catch (err) {
+        this.notify("Impossible de copier le lien.", "error");
+      }
+    },
+    legacyCopy(text) {
+      // Fallback for non-secure contexts (plain HTTP), where the async
+      // Clipboard API is unavailable — the browser still allows the legacy
+      // execCommand copy from a focused, selected element.
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!ok) throw new Error("execCommand copy failed");
+    },
     async saveBoard() {
       if (!this.currentSeasonId) return;
       this.saving = true;
@@ -1057,11 +1098,26 @@ export default {
         const customTeams = this.teams
           .filter((t) => t.g5Id == null)
           .map((t) => ({ id: t.id, name: t.name, src: t.src }));
+        // Denormalized team display data per slot, so the public read-only
+        // OBS overlay can render the board from this one saved payload
+        // without needing an authenticated call to fetch team info.
+        const resolvedAssignments = {};
+        Object.entries(this.assignments).forEach(([slotId, teamId]) => {
+          const team = this.teams.find((t) => t.id === teamId);
+          if (!team) return;
+          resolvedAssignments[slotId] = {
+            name: team.name,
+            tag: team.tag || null,
+            src: team.src || null,
+            g5Id: team.g5Id ?? null,
+          };
+        });
         const board = {
           version: 1,
           backgroundSrc: this.bgSrc,
           customTeams,
           assignments,
+          resolvedAssignments,
           matchResults: this.matchResults,
           lockedMatches: this.lockedMatches,
           showNames: this.showNames,
@@ -1144,17 +1200,35 @@ export default {
     },
     // Shared box-filling core for both auto-placement strategies below: walks
     // `matches` (already in the right processing order) and, for each one,
-    // drops the pair into the next empty box of the W-L bucket implied by
-    // each team's record *before* that match, then updates the running
-    // record from the linked G5 result before moving on.
-    fillBoardFromOrderedMatches(matches) {
+    // drops the pair into the W-L bucket implied by each team's record
+    // *before* that match, then updates the running record from the linked
+    // G5 result before moving on.
+    //
+    // `overwrite: true` (Challonge path) always assigns the Nth non-locked
+    // box of a bucket to the Nth match of that bucket, regardless of what
+    // currently occupies it — Challonge is the authoritative source, so a
+    // stale box left over from a previous run (or from the local-record
+    // heuristic) must not block a real match from being placed. Without
+    // this, once every box of a bucket held *some* team, no further match
+    // for that bucket — including one that simply hadn't been played yet —
+    // could ever find a slot. `overwrite: false` (local heuristic) only
+    // ever fills genuinely empty boxes, since it's a best-effort guess and
+    // shouldn't clobber existing placements.
+    fillBoardFromOrderedMatches(matches, { overwrite = false } = {}) {
       const buckets = this.slotBucketBoxes();
+      const usedIndex = new Map(); // bucket key -> next box index (overwrite mode)
       const isBoxUsable = (base) =>
         !this.lockedMatches[base] &&
         !this.assignments[base + "-A"] &&
         !this.assignments[base + "-B"];
-      const nextEmptyBox = (key) =>
-        (buckets.get(key) || []).find((b) => isBoxUsable(b.base));
+      const nextBox = (key) => {
+        const boxes = buckets.get(key) || [];
+        if (!overwrite) return boxes.find((b) => isBoxUsable(b.base));
+        let idx = usedIndex.get(key) || 0;
+        while (idx < boxes.length && this.lockedMatches[boxes[idx].base]) idx++;
+        usedIndex.set(key, idx + 1);
+        return idx < boxes.length ? boxes[idx] : null;
+      };
       const nextEmptyTerminalSlot = (key) => {
         for (const b of buckets.get(key) || []) {
           if (this.lockedMatches[b.base]) continue;
@@ -1168,19 +1242,24 @@ export default {
       const getRecord = (gid) => records.get(gid) || { w: 0, l: 0 };
 
       let placedCount = 0;
-      let skipped = 0;
+      const skipReasons = { noTeam: 0, recordMismatch: 0, noBox: 0 };
 
       for (const { teamA, teamB, winnerG5Id, concluded } of matches) {
         if (!teamA || !teamB) {
-          skipped++;
+          skipReasons.noTeam++;
         } else {
           const pairKey = [teamA.g5Id, teamB.g5Id].sort().join(":");
-          if (!this.placedPairKeys.has(pairKey)) {
+          if (overwrite || !this.placedPairKeys.has(pairKey)) {
             const recA = getRecord(teamA.g5Id);
             const recB = getRecord(teamB.g5Id);
             const key = `${recA.w}-${recA.l}`;
-            if (key === `${recB.w}-${recB.l}` && buckets.has(key)) {
-              const box = nextEmptyBox(key);
+            const isTerminalRecord = recA.w === 3 || recA.l === 3;
+            if (
+              !isTerminalRecord &&
+              key === `${recB.w}-${recB.l}` &&
+              buckets.has(key)
+            ) {
+              const box = nextBox(key);
               if (box) {
                 this.$set(this.assignments, box.base + "-A", teamA.id);
                 this.$set(this.assignments, box.base + "-B", teamB.id);
@@ -1188,10 +1267,10 @@ export default {
                 this.autoFillResult(box.base);
                 placedCount++;
               } else {
-                skipped++;
+                skipReasons.noBox++;
               }
             } else {
-              skipped++;
+              skipReasons.recordMismatch++;
             }
           }
 
@@ -1224,7 +1303,20 @@ export default {
       });
 
       this.reapplyResults();
-      return { placedCount, terminalPlaced, skipped };
+      const skipped =
+        skipReasons.noTeam + skipReasons.recordMismatch + skipReasons.noBox;
+      return { placedCount, terminalPlaced, skipped, skipReasons };
+    },
+    describeSkips(skipReasons) {
+      if (!skipReasons) return "";
+      const parts = [];
+      if (skipReasons.noTeam)
+        parts.push(`${skipReasons.noTeam} équipe non liée`);
+      if (skipReasons.recordMismatch)
+        parts.push(`${skipReasons.recordMismatch} round pas encore atteint`);
+      if (skipReasons.noBox)
+        parts.push(`${skipReasons.noBox} case indisponible`);
+      return parts.join(", ");
     },
     // Entry point for the "Placer automatiquement" button: prefers the
     // authoritative Challonge round/identifier ordering when the season is
@@ -1275,6 +1367,30 @@ export default {
 
       this.pushHistory();
 
+      // Challonge is authoritative for every team it references here: wipe
+      // their existing non-locked placements first, so a stale/incorrect
+      // box from an earlier run can't block (or duplicate) the correct one
+      // computed below.
+      const challongeTeamG5Ids = new Set();
+      swissMatches.forEach((cm) => {
+        challongeTeamG5Ids.add(cm.player1.local_team.id);
+        challongeTeamG5Ids.add(cm.player2.local_team.id);
+      });
+      Object.keys(this.assignments).forEach((slotId) => {
+        const base = this.getMatchBase(slotId);
+        if (this.lockedMatches[base]) return;
+        const placedTeam = this.teams.find(
+          (t) => t.id === this.assignments[slotId],
+        );
+        if (
+          placedTeam?.g5Id != null &&
+          challongeTeamG5Ids.has(placedTeam.g5Id)
+        ) {
+          this.$delete(this.assignments, slotId);
+          this.$delete(this.matchResults, base);
+        }
+      });
+
       const ordered = swissMatches.map((cm) => {
         const teamA = this.teams.find(
           (t) => t.g5Id === cm.player1.local_team.id,
@@ -1292,9 +1408,10 @@ export default {
         };
       });
 
-      const { placedCount, terminalPlaced, skipped } =
-        this.fillBoardFromOrderedMatches(ordered);
-      this.status = `Placement automatique (Challonge) : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (équipe manquante ou case occupée)` : ""}.`;
+      const { placedCount, terminalPlaced, skipped, skipReasons } =
+        this.fillBoardFromOrderedMatches(ordered, { overwrite: true });
+      const skipDetail = this.describeSkips(skipReasons);
+      this.status = `Placement automatique (Challonge) : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (${skipDetail})` : ""}.`;
       this.notify(this.status);
       return true;
     },
@@ -1325,9 +1442,10 @@ export default {
           concluded: !!m.end_time,
         }));
 
-      const { placedCount, terminalPlaced, skipped } =
+      const { placedCount, terminalPlaced, skipped, skipReasons } =
         this.fillBoardFromOrderedMatches(ordered);
-      this.status = `Placement automatique : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (équipe manquante ou case occupée)` : ""}.`;
+      const skipDetail = this.describeSkips(skipReasons);
+      this.status = `Placement automatique : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (${skipDetail})` : ""}.`;
       this.notify(this.status);
     },
     onKeydown(e) {

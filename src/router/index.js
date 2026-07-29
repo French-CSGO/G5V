@@ -296,6 +296,13 @@ const routes = [
       import(/* webpackChunkName: "Overlay" */ "../views/OverlaySeason.vue"),
   },
   {
+    path: "/overlay/swiss/:seasonId",
+    name: "SwissOverlay",
+    meta: { hideChrome: true },
+    component: () =>
+      import(/* webpackChunkName: "Overlay" */ "../views/SwissOverlay.vue"),
+  },
+  {
     path: "/admin/settings",
     name: "AdminSettings",
     component: () =>

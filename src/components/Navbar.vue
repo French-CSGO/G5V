@@ -146,6 +146,16 @@
           }}</v-list-item-title>
         </v-list-item>
 
+        <v-list-item
+          v-if="isCast || isAdmin"
+          index="season_team_sync"
+          :to="'/cast/season-team-sync'"
+        >
+          <v-list-item-title>{{
+            $t("Navbar.SeasonTeamSync")
+          }}</v-list-item-title>
+        </v-list-item>
+
         <!-- Menu Administration (super_admin uniquement) -->
         <template v-if="user.super_admin == 1">
           <v-divider class="my-2" />

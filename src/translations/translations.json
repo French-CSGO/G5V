@@ -19,7 +19,8 @@
       "Home": "Home",
       "PlayerImages": "Player Avatars",
       "ObsSlots": "OBS Slots",
-      "SwissGenerator": "Swiss Generator"
+      "SwissGenerator": "Swiss Generator",
+      "SeasonTeamSync": "Season Team Sync"
     },
     "Login": {
       "title": "Login/Register",
@@ -709,7 +710,8 @@
       "Home": "Accueil",
       "PlayerImages": "Avatars des joueurs",
       "ObsSlots": "Slots OBS",
-      "SwissGenerator": "Générateur Swiss"
+      "SwissGenerator": "Générateur Swiss",
+      "SeasonTeamSync": "Synchro équipes saison"
     },
     "Login": {
       "title": "S'identifier / S'incrire",
@@ -1399,7 +1401,8 @@
       "Home": "ホーム",
       "PlayerImages": "選手アバター",
       "ObsSlots": "OBSスロット",
-      "SwissGenerator": "スイスジェネレーター"
+      "SwissGenerator": "スイスジェネレーター",
+      "SeasonTeamSync": "シーズンチーム同期"
     },
     "Login": {
       "title": "ログイン/登録",

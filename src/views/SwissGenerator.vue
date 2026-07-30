@@ -455,6 +455,11 @@ export default {
     this.ctx = this.canvas.getContext("2d");
     this.draw();
     window.addEventListener("keydown", this.onKeydown);
+    const season = this.$route.query.season;
+    if (season) {
+      this.seasonIdInput = String(season);
+      this.loadSeason();
+    }
   },
   beforeDestroy() {
     window.removeEventListener("keydown", this.onKeydown);

@@ -282,6 +282,13 @@ const routes = [
       import(/* webpackChunkName: "Cast" */ "../views/SwissGenerator.vue"),
   },
   {
+    path: "/cast/season-team-sync",
+    name: "SeasonTeamSync",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/SeasonTeamSync.vue"),
+  },
+  {
     path: "/overlay/:steamid/live",
     name: "OverlayLive",
     meta: { hideChrome: true },

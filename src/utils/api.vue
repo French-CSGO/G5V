@@ -861,6 +861,23 @@ export default {
       const res = await this.axiosCall.get(url);
       return res.data.matches;
     },
+    async GetChallongeTournamentParticipants(seasonid, tournamentId) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/tournaments/${tournamentId}/participants`,
+      );
+      return res.data.participants;
+    },
+    async SaveChallongeTeamSync(seasonid, associations) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/team-sync`,
+        { associations },
+      );
+      return res.data;
+    },
     async GetSwissBoard(seasonid) {
       const res = await this.axiosCall.get(
         `${

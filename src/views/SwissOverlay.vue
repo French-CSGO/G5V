@@ -84,18 +84,6 @@ export default {
       const m = slotId.match(/-(A|B)$/);
       return m ? m[1] : null;
     },
-    // Same rule as SwissGenerator.vue: a box is terminal (no match, just two
-    // independent qualified/eliminated teams) once its record has 3 wins or
-    // 3 losses.
-    terminalKind(base) {
-      const m = base.match(/^(\d+)-(\d+)-\d+$/);
-      if (!m) return null;
-      const wins = parseInt(m[1], 10);
-      const losses = parseInt(m[2], 10);
-      if (wins === 3) return "win";
-      if (losses === 3) return "loss";
-      return null;
-    },
     teamTagText(team) {
       if (team.tag) return team.tag;
       return (team.name || "?").trim().slice(0, 4).toUpperCase();
@@ -165,7 +153,6 @@ export default {
     // of a local teams array, and never writes anything back to the server
     // (this view is read-only).
     autoFillResult(base) {
-      if (this.terminalKind(base)) return;
       const a = this.resolvedAssignments[base + "-A"];
       const b = this.resolvedAssignments[base + "-B"];
       if (!a || !b || a.g5Id == null || b.g5Id == null) return;
@@ -216,16 +203,7 @@ export default {
 
         const base = this.getMatchBase(slot.id);
         const side = this.getSlotSide(slot.id);
-        const terminal = this.terminalKind(base);
-        if (terminal) {
-          ctx.save();
-          ctx.fillStyle = this.hexToRgba(
-            terminal === "win" ? this.winnerColor : this.loserColor,
-            this.resultOpacity,
-          );
-          ctx.fillRect(slot.x + 1, slot.y + 1, slot.w - 2, slot.h - 2);
-          ctx.restore();
-        } else if (this.matchResults[base]) {
+        if (this.matchResults[base]) {
           ctx.save();
           const isWinner = this.matchResults[base] === side;
           ctx.fillStyle = this.hexToRgba(

@@ -109,8 +109,9 @@
           Si la saison est liée à Challonge, utilise directement le round et
           l'ordre des matchs du bracket swiss. Sinon, déduit le round de chaque
           match importé à partir des résultats déjà entrés (victoires/défaites).
-          Dans les deux cas, place les matchs — ainsi que les équipes qualifiées
-          (3-0/3-1/3-2) ou éliminées (0-3/1-3/2-3) — dans les bonnes cases.
+          Dans les deux cas, place les matchs dans les bonnes cases — aucune
+          équipe n'est retirée du tableau : tout le monde continue à se
+          rencontrer selon son bilan (3-0, 4-0, 5-0...).
         </div>
         <div class="swiss-gen__caption">{{ importStatus }}</div>
 
@@ -513,18 +514,6 @@ export default {
       if (!side) return null;
       return this.getMatchBase(slotId) + "-" + (side === "A" ? "B" : "A");
     },
-    // Boxes where the record already has 3 wins or 3 losses (e.g. 3-0, 1-3)
-    // don't host a match: each of their A/B slots shows one qualified or
-    // eliminated team, independent of the other slot in the same box.
-    terminalKind(base) {
-      const m = base.match(/^(\d+)-(\d+)-\d+$/);
-      if (!m) return null;
-      const wins = parseInt(m[1], 10);
-      const losses = parseInt(m[2], 10);
-      if (wins === 3) return "win";
-      if (losses === 3) return "loss";
-      return null;
-    },
     setBackground(src) {
       if (!src) return;
       this.bgSrc = src;
@@ -593,16 +582,7 @@ export default {
 
           const base = this.getMatchBase(slot.id);
           const side = this.getSlotSide(slot.id);
-          const terminal = this.terminalKind(base);
-          if (terminal) {
-            ctx.save();
-            ctx.fillStyle = this.hexToRgba(
-              terminal === "win" ? this.winnerColor : this.loserColor,
-              this.resultOpacity,
-            );
-            ctx.fillRect(slot.x + 1, slot.y + 1, slot.w - 2, slot.h - 2);
-            ctx.restore();
-          } else if (this.matchResults[base]) {
+          if (this.matchResults[base]) {
             ctx.save();
             const isWinner = this.matchResults[base] === side;
             ctx.fillStyle = this.hexToRgba(
@@ -771,11 +751,6 @@ export default {
       }
 
       if (this.winnerMode) {
-        if (this.terminalKind(base)) {
-          this.status =
-            "Cette case affiche une équipe qualifiée/éliminée : la couleur est automatique, il n'y a pas de gagnant à désigner.";
-          return;
-        }
         if (this.lockedMatches[base]) {
           this.status =
             "Ce match est verrouillé. Déverrouille-le avant de modifier le résultat.";
@@ -806,11 +781,6 @@ export default {
       }
 
       if (this.selectedMatchId) {
-        if (this.terminalKind(base)) {
-          this.status =
-            "Cette case affiche des équipes individuelles (qualifiée/éliminée), pas un match. Sélectionne une équipe seule pour la placer ici.";
-          return;
-        }
         if (this.lockedMatches[base]) {
           this.status =
             "Ce match est verrouillé. Déverrouille-le avant de modifier ses équipes.";
@@ -1249,7 +1219,6 @@ export default {
       this.draw();
     },
     autoFillResult(base) {
-      if (this.terminalKind(base)) return;
       const slotA = SLOTS.find((s) => s.id === base + "-A");
       const slotB = SLOTS.find((s) => s.id === base + "-B");
       if (!slotA || !slotB) return;
@@ -1270,12 +1239,10 @@ export default {
         this.$set(this.matchResults, base, "B");
     },
     // Boxes are grouped by "W-L" record (e.g. "2-1"), each box being one
-    // real match except for terminal records (3 wins or 3 losses) whose
-    // boxes just display individual teams. Walking the imported matches in
-    // chronological order lets us derive each team's record *before* every
-    // match they play, so every match (and every team that finishes with a
-    // terminal record) can be dropped into its correct box automatically —
-    // exactly what the previous rounds' results already imply.
+    // real match. Walking the imported matches in chronological order lets
+    // us derive each team's record *before* every match they play, so every
+    // match can be dropped into its correct box automatically — exactly
+    // what the previous rounds' results already imply.
     slotBucketBoxes() {
       const buckets = new Map();
       const seenBases = new Set();
@@ -1324,15 +1291,6 @@ export default {
         usedIndex.set(key, idx + 1);
         return idx < boxes.length ? boxes[idx] : null;
       };
-      const nextEmptyTerminalSlot = (key) => {
-        for (const b of buckets.get(key) || []) {
-          if (this.lockedMatches[b.base]) continue;
-          if (!this.assignments[b.base + "-A"]) return b.base + "-A";
-          if (!this.assignments[b.base + "-B"]) return b.base + "-B";
-        }
-        return null;
-      };
-
       const records = new Map(); // g5Id -> { w, l }
       const getRecord = (gid) => records.get(gid) || { w: 0, l: 0 };
 
@@ -1365,12 +1323,7 @@ export default {
             const recA = getRecord(teamA.g5Id);
             const recB = getRecord(teamB.g5Id);
             const key = `${recA.w}-${recA.l}`;
-            const isTerminalRecord = recA.w === 3 || recA.l === 3;
-            if (
-              !isTerminalRecord &&
-              key === `${recB.w}-${recB.l}` &&
-              buckets.has(key)
-            ) {
+            if (key === `${recB.w}-${recB.l}` && buckets.has(key)) {
               const box = nextBox(key);
               if (box) {
                 this.$set(this.assignments, box.base + "-A", teamA.id);
@@ -1416,24 +1369,10 @@ export default {
         }
       }
 
-      let terminalPlaced = 0;
-      const placedTeamIds = new Set(Object.values(this.assignments));
-      records.forEach((rec, gid) => {
-        if (rec.w !== 3 && rec.l !== 3) return;
-        const team = this.teams.find((t) => t.g5Id === gid);
-        if (!team || placedTeamIds.has(team.id)) return;
-        const slotId = nextEmptyTerminalSlot(`${rec.w}-${rec.l}`);
-        if (slotId) {
-          this.$set(this.assignments, slotId, team.id);
-          placedTeamIds.add(team.id);
-          terminalPlaced++;
-        }
-      });
-
       this.reapplyResults();
       const skipped =
         skipReasons.noTeam + skipReasons.recordMismatch + skipReasons.noBox;
-      return { placedCount, terminalPlaced, skipped, skipReasons, skippedList };
+      return { placedCount, skipped, skipReasons, skippedList };
     },
     describeSkips(skipReasons) {
       if (!skipReasons) return "";
@@ -1708,12 +1647,12 @@ export default {
         };
       });
 
-      const { placedCount, terminalPlaced, skipped, skipReasons, skippedList } =
+      const { placedCount, skipped, skipReasons, skippedList } =
         this.fillBoardFromOrderedMatches(ordered, { overwrite: true });
       this.unplacedChallongeMatches =
         this.unplacedChallongeMatches.concat(skippedList);
       const skipDetail = this.describeSkips(skipReasons);
-      this.status = `Placement automatique (Challonge) : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (${skipDetail})` : ""}.`;
+      this.status = `Placement automatique (Challonge) : ${placedCount} match(s) placé(s)${skipped ? `, ${skipped} match(s) ignoré(s) (${skipDetail})` : ""}.`;
       this.notify(this.status);
       return true;
     },
@@ -1748,10 +1687,10 @@ export default {
       }
       this.pushHistory();
 
-      const { placedCount, terminalPlaced, skipped, skipReasons } =
+      const { placedCount, skipped, skipReasons } =
         this.fillBoardFromOrderedMatches(this.orderedRecordMatches());
       const skipDetail = this.describeSkips(skipReasons);
-      this.status = `Placement automatique : ${placedCount} match(s) placé(s), ${terminalPlaced} équipe(s) qualifiée(s)/éliminée(s) placée(s)${skipped ? `, ${skipped} match(s) ignoré(s) (${skipDetail})` : ""}.`;
+      this.status = `Placement automatique : ${placedCount} match(s) placé(s)${skipped ? `, ${skipped} match(s) ignoré(s) (${skipDetail})` : ""}.`;
       this.notify(this.status);
     },
     // Runs on every load and on every 30s auto-refresh: picks up matches

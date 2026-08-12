@@ -64,7 +64,14 @@
       "RCONCommand": "RCON Command",
       "RCONHint": "Like working in the console!",
       "MatchRestart": "Restart Current Match",
-      "MatchRestartInfo": "Restarting the current match will remove all map stats. Continue?"
+      "MatchRestartInfo": "Restarting the current match will remove all map stats. Continue?",
+      "ForceVeto": "Force Veto",
+      "ForceVetoConfirm": "Force the veto?",
+      "ForceVetoChoice": "Select which team(s) are absent — their veto will be simulated automatically, then the match will start.",
+      "ForceVetoTeam1": "Team 1 Absent",
+      "ForceVetoTeam2": "Team 2 Absent",
+      "ForceVetoBoth": "Both Absent",
+      "ForceStart": "Force Start"
     },
     "Match": {
       "MatchHasBeenCancelled": "This match has been cancelled.",
@@ -755,7 +762,14 @@
       "RCONCommand": "Commande RCON",
       "RCONHint": "Travailler comme dans la console!",
       "MatchRestart": "Redémarrer le match en cours",
-      "MatchRestartInfo": "Le redémarrage du match en cours va supprimer toutes les statistiques de la map. Continuer?"
+      "MatchRestartInfo": "Le redémarrage du match en cours va supprimer toutes les statistiques de la map. Continuer?",
+      "ForceVeto": "Forçage du véto",
+      "ForceVetoConfirm": "Forcer le véto ?",
+      "ForceVetoTeam1": "Équipe 1 absente",
+      "ForceVetoTeam2": "Équipe 2 absente",
+      "ForceVetoBoth": "Les deux absentes",
+      "ForceVetoChoice": "Sélectionnez la ou les équipes absentes — leur véto sera simulé automatiquement, puis le match démarrera.",
+      "ForceStart": "Forcer le lancement"
     },
     "Match": {
       "MatchHasBeenCancelled": "Ce match a été annulé.",
@@ -1446,7 +1460,14 @@
       "RCONCommand": "RCONコマンド",
       "RCONHint": "コンソールで仕事をしているような！？",
       "MatchRestart": "カレントマッチのリスタート",
-      "MatchRestartInfo": "現在のマッチをリスタートすると、すべてのマップ統計が削除されます。続ける？"
+      "MatchRestartInfo": "現在のマッチをリスタートすると、すべてのマップ統計が削除されます。続ける？",
+      "ForceVeto": "ヴィート強制",
+      "ForceVetoConfirm": "ヴィートを強制しますか？",
+      "ForceVetoChoice": "不在のチームを選択してください。そのチームのヴィートは自動的にシミュレートされ、その後マッチが開始されます。",
+      "ForceVetoTeam1": "チーム1が不在",
+      "ForceVetoTeam2": "チーム2が不在",
+      "ForceVetoBoth": "両チームが不在",
+      "ForceStart": "強制開始"
     },
     "Match": {
       "MatchHasBeenCancelled": "このマッチはキャンセルされました。",

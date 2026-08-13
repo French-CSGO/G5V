@@ -282,6 +282,13 @@ const routes = [
       import(/* webpackChunkName: "Cast" */ "../views/SwissGenerator.vue"),
   },
   {
+    path: "/cast/round-robin-generator",
+    name: "RoundRobinGenerator",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/RoundRobinGenerator.vue"),
+  },
+  {
     path: "/cast/season-team-sync",
     name: "SeasonTeamSync",
     meta: { hideChrome: false },

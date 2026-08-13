@@ -20,6 +20,7 @@
       "PlayerImages": "Player Avatars",
       "ObsSlots": "OBS Slots",
       "SwissGenerator": "Swiss Generator",
+      "RoundRobinGenerator": "Round Robin Generator",
       "SeasonTeamSync": "Season Team Sync"
     },
     "Login": {
@@ -718,6 +719,7 @@
       "PlayerImages": "Avatars des joueurs",
       "ObsSlots": "Slots OBS",
       "SwissGenerator": "Générateur Swiss",
+      "RoundRobinGenerator": "Générateur Round Robin",
       "SeasonTeamSync": "Synchro équipes saison"
     },
     "Login": {
@@ -1416,6 +1418,7 @@
       "PlayerImages": "選手アバター",
       "ObsSlots": "OBSスロット",
       "SwissGenerator": "スイスジェネレーター",
+      "RoundRobinGenerator": "総当たり戦ジェネレーター",
       "SeasonTeamSync": "シーズンチーム同期"
     },
     "Login": {

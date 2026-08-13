@@ -895,6 +895,23 @@ export default {
       );
       return res.data;
     },
+    async GetRoundRobinBoard(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/round-robin-board`,
+      );
+      return res.data.board;
+    },
+    async SaveRoundRobinBoard(seasonid, board) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/round-robin-board`,
+        { board },
+      );
+      return res.data;
+    },
     async AddTeamsToSeason(seasonid, teamIds) {
       let res;
       let message;

@@ -317,6 +317,15 @@ const routes = [
       import(/* webpackChunkName: "Overlay" */ "../views/SwissOverlay.vue"),
   },
   {
+    path: "/overlay/round-robin/:seasonId",
+    name: "RoundRobinOverlay",
+    meta: { hideChrome: true },
+    component: () =>
+      import(
+        /* webpackChunkName: "Overlay" */ "../views/RoundRobinOverlay.vue"
+      ),
+  },
+  {
     path: "/admin/settings",
     name: "AdminSettings",
     component: () =>

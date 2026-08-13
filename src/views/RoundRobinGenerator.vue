@@ -32,6 +32,19 @@
         >
           {{ saving ? "Enregistrement..." : "Enregistrer sur le serveur" }}
         </button>
+        <button
+          type="button"
+          :disabled="!currentSeasonId"
+          @click="copyOverlayLink"
+        >
+          Copier le lien overlay OBS
+        </button>
+        <div class="rr-gen__caption" style="margin-bottom: 6px">
+          Lien en fond transparent pour une source navigateur OBS : reflète
+          automatiquement le dernier tableau enregistré (clique sur "Enregistrer
+          sur le serveur" après chaque changement) et se rafraîchit tout seul
+          toutes les 30s.
+        </div>
         <label class="rr-gen__small">
           <input v-model="autoRefreshEnabled" type="checkbox" />
           Actualisation automatique (toutes les 30s)
@@ -654,6 +667,25 @@ export default {
         const customTeams = this.teams
           .filter((t) => t.g5Id == null)
           .map((t) => ({ id: t.id, name: t.name, src: t.src }));
+        // Denormalized team display data per key, so the public read-only
+        // OBS overlay can render the board from this one saved payload
+        // without needing an authenticated call to fetch team info.
+        const resolvedTeams = {};
+        const seenKeys = new Set();
+        this.pools.forEach((p) => {
+          p.teamKeys.forEach((key) => {
+            if (seenKeys.has(key)) return;
+            seenKeys.add(key);
+            const team = this.teamByKey(key);
+            if (!team) return;
+            resolvedTeams[key] = {
+              name: team.name,
+              tag: team.tag || null,
+              src: team.src || null,
+              g5Id: team.g5Id ?? null,
+            };
+          });
+        });
         const board = {
           version: 1,
           challongeTournamentId: this.challongeTournamentId,
@@ -665,6 +697,7 @@ export default {
           matchResults: this.matchResults,
           lockedResults: this.lockedResults,
           customTeams,
+          resolvedTeams,
         };
         await this.SaveRoundRobinBoard(this.currentSeasonId, board);
         this.notify("Enregistré sur le serveur.");
@@ -676,6 +709,34 @@ export default {
       } finally {
         this.saving = false;
       }
+    },
+    async copyOverlayLink() {
+      if (!this.currentSeasonId) return;
+      const url = new URL(
+        `/overlay/round-robin/${this.currentSeasonId}`,
+        window.location.origin,
+      ).href;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(url);
+        } else {
+          this.legacyCopy(url);
+        }
+        this.notify("Lien overlay copié : " + url);
+      } catch (err) {
+        this.notify("Impossible de copier le lien.", "error");
+      }
+    },
+    legacyCopy(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      document.execCommand("copy");
+      document.body.removeChild(textarea);
     },
   },
 };

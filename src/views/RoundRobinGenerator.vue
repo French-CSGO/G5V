@@ -46,6 +46,10 @@
           toutes les 30s.
         </div>
         <label class="rr-gen__small">
+          <input v-model="overlayShowMatches" type="checkbox" />
+          Afficher les matchs sur l'overlay (sinon, classement seul)
+        </label>
+        <label class="rr-gen__small">
           <input v-model="autoRefreshEnabled" type="checkbox" />
           Actualisation automatique (toutes les 30s)
         </label>
@@ -275,6 +279,7 @@ export default {
       status: "Charge une saison pour commencer.",
       saving: false,
       autoRefreshEnabled: true,
+      overlayShowMatches: true,
       snack: false,
       snackMsg: "",
       snackColor: "success",
@@ -755,10 +760,14 @@ export default {
     },
     async copyOverlayLink() {
       if (!this.currentSeasonId) return;
-      const url = new URL(
+      const urlObj = new URL(
         `/overlay/round-robin/${this.currentSeasonId}`,
         window.location.origin,
-      ).href;
+      );
+      if (!this.overlayShowMatches) {
+        urlObj.searchParams.set("show_matches", "0");
+      }
+      const url = urlObj.href;
       try {
         if (navigator.clipboard && window.isSecureContext) {
           await navigator.clipboard.writeText(url);

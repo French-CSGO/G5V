@@ -7,7 +7,10 @@
     <div v-else class="rr-overlay__pools">
       <div v-for="pool in pools" :key="pool.id" class="rr-overlay__pool">
         <div class="rr-overlay__pool-name">{{ pool.name }}</div>
-        <table class="rr-overlay__matches" v-if="poolMatches(pool).length">
+        <table
+          class="rr-overlay__matches"
+          v-if="showMatches && poolMatches(pool).length"
+        >
           <tbody>
             <tr v-for="m in poolMatches(pool)" :key="m.key">
               <td
@@ -92,6 +95,11 @@ export default {
   },
   beforeDestroy() {
     if (this.refreshTimer) clearInterval(this.refreshTimer);
+  },
+  computed: {
+    showMatches() {
+      return this.$route.query.show_matches !== "0";
+    },
   },
   methods: {
     teamName(key) {

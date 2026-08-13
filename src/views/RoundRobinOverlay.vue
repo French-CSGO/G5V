@@ -218,7 +218,7 @@ export default {
 
 .rr-overlay__pools {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 14px;
 }
 
@@ -233,6 +233,7 @@ export default {
   font-weight: 700;
   font-size: 13px;
   margin-bottom: 6px;
+  color: #90ee90;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 

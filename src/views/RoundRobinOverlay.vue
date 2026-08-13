@@ -19,7 +19,12 @@
               >
                 {{ teamName(m.teamAKey) }}
               </td>
-              <td class="rr-overlay__vs">vs</td>
+              <td
+                class="rr-overlay__vs"
+                :class="{ 'rr-overlay__draw': m.result === 'draw' }"
+              >
+                vs
+              </td>
               <td
                 class="rr-overlay__match-team"
                 :class="{
@@ -39,7 +44,9 @@
               <th>Équipe</th>
               <th>J</th>
               <th>G</th>
+              <th>N</th>
               <th>P</th>
+              <th>Pts</th>
             </tr>
           </thead>
           <tbody>
@@ -51,7 +58,9 @@
               </td>
               <td>{{ s.played }}</td>
               <td>{{ s.wins }}</td>
+              <td>{{ s.draws }}</td>
               <td>{{ s.losses }}</td>
+              <td>{{ s.points }}</td>
             </tr>
           </tbody>
         </table>
@@ -114,29 +123,50 @@ export default {
       const rows = pool.teamKeys.map((key) => ({
         key,
         wins: 0,
+        draws: 0,
         losses: 0,
         played: 0,
+        points: 0,
       }));
       const byKey = new Map(rows.map((r) => [r.key, r]));
-      for (const m of this.poolMatches(pool)) {
+      const matches = this.poolMatches(pool);
+      for (const m of matches) {
         if (!m.result) continue;
         const a = byKey.get(m.teamAKey);
         const b = byKey.get(m.teamBKey);
         if (!a || !b) continue;
         a.played++;
         b.played++;
-        if (m.result === "A") {
+        if (m.result === "draw") {
+          a.draws++;
+          b.draws++;
+          a.points += 1;
+          b.points += 1;
+        } else if (m.result === "A") {
           a.wins++;
           b.losses++;
+          a.points += 3;
         } else {
           b.wins++;
           a.losses++;
+          b.points += 3;
         }
       }
+      const headToHead = (x, y) => {
+        const m = matches.find(
+          (m) =>
+            (m.teamAKey === x.key && m.teamBKey === y.key) ||
+            (m.teamAKey === y.key && m.teamBKey === x.key),
+        );
+        if (!m || !m.result || m.result === "draw") return 0;
+        const xIsA = m.teamAKey === x.key;
+        const xWon = (m.result === "A") === xIsA;
+        return xWon ? -1 : 1;
+      };
       return rows.sort(
         (x, y) =>
-          y.wins - x.wins ||
-          x.losses - y.losses ||
+          y.points - x.points ||
+          headToHead(x, y) ||
           this.teamName(x.key).localeCompare(this.teamName(y.key)),
       );
     },
@@ -282,6 +312,11 @@ export default {
 
 .rr-overlay__loser {
   color: #c13d4f;
+}
+
+.rr-overlay__draw {
+  color: #e8c547;
+  font-weight: 700;
 }
 
 .rr-overlay__team {

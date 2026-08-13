@@ -68,38 +68,33 @@
           main si besoin.
         </div>
 
-        <template v-if="challongeTournaments.length">
-          <hr />
-          <strong>Challonge</strong>
-          <div
-            v-if="challongeTournaments.length > 1"
-            class="rr-gen__row"
-            style="grid-template-columns: 1fr"
-          >
-            <select v-model="challongeTournamentId">
-              <option :value="null">Bracket Challonge : auto</option>
-              <option
-                v-for="t in challongeTournaments"
-                :key="t.id"
-                :value="t.id"
-              >
-                {{ t.label || t.challonge_slug }}
-              </option>
-            </select>
-          </div>
-          <button
-            type="button"
-            :disabled="!currentSeasonId"
-            @click="autoPlaceFromChallonge"
-          >
-            Charger les poules depuis Challonge
-          </button>
-          <div class="rr-gen__caption">
-            Reconstruit les poules à partir des groupes (group stage) du bracket
-            Challonge sélectionné, et importe les résultats déjà joués. Seules
-            les équipes liées (challonge_team_id synchronisé) sont placées.
-          </div>
-        </template>
+        <hr />
+        <strong>Challonge</strong>
+        <div
+          v-if="challongeTournaments.length > 1"
+          class="rr-gen__row"
+          style="grid-template-columns: 1fr"
+        >
+          <select v-model="challongeTournamentId">
+            <option :value="null">Bracket Challonge : auto</option>
+            <option v-for="t in challongeTournaments" :key="t.id" :value="t.id">
+              {{ t.label || t.challonge_slug }}
+            </option>
+          </select>
+        </div>
+        <button
+          type="button"
+          :disabled="!currentSeasonId"
+          @click="autoPlaceFromChallonge"
+        >
+          Charger les poules depuis Challonge
+        </button>
+        <div class="rr-gen__caption">
+          Reconstruit les poules à partir des groupes (group stage) du bracket
+          Challonge lié à la saison, et importe les résultats déjà joués. Seules
+          les équipes liées (challonge_team_id synchronisé) sont placées. Si la
+          saison n'est pas liée à Challonge, un message d'erreur s'affiche.
+        </div>
 
         <template v-if="teams.length">
           <hr />

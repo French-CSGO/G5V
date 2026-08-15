@@ -87,7 +87,8 @@
       "Connect": "Connect!",
       "GOTVConnect": "Connect to GOTV!",
       "ConnectedPlayers": "Connected players",
-      "NoConnectedPlayers": "No players connected."
+      "NoConnectedPlayers": "No players connected.",
+      "OtherConnectedPlayers": "Other connected players"
     },
     "CreateMatch": {
       "FormServer": "Select a Server",
@@ -788,7 +789,8 @@
       "Connect": "Connexion !",
       "GOTVConnect": "Connexion à la GOTV!",
       "ConnectedPlayers": "Joueurs connectés",
-      "NoConnectedPlayers": "Aucun joueur connecté."
+      "NoConnectedPlayers": "Aucun joueur connecté.",
+      "OtherConnectedPlayers": "Autres joueurs connectés"
     },
     "CreateMatch": {
       "FormServer": "Selectionner un serveur",
@@ -1489,7 +1491,8 @@
       "Connect": "つなげろ！",
       "GOTVConnect": "GOTVに接続",
       "ConnectedPlayers": "接続中のプレイヤー",
-      "NoConnectedPlayers": "接続中のプレイヤーはいません。"
+      "NoConnectedPlayers": "接続中のプレイヤーはいません。",
+      "OtherConnectedPlayers": "その他の接続中プレイヤー"
     },
     "CreateMatch": {
       "FormServer": "サーバー",

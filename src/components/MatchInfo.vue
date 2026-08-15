@@ -134,20 +134,38 @@
       <div class="text-subtitle-2" align="center">
         {{ $t("Match.ConnectedPlayers") }} ({{ connectedPlayers.length }})
       </div>
-      <div align="center">
-        <v-chip
-          v-for="p in connectedPlayers"
-          :key="p.steamid"
-          small
-          class="ma-1"
-          text-color="white"
-          :color="connectedPlayerColor(p.team)"
-        >
-          {{ p.name }}
-        </v-chip>
-        <div v-if="!connectedPlayers.length" class="text-caption">
-          {{ $t("Match.NoConnectedPlayers") }}
+      <div v-if="connectedPlayers.length" class="connected-players__table">
+        <div class="connected-players__col">
+          <div
+            class="connected-players__team-name"
+            style="border-color: #e8523a"
+          >
+            {{ matchInfo.team1_name }}
+          </div>
+          <div v-for="p in team1Players" :key="p.steamid">{{ p.name }}</div>
+          <div v-if="!team1Players.length" class="connected-players__empty">
+            —
+          </div>
         </div>
+        <div class="connected-players__col">
+          <div
+            class="connected-players__team-name"
+            style="border-color: #4fc3f7"
+          >
+            {{ matchInfo.team2_name }}
+          </div>
+          <div v-for="p in team2Players" :key="p.steamid">{{ p.name }}</div>
+          <div v-if="!team2Players.length" class="connected-players__empty">
+            —
+          </div>
+        </div>
+      </div>
+      <div v-if="otherPlayers.length" class="text-caption" align="center">
+        {{ $t("Match.OtherConnectedPlayers") }}:
+        {{ otherPlayers.map((p) => p.name).join(", ") }}
+      </div>
+      <div v-if="!connectedPlayers.length" class="text-caption" align="center">
+        {{ $t("Match.NoConnectedPlayers") }}
       </div>
     </div>
   </v-container>
@@ -225,6 +243,25 @@ export default {
         (this.matchInfo.forfeit == 0 || this.matchInfo.forfeit == null)
       );
     },
+    team1Players() {
+      return this.connectedPlayers.filter(
+        (p) => p.team === "team1" || p.team === "coach_team1",
+      );
+    },
+    team2Players() {
+      return this.connectedPlayers.filter(
+        (p) => p.team === "team2" || p.team === "coach_team2",
+      );
+    },
+    otherPlayers() {
+      return this.connectedPlayers.filter(
+        (p) =>
+          p.team !== "team1" &&
+          p.team !== "coach_team1" &&
+          p.team !== "team2" &&
+          p.team !== "coach_team2",
+      );
+    },
   },
   created() {
     this.checkIfMatchLive();
@@ -239,11 +276,6 @@ export default {
     async refreshConnectedPlayers() {
       if (!this.showConnectedPlayers) return;
       this.connectedPlayers = await this.GetConnectedPlayers(this.match_id);
-    },
-    connectedPlayerColor(team) {
-      if (team?.startsWith("team1")) return "#e8523a";
-      if (team?.startsWith("team2")) return "#4fc3f7";
-      return "#757575";
     },
     async checkIfMatchLive() {
       let matchRes = await this.GetMatchData(this.match_id);
@@ -322,3 +354,30 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.connected-players__table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+.connected-players__col {
+  text-align: center;
+}
+
+.connected-players__team-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 2px solid;
+}
+
+.connected-players__empty {
+  opacity: 0.5;
+}
+</style>

@@ -85,7 +85,9 @@
       "EndTime": "End:",
       "EstimatedEndTime": "Estimated end in {minutes} min ({time})",
       "Connect": "Connect!",
-      "GOTVConnect": "Connect to GOTV!"
+      "GOTVConnect": "Connect to GOTV!",
+      "ConnectedPlayers": "Connected players",
+      "NoConnectedPlayers": "No players connected."
     },
     "CreateMatch": {
       "FormServer": "Select a Server",
@@ -784,7 +786,9 @@
       "EndTime": "Fin : ",
       "EstimatedEndTime": "Fin estimée dans {minutes} minutes ({time})",
       "Connect": "Connexion !",
-      "GOTVConnect": "Connexion à la GOTV!"
+      "GOTVConnect": "Connexion à la GOTV!",
+      "ConnectedPlayers": "Joueurs connectés",
+      "NoConnectedPlayers": "Aucun joueur connecté."
     },
     "CreateMatch": {
       "FormServer": "Selectionner un serveur",
@@ -1483,7 +1487,9 @@
       "EndTime": "終り:",
       "EstimatedEndTime": "終了予定まで {minutes} 分 ({time})",
       "Connect": "つなげろ！",
-      "GOTVConnect": "GOTVに接続"
+      "GOTVConnect": "GOTVに接続",
+      "ConnectedPlayers": "接続中のプレイヤー",
+      "NoConnectedPlayers": "接続中のプレイヤーはいません。"
     },
     "CreateMatch": {
       "FormServer": "サーバー",

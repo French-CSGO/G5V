@@ -372,6 +372,19 @@ export default {
       }
       return message;
     },
+    async GetConnectedPlayers(matchid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/${matchid}/connected-players`,
+        );
+        message = res.data.connectedPlayers;
+      } catch (err) {
+        message = [];
+      }
+      return message;
+    },
     async GetEventMatchData(matchid) {
       let retVal;
       try {

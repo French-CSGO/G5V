@@ -129,6 +129,32 @@
         {{ $t("Match.GOTVConnect") }}
       </v-btn>
     </div>
+    <div v-if="showConnectedPlayers">
+      <v-divider class="my-2" />
+      <div class="text-subtitle-2" align="center">
+        {{ $t("Match.ConnectedPlayers") }} ({{ connectedPlayers.length }})
+      </div>
+      <div align="center">
+        <v-chip
+          v-for="p in connectedPlayers"
+          :key="p.steamid"
+          small
+          class="ma-1"
+          :color="
+            p.team === 'team1'
+              ? 'primary'
+              : p.team === 'team2'
+                ? 'secondary'
+                : 'grey'
+          "
+        >
+          {{ p.name }}
+        </v-chip>
+        <div v-if="!connectedPlayers.length" class="text-caption">
+          {{ $t("Match.NoConnectedPlayers") }}
+        </div>
+      </div>
+    </div>
   </v-container>
 </template>
 
@@ -191,12 +217,34 @@ export default {
       },
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
       imageLoaded: true,
+      connectedPlayers: [],
+      connectedPlayersTimer: null,
     };
+  },
+  computed: {
+    showConnectedPlayers() {
+      return (
+        this.IsAnyAdmin(this.user) &&
+        (this.matchInfo.end_time == null || this.matchInfo.end_time === "") &&
+        (this.matchInfo.cancelled == 0 || this.matchInfo.cancelled == null) &&
+        (this.matchInfo.forfeit == 0 || this.matchInfo.forfeit == null)
+      );
+    },
   },
   created() {
     this.checkIfMatchLive();
+    this.connectedPlayersTimer = setInterval(() => {
+      this.refreshConnectedPlayers();
+    }, 10000);
+  },
+  beforeDestroy() {
+    if (this.connectedPlayersTimer) clearInterval(this.connectedPlayersTimer);
   },
   methods: {
+    async refreshConnectedPlayers() {
+      if (!this.showConnectedPlayers) return;
+      this.connectedPlayers = await this.GetConnectedPlayers(this.match_id);
+    },
     async checkIfMatchLive() {
       let matchRes = await this.GetMatchData(this.match_id);
       if (matchRes.end_time == null) {
@@ -224,6 +272,7 @@ export default {
       try {
         let matchRes = await this.GetMatchData(this.match_id);
         await this.retrieveMatchInfoHelper(matchRes);
+        await this.refreshConnectedPlayers();
       } catch {
         // ignored
       }

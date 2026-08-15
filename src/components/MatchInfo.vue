@@ -140,13 +140,8 @@
           :key="p.steamid"
           small
           class="ma-1"
-          :color="
-            p.team === 'team1'
-              ? 'primary'
-              : p.team === 'team2'
-                ? 'secondary'
-                : 'grey'
-          "
+          text-color="white"
+          :color="connectedPlayerColor(p.team)"
         >
           {{ p.name }}
         </v-chip>
@@ -244,6 +239,11 @@ export default {
     async refreshConnectedPlayers() {
       if (!this.showConnectedPlayers) return;
       this.connectedPlayers = await this.GetConnectedPlayers(this.match_id);
+    },
+    connectedPlayerColor(team) {
+      if (team?.startsWith("team1")) return "#e8523a";
+      if (team?.startsWith("team2")) return "#4fc3f7";
+      return "#757575";
     },
     async checkIfMatchLive() {
       let matchRes = await this.GetMatchData(this.match_id);

@@ -495,7 +495,11 @@ export default {
           ((m.team1_id === g5A && m.team2_id === g5B) ||
             (m.team1_id === g5B && m.team2_id === g5A)),
       );
-      if (!match || match.winner == null) return null;
+      if (!match) return null;
+      if (match.map1_t1_score === 12 && match.map1_t2_score === 12) {
+        return "draw";
+      }
+      if (match.winner == null) return null;
       if (match.winner === g5A) return "A";
       if (match.winner === g5B) return "B";
       return null;
@@ -586,6 +590,8 @@ export default {
           winner: m.winner,
           cancelled: !!m.cancelled,
           end_time: m.end_time,
+          map1_t1_score: m.map1_t1_score,
+          map1_t2_score: m.map1_t2_score,
         }));
 
         if (board && Array.isArray(board.pools)) {
@@ -685,6 +691,8 @@ export default {
           winner: m.winner,
           cancelled: !!m.cancelled,
           end_time: m.end_time,
+          map1_t1_score: m.map1_t1_score,
+          map1_t2_score: m.map1_t2_score,
         }));
         if (
           this.challongeTournamentId != null ||

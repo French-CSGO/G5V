@@ -23,7 +23,7 @@ jobs:
         uses: ASzc/change-string-case-action@v8
         with:
           string: ${{ github.repository_owner }}
-      - uses: actions/checkout@v6.0.3
+      - uses: actions/checkout@v7.0.0
       - uses: docker/login-action@v4.4.0
         if: github.event_name != 'pull_request'
         with:

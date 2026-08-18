@@ -7,6 +7,22 @@
         </v-btn>
         {{ seasonName }} — {{ $t("Challonge.MatchesTitle") }}
         <v-spacer />
+        <v-btn
+          small
+          :to="`/cast/swiss-generator?season=${seasonId}`"
+          class="mr-2"
+        >
+          <v-icon left small>mdi-grid</v-icon>
+          {{ $t("Navbar.SwissGenerator") }}
+        </v-btn>
+        <v-btn
+          small
+          :to="`/cast/season-team-sync?season=${seasonId}`"
+          class="mr-2"
+        >
+          <v-icon left small>mdi-sync</v-icon>
+          {{ $t("Navbar.SeasonTeamSync") }}
+        </v-btn>
         <v-chip small color="primary">Challonge</v-chip>
       </v-card-title>
 

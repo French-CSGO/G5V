@@ -372,6 +372,19 @@ export default {
       }
       return message;
     },
+    async GetConnectedPlayers(matchid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/${matchid}/connected-players`,
+        );
+        message = res.data.connectedPlayers;
+      } catch (err) {
+        message = [];
+      }
+      return message;
+    },
     async GetEventMatchData(matchid) {
       let retVal;
       try {
@@ -843,6 +856,74 @@ export default {
         message = error.response.data.message;
       }
       return message;
+    },
+    async GetSeasonChallongeTournaments(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/tournaments`,
+      );
+      return res.data.tournaments;
+    },
+    async GetSeasonChallongeMatches(seasonid, tournamentId) {
+      const url =
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/matches` +
+        (tournamentId ? `?tournament_id=${tournamentId}` : "");
+      const res = await this.axiosCall.get(url);
+      return res.data.matches;
+    },
+    async GetChallongeTournamentParticipants(seasonid, tournamentId) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/tournaments/${tournamentId}/participants`,
+      );
+      return res.data.participants;
+    },
+    async SaveChallongeTeamSync(seasonid, associations) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/team-sync`,
+        { associations },
+      );
+      return res.data;
+    },
+    async GetSwissBoard(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/swiss-board`,
+      );
+      return res.data.board;
+    },
+    async SaveSwissBoard(seasonid, board) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/swiss-board`,
+        { board },
+      );
+      return res.data;
+    },
+    async GetRoundRobinBoard(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/round-robin-board`,
+      );
+      return res.data.board;
+    },
+    async SaveRoundRobinBoard(seasonid, board) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/round-robin-board`,
+        { board },
+      );
+      return res.data;
     },
     async AddTeamsToSeason(seasonid, teamIds) {
       let res;

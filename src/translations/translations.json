@@ -18,7 +18,10 @@
       "ImageSettings": "Image Settings",
       "Home": "Home",
       "PlayerImages": "Player Avatars",
-      "ObsSlots": "OBS Slots"
+      "ObsSlots": "OBS Slots",
+      "SwissGenerator": "Swiss Generator",
+      "RoundRobinGenerator": "Round Robin Generator",
+      "SeasonTeamSync": "Season Team Sync"
     },
     "Login": {
       "title": "Login/Register",
@@ -62,7 +65,14 @@
       "RCONCommand": "RCON Command",
       "RCONHint": "Like working in the console!",
       "MatchRestart": "Restart Current Match",
-      "MatchRestartInfo": "Restarting the current match will remove all map stats. Continue?"
+      "MatchRestartInfo": "Restarting the current match will remove all map stats. Continue?",
+      "ForceVeto": "Force Veto",
+      "ForceVetoConfirm": "Force the veto?",
+      "ForceVetoChoice": "Select which team(s) are absent — their veto will be simulated automatically, then the match will start.",
+      "ForceVetoTeam1": "Team 1 Absent",
+      "ForceVetoTeam2": "Team 2 Absent",
+      "ForceVetoBoth": "Both Absent",
+      "ForceStart": "Force Start"
     },
     "Match": {
       "MatchHasBeenCancelled": "This match has been cancelled.",
@@ -75,7 +85,10 @@
       "EndTime": "End:",
       "EstimatedEndTime": "Estimated end in {minutes} min ({time})",
       "Connect": "Connect!",
-      "GOTVConnect": "Connect to GOTV!"
+      "GOTVConnect": "Connect to GOTV!",
+      "ConnectedPlayers": "Connected players",
+      "NoConnectedPlayers": "No players connected.",
+      "OtherConnectedPlayers": "Other connected players"
     },
     "CreateMatch": {
       "FormServer": "Select a Server",
@@ -707,7 +720,10 @@
       "ImageSettings": "Paramètres des images",
       "Home": "Accueil",
       "PlayerImages": "Avatars des joueurs",
-      "ObsSlots": "Slots OBS"
+      "ObsSlots": "Slots OBS",
+      "SwissGenerator": "Générateur Swiss",
+      "RoundRobinGenerator": "Générateur Round Robin",
+      "SeasonTeamSync": "Synchro équipes saison"
     },
     "Login": {
       "title": "S'identifier / S'incrire",
@@ -751,7 +767,14 @@
       "RCONCommand": "Commande RCON",
       "RCONHint": "Travailler comme dans la console!",
       "MatchRestart": "Redémarrer le match en cours",
-      "MatchRestartInfo": "Le redémarrage du match en cours va supprimer toutes les statistiques de la map. Continuer?"
+      "MatchRestartInfo": "Le redémarrage du match en cours va supprimer toutes les statistiques de la map. Continuer?",
+      "ForceVeto": "Forçage du véto",
+      "ForceVetoConfirm": "Forcer le véto ?",
+      "ForceVetoTeam1": "Équipe 1 absente",
+      "ForceVetoTeam2": "Équipe 2 absente",
+      "ForceVetoBoth": "Les deux absentes",
+      "ForceVetoChoice": "Sélectionnez la ou les équipes absentes — leur véto sera simulé automatiquement, puis le match démarrera.",
+      "ForceStart": "Forcer le lancement"
     },
     "Match": {
       "MatchHasBeenCancelled": "Ce match a été annulé.",
@@ -764,7 +787,10 @@
       "EndTime": "Fin : ",
       "EstimatedEndTime": "Fin estimée dans {minutes} minutes ({time})",
       "Connect": "Connexion !",
-      "GOTVConnect": "Connexion à la GOTV!"
+      "GOTVConnect": "Connexion à la GOTV!",
+      "ConnectedPlayers": "Joueurs connectés",
+      "NoConnectedPlayers": "Aucun joueur connecté.",
+      "OtherConnectedPlayers": "Autres joueurs connectés"
     },
     "CreateMatch": {
       "FormServer": "Selectionner un serveur",
@@ -1396,7 +1422,10 @@
       "ImageSettings": "画像設定",
       "Home": "ホーム",
       "PlayerImages": "選手アバター",
-      "ObsSlots": "OBSスロット"
+      "ObsSlots": "OBSスロット",
+      "SwissGenerator": "スイスジェネレーター",
+      "RoundRobinGenerator": "総当たり戦ジェネレーター",
+      "SeasonTeamSync": "シーズンチーム同期"
     },
     "Login": {
       "title": "ログイン/登録",
@@ -1440,7 +1469,14 @@
       "RCONCommand": "RCONコマンド",
       "RCONHint": "コンソールで仕事をしているような！？",
       "MatchRestart": "カレントマッチのリスタート",
-      "MatchRestartInfo": "現在のマッチをリスタートすると、すべてのマップ統計が削除されます。続ける？"
+      "MatchRestartInfo": "現在のマッチをリスタートすると、すべてのマップ統計が削除されます。続ける？",
+      "ForceVeto": "ヴィート強制",
+      "ForceVetoConfirm": "ヴィートを強制しますか？",
+      "ForceVetoChoice": "不在のチームを選択してください。そのチームのヴィートは自動的にシミュレートされ、その後マッチが開始されます。",
+      "ForceVetoTeam1": "チーム1が不在",
+      "ForceVetoTeam2": "チーム2が不在",
+      "ForceVetoBoth": "両チームが不在",
+      "ForceStart": "強制開始"
     },
     "Match": {
       "MatchHasBeenCancelled": "このマッチはキャンセルされました。",
@@ -1453,7 +1489,10 @@
       "EndTime": "終り:",
       "EstimatedEndTime": "終了予定まで {minutes} 分 ({time})",
       "Connect": "つなげろ！",
-      "GOTVConnect": "GOTVに接続"
+      "GOTVConnect": "GOTVに接続",
+      "ConnectedPlayers": "接続中のプレイヤー",
+      "NoConnectedPlayers": "接続中のプレイヤーはいません。",
+      "OtherConnectedPlayers": "その他の接続中プレイヤー"
     },
     "CreateMatch": {
       "FormServer": "サーバー",

@@ -5097,8 +5097,12 @@ export default {
         this.$set(this.uploadMsg, idx, `Fond uploadé : ${filename}`);
         this.$set(this.uploadMsgType, idx, "success");
         this.$set(this.bgFile, idx, null);
-      } catch {
-        this.$set(this.uploadMsg, idx, "Erreur lors de l'upload");
+      } catch (err) {
+        this.$set(
+          this.uploadMsg,
+          idx,
+          err.response?.data?.error || "Erreur lors de l'upload",
+        );
         this.$set(this.uploadMsgType, idx, "error");
       } finally {
         this.$set(this.uploadingBg, idx, false);
@@ -5171,8 +5175,9 @@ export default {
           .get(`${this.apiUrl}/image/players`)
           .then((r) => r.data)
           .catch(() => []);
-      } catch {
-        this.uploadPhotoMsg = "Erreur lors de l'upload";
+      } catch (err) {
+        this.uploadPhotoMsg =
+          err.response?.data?.error || "Erreur lors de l'upload";
         this.uploadPhotoMsgType = "error";
       } finally {
         this.uploadingPhoto = false;
@@ -5196,8 +5201,9 @@ export default {
           .get(`${this.apiUrl}/image/maps`)
           .then((r) => r.data)
           .catch(() => []);
-      } catch {
-        this.uploadMapMsg = "Erreur lors de l'upload";
+      } catch (err) {
+        this.uploadMapMsg =
+          err.response?.data?.error || "Erreur lors de l'upload";
         this.uploadMapMsgType = "error";
       } finally {
         this.uploadingMap = false;

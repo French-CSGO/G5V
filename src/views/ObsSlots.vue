@@ -297,12 +297,32 @@ export default {
       }
     },
     async copyLink(url) {
+      const absoluteUrl = new URL(url, window.location.origin).href;
       try {
-        await navigator.clipboard.writeText(url);
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(absoluteUrl);
+        } else {
+          this.legacyCopy(absoluteUrl);
+        }
         this.successMsg = this.$t("ObsSlots.linkCopied");
       } catch {
         this.errorMsg = this.$t("ObsSlots.copyError");
       }
+    },
+    legacyCopy(text) {
+      // Fallback for non-secure contexts (plain HTTP) where the async
+      // Clipboard API is unavailable — the browser still allows the
+      // legacy execCommand copy from a focused, selected element.
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      const ok = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!ok) throw new Error("execCommand copy failed");
     },
     linkGroups(slot) {
       const slug = slot.slug;

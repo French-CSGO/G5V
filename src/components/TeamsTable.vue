@@ -15,6 +15,16 @@
         <v-toolbar flat>
           {{ $t("Teams.Title") }}
           <v-spacer />
+          <v-text-field
+            v-model="search"
+            :label="$t('misc.Search')"
+            prepend-inner-icon="mdi-magnify"
+            single-line
+            hide-details
+            clearable
+            dense
+            style="max-width: 300px"
+          />
         </v-toolbar>
       </template>
       <template v-slot:item.id="{ item }">
@@ -109,6 +119,8 @@ export default {
       response: "",
       options: {},
       totalTeams: -1,
+      search: "",
+      searchTimer: null,
     };
   },
   watch: {
@@ -125,6 +137,16 @@ export default {
         this.GetTeams();
       },
       deep: true,
+    },
+    search() {
+      clearTimeout(this.searchTimer);
+      this.searchTimer = setTimeout(() => {
+        if (this.options.page !== 1) {
+          this.options.page = 1;
+        } else {
+          this.GetTeams();
+        }
+      }, 300);
     },
   },
   computed: {
@@ -189,6 +211,16 @@ export default {
           (team) => team.public_team == 1 || team.user_id == this.user.id,
         );
       }
+
+      if (this.search && this.search.trim() !== "") {
+        const needle = this.search.trim().toLowerCase();
+        count = count.filter(
+          (team) =>
+            (team.name || "").toLowerCase().includes(needle) ||
+            (team.tag || "").toLowerCase().includes(needle),
+        );
+      }
+
       this.totalTeams = count.length;
       if (itemsPerPage > 0) {
         count = count.slice((page - 1) * itemsPerPage, page * itemsPerPage);

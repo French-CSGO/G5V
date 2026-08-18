@@ -7,9 +7,29 @@
           color="warning"
           :href="apiUrl + '/image/match/' + match_id + '/mvp'"
           target="_blank"
+          class="mr-2"
         >
           <v-icon left small>mdi-star</v-icon>
           MVP Match
+        </v-btn>
+        <v-btn
+          small
+          color="teal"
+          :href="GetTeamMatchImageUrl(match_id, 1)"
+          target="_blank"
+          class="mr-2"
+        >
+          <v-icon left small>mdi-account-group</v-icon>
+          Stats Équipe 1
+        </v-btn>
+        <v-btn
+          small
+          color="teal darken-2"
+          :href="GetTeamMatchImageUrl(match_id, 2)"
+          target="_blank"
+        >
+          <v-icon left small>mdi-account-group</v-icon>
+          Stats Équipe 2
         </v-btn>
       </div>
       <v-container
@@ -87,9 +107,29 @@
                 '/mvp'
               "
               target="_blank"
+              class="mr-2"
             >
               <v-icon left small>mdi-star</v-icon>
               MVP Image
+            </v-btn>
+            <v-btn
+              small
+              color="teal"
+              :href="GetTeamMatchImageUrl(match_id, 1, index + 1)"
+              target="_blank"
+              class="mr-2"
+            >
+              <v-icon left small>mdi-account-group</v-icon>
+              Équipe 1
+            </v-btn>
+            <v-btn
+              small
+              color="teal darken-2"
+              :href="GetTeamMatchImageUrl(match_id, 2, index + 1)"
+              target="_blank"
+            >
+              <v-icon left small>mdi-account-group</v-icon>
+              Équipe 2
             </v-btn>
           </div>
           <div

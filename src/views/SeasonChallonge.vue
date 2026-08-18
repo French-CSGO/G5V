@@ -7,6 +7,22 @@
         </v-btn>
         {{ seasonName }} — {{ $t("Challonge.MatchesTitle") }}
         <v-spacer />
+        <v-btn
+          small
+          :to="`/cast/swiss-generator?season=${seasonId}`"
+          class="mr-2"
+        >
+          <v-icon left small>mdi-grid</v-icon>
+          {{ $t("Navbar.SwissGenerator") }}
+        </v-btn>
+        <v-btn
+          small
+          :to="`/cast/season-team-sync?season=${seasonId}`"
+          class="mr-2"
+        >
+          <v-icon left small>mdi-sync</v-icon>
+          {{ $t("Navbar.SeasonTeamSync") }}
+        </v-btn>
         <v-chip small color="primary">Challonge</v-chip>
       </v-card-title>
 
@@ -55,8 +71,16 @@
       <!-- Contenu par bracket actif -->
       <div v-if="currentTournament">
         <v-card-text v-if="!loading && groupedByRound.length">
-          <div v-for="group in groupedByRound" :key="group.round" class="mb-6">
+          <div v-for="group in groupedByRound" :key="group.key" class="mb-6">
             <div class="d-flex align-center mb-2">
+              <v-chip
+                v-if="group.group_id"
+                small
+                color="grey darken-1"
+                class="mr-2"
+              >
+                {{ $t("Challonge.Group") }} {{ group.group_id }}
+              </v-chip>
               <v-chip small color="secondary" class="mr-2 font-weight-bold">
                 {{ $t("Challonge.Round") }} {{ group.round }}
               </v-chip>
@@ -75,6 +99,35 @@
                 Créer le round
               </v-btn>
             </div>
+
+            <!-- Format par défaut de ce round -->
+            <div v-if="canCreate" class="text-caption grey--text mb-1">
+              {{ $t("Challonge.RoundFormatLabel") }}
+            </div>
+            <v-row v-if="canCreate" dense align="center" class="mb-2">
+              <v-col cols="8" sm="3">
+                <v-select
+                  v-model="roundFormats[formatKey(group)]"
+                  :items="formatOptions"
+                  item-text="label"
+                  item-value="value"
+                  dense
+                  outlined
+                  hide-details
+                />
+              </v-col>
+              <v-col cols="4" sm="auto">
+                <v-btn
+                  small
+                  color="primary"
+                  :loading="savingFormat[formatKey(group)]"
+                  @click="saveFormat(group)"
+                >
+                  <v-icon left small>mdi-content-save</v-icon>
+                  {{ $t("Challonge.FormatSave") }}
+                </v-btn>
+              </v-col>
+            </v-row>
 
             <v-data-table
               :headers="tableHeaders"
@@ -188,6 +241,15 @@
       :prefill-data="bulkPrefill"
       @matches-created="onMatchesCreated"
     />
+
+    <v-snackbar
+      v-model="snackbar.show"
+      :color="snackbar.color"
+      timeout="3000"
+      top
+    >
+      {{ snackbar.text }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -215,6 +277,10 @@ export default {
       bulkRound: 0,
       bulkMatches: [],
       bulkPrefill: {},
+      roundFormatDefaults: {},
+      roundFormats: {},
+      savingFormat: {},
+      snackbar: { show: false, text: "", color: "success" },
     };
   },
   computed: {
@@ -229,6 +295,15 @@ export default {
     },
     currentTournament() {
       return this.tournaments[this.activeTournament] ?? null;
+    },
+    formatOptions() {
+      return [
+        { value: null, label: this.$t("Challonge.FormatAuto") },
+        { value: 1, label: "BO1" },
+        { value: 2, label: "BO2" },
+        { value: 3, label: "BO3" },
+        { value: 5, label: "BO5" },
+      ];
     },
     currentMatches() {
       if (!this.currentTournament) return [];
@@ -252,15 +327,23 @@ export default {
       return list;
     },
     groupedByRound() {
-      const byRound = new Map();
+      // Clé composite (group_id, round) : deux groupes round-robin distincts peuvent
+      // partager le même numéro de round, il ne faut donc pas les fusionner.
+      const byKey = new Map();
       for (const match of this.filteredMatches) {
-        const key = match.round ?? 0;
-        if (!byRound.has(key)) {
-          byRound.set(key, { round: key, matches: [] });
+        const round = match.round ?? 0;
+        const groupId = match.group_id || null;
+        const key = `${groupId ?? "none"}|${round}`;
+        if (!byKey.has(key)) {
+          byKey.set(key, { key, round, group_id: groupId, matches: [] });
         }
-        byRound.get(key).matches.push(match);
+        byKey.get(key).matches.push(match);
       }
-      return [...byRound.values()].sort((a, b) => a.round - b.round);
+      return [...byKey.values()].sort(
+        (a, b) =>
+          a.round - b.round ||
+          String(a.group_id).localeCompare(String(b.group_id)),
+      );
     },
     tableHeaders() {
       return [
@@ -302,6 +385,15 @@ export default {
     filterCreatable() {
       this.pushQuery();
     },
+    groupedByRound(groups) {
+      for (const group of groups) {
+        const key = this.formatKey(group);
+        if (!(key in this.roundFormats)) {
+          const def = this.roundFormatDefaults[key];
+          this.$set(this.roundFormats, key, def !== undefined ? def : null);
+        }
+      }
+    },
   },
   async created() {
     this.user = await this.IsLoggedIn();
@@ -311,8 +403,19 @@ export default {
       this.seasonUserId = season.user_id;
     }
     this.loadingTournaments = true;
-    const t = await this.GetChallongeTournaments(this.seasonId);
+    const [t, formats] = await Promise.all([
+      this.GetChallongeTournaments(this.seasonId),
+      this.GetChallongeRoundFormats(this.seasonId),
+    ]);
     this.tournaments = Array.isArray(t) ? t : [];
+    this.roundFormatDefaults = {};
+    if (Array.isArray(formats)) {
+      for (const f of formats) {
+        this.roundFormatDefaults[
+          `${f.challonge_slug}|${f.group_id}|${f.round}`
+        ] = f.max_maps;
+      }
+    }
     this.loadingTournaments = false;
     // Restore filters from URL query params
     const q = this.$route.query;
@@ -384,7 +487,11 @@ export default {
     async openBulkCreate(group) {
       const creatable = this.creatableInRound(group);
       if (!creatable.length) return;
-      const data = await this.GetChallongeBulkPrefill(this.seasonId);
+      const data = await this.GetChallongeBulkPrefill(this.seasonId, {
+        challonge_slug: this.currentTournament.challonge_slug,
+        group_id: group.group_id || undefined,
+        round: group.round,
+      });
       if (!data || typeof data !== "object") return;
       this.bulkRound = group.round;
       this.bulkMatches = creatable;
@@ -393,6 +500,41 @@ export default {
     },
     onMatchesCreated() {
       this.loadMatches();
+    },
+    formatKey(group) {
+      const slug = this.currentTournament?.challonge_slug;
+      return `${slug}|${group.group_id || "none"}|${group.round}`;
+    },
+    async saveFormat(group) {
+      const key = this.formatKey(group);
+      this.$set(this.savingFormat, key, true);
+      const slug = this.currentTournament.challonge_slug;
+      const value = this.roundFormats[key];
+      const result =
+        value === null || value === undefined
+          ? await this.DeleteChallongeRoundFormat(
+              this.seasonId,
+              slug,
+              group.group_id,
+              group.round,
+            )
+          : await this.SetChallongeRoundFormat(
+              this.seasonId,
+              slug,
+              group.group_id,
+              group.round,
+              value,
+            );
+      if (result?.message) {
+        this.snackbar = { show: true, text: result.message, color: "success" };
+      } else {
+        this.snackbar = {
+          show: true,
+          text: this.$t("Challonge.ScheduleError"),
+          color: "error",
+        };
+      }
+      this.$set(this.savingFormat, key, false);
     },
   },
 };

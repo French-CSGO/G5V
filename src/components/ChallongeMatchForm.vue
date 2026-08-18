@@ -77,6 +77,11 @@
               <v-col cols="12">
                 <div class="text-subtitle-1 mb-2">
                   <strong>{{ $t("CreateMatch.FormSeriesType") }}</strong>
+                  <span v-if="prefill.max_maps" class="ml-2 caption grey--text"
+                    >({{
+                      $t("Toornament.SuggestedFormat", { n: prefill.max_maps })
+                    }})</span
+                  >
                 </div>
                 <v-radio-group v-model="formData.maps_to_win" row>
                   <v-radio :label="$t('CreateMatch.BestOf') + 1" :value="1" />
@@ -222,6 +227,9 @@ export default {
       if (val) this.reset();
     },
     prefill(val) {
+      if (val && val.max_maps) {
+        this.formData.maps_to_win = val.max_maps;
+      }
       if (val && val.season_cvars) {
         this.formData.cvars = this.buildCvarArray(val.season_cvars);
       }
@@ -234,6 +242,8 @@ export default {
     reset() {
       this.step = 1;
       this.isLoading = false;
+      if (this.prefill.max_maps)
+        this.formData.maps_to_win = this.prefill.max_maps;
       if (this.prefill.season_cvars) {
         this.formData.cvars = this.buildCvarArray(this.prefill.season_cvars);
       }
@@ -299,6 +309,7 @@ export default {
           team2_id: this.prefill.team2.id,
           season_id: this.prefill.season_id,
           challonge_id: this.prefill.challonge_match_id ?? null,
+          challonge_slug: this.prefill.challonge_match?.slug ?? null,
           start_time: new Date().toISOString().slice(0, 19).replace("T", " "),
           max_maps: this.formData.maps_to_win,
           spectator_auths: this.formData.spectators.length

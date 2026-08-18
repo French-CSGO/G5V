@@ -55,6 +55,20 @@
               <v-icon left>mdi-plus</v-icon>
               {{ $t("Challonge.AddBracket") }}
             </v-btn>
+            <v-btn
+              v-if="isChallongeSeason && IsAnyAdmin(user)"
+              :to="`/cast/swiss-generator?season=${seasonData.id}`"
+            >
+              <v-icon left>mdi-grid</v-icon>
+              {{ $t("Navbar.SwissGenerator") }}
+            </v-btn>
+            <v-btn
+              v-if="isChallongeSeason && IsAnyAdmin(user)"
+              :to="`/cast/season-team-sync?season=${seasonData.id}`"
+            >
+              <v-icon left>mdi-sync</v-icon>
+              {{ $t("Navbar.SeasonTeamSync") }}
+            </v-btn>
           </v-card-title>
         </v-col>
 

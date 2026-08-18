@@ -204,6 +204,63 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <v-dialog v-model="forceVetoDialog" persistent max-width="600px">
+      <v-card>
+        <v-card-title>
+          <span class="headline">
+            {{ $t("MatchAdmin.ForceVetoConfirm") }}
+          </span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col cols="12">
+                {{ $t("MatchAdmin.ForceVetoChoice") }}
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="darken-1"
+            text
+            @click="forceVetoDialog = false"
+            :disabled="isLoading"
+            :loading="isLoading"
+          >
+            {{ $t("misc.Cancel") }}
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="forceVetoCurrentMatch('team1')"
+            :disabled="isLoading"
+            :loading="isLoading"
+          >
+            {{ $t("MatchAdmin.ForceVetoTeam1") }}
+          </v-btn>
+          <v-btn
+            color="yellow darken-1"
+            text
+            @click="forceVetoCurrentMatch('team2')"
+            :disabled="isLoading"
+            :loading="isLoading"
+          >
+            {{ $t("MatchAdmin.ForceVetoTeam2") }}
+          </v-btn>
+          <v-btn
+            color="red darken-1"
+            text
+            @click="forceVetoCurrentMatch('both')"
+            :disabled="isLoading"
+            :loading="isLoading"
+          >
+            {{ $t("MatchAdmin.ForceVetoBoth") }}
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
     <v-dialog v-model="rconDialog" persistent max-width="600px">
       <v-card>
         <v-card-title>
@@ -348,6 +405,7 @@ export default {
       addDialog: false,
       restartDialog: false,
       forfeitDialog: false,
+      forceVetoDialog: false,
       rconDialog: false,
       backupDialog: false,
       serverChangeDialog: false,
@@ -469,6 +527,18 @@ export default {
           },
         },
         {
+          title: this.$t("MatchAdmin.ForceVeto"),
+          apiCall: () => {
+            this.forceVetoDialog = true;
+          },
+        },
+        {
+          title: this.$t("MatchAdmin.ForceStart"),
+          apiCall: () => {
+            this.forceStartCurrentMatch();
+          },
+        },
+        {
           title: this.$t("MatchAdmin.ChangeServer"),
           apiCall: async () => {
             try {
@@ -543,6 +613,18 @@ export default {
           title: this.$t("MatchAdmin.ForfeitMatch"),
           apiCall: () => {
             this.forfeitDialog = true;
+          },
+        },
+        {
+          title: this.$t("MatchAdmin.ForceVeto"),
+          apiCall: () => {
+            this.forceVetoDialog = true;
+          },
+        },
+        {
+          title: this.$t("MatchAdmin.ForceStart"),
+          apiCall: () => {
+            this.forceStartCurrentMatch();
           },
         },
         {
@@ -630,6 +712,43 @@ export default {
       this.responseSheet = true;
       this.isLoading = false;
       return;
+    },
+    async forceVetoCurrentMatch(absentTeams) {
+      this.isLoading = true;
+      const commands = [];
+      if (absentTeams === "team1" || absentTeams === "both") {
+        commands.push(
+          `css_asay "Forçage du véto en cours, le véto de l'équipe ${this.matchInfo.team1_name} sera simulé"`,
+        );
+      }
+      if (absentTeams === "team2" || absentTeams === "both") {
+        commands.push(
+          `css_asay "Forçage du véto en cours, le véto de l'équipe ${this.matchInfo.team2_name} sera simulé"`,
+        );
+      }
+      commands.push(`matchzy_veto_simulate_team '${absentTeams}'`);
+      commands.push("css_start");
+
+      let lastRes;
+      for (const rcon_command of commands) {
+        lastRes = await this.SendRconCommandToMatch(this.matchInfo.id, [
+          { rcon_command },
+        ]);
+      }
+      this.response =
+        lastRes.response == null ? lastRes.message : lastRes.response;
+      this.forceVetoDialog = false;
+      this.isLoading = false;
+      this.responseSheet = true;
+    },
+    async forceStartCurrentMatch() {
+      this.isLoading = true;
+      let res = await this.SendRconCommandToMatch(this.matchInfo.id, [
+        { rcon_command: "css_start" },
+      ]);
+      this.response = res.response == null ? res.message : res.response;
+      this.isLoading = false;
+      this.responseSheet = true;
     },
     async sendRconCommand() {
       if (this.$refs.rconForm.validate()) {

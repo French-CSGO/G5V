@@ -372,6 +372,19 @@ export default {
       }
       return message;
     },
+    async GetConnectedPlayers(matchid) {
+      let res;
+      let message;
+      try {
+        res = await this.axiosCall.get(
+          `${process.env?.VUE_APP_G5V_API_URL || "/api"}/matches/${matchid}/connected-players`,
+        );
+        message = res.data.connectedPlayers;
+      } catch (err) {
+        message = [];
+      }
+      return message;
+    },
     async GetEventMatchData(matchid) {
       let retVal;
       try {
@@ -843,6 +856,74 @@ export default {
         message = error.response.data.message;
       }
       return message;
+    },
+    async GetSeasonChallongeTournaments(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/tournaments`,
+      );
+      return res.data.tournaments;
+    },
+    async GetSeasonChallongeMatches(seasonid, tournamentId) {
+      const url =
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/matches` +
+        (tournamentId ? `?tournament_id=${tournamentId}` : "");
+      const res = await this.axiosCall.get(url);
+      return res.data.matches;
+    },
+    async GetChallongeTournamentParticipants(seasonid, tournamentId) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/tournaments/${tournamentId}/participants`,
+      );
+      return res.data.participants;
+    },
+    async SaveChallongeTeamSync(seasonid, associations) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/challonge/team-sync`,
+        { associations },
+      );
+      return res.data;
+    },
+    async GetSwissBoard(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/swiss-board`,
+      );
+      return res.data.board;
+    },
+    async SaveSwissBoard(seasonid, board) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/swiss-board`,
+        { board },
+      );
+      return res.data;
+    },
+    async GetRoundRobinBoard(seasonid) {
+      const res = await this.axiosCall.get(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/round-robin-board`,
+      );
+      return res.data.board;
+    },
+    async SaveRoundRobinBoard(seasonid, board) {
+      const res = await this.axiosCall.put(
+        `${
+          process.env?.VUE_APP_G5V_API_URL || "/api"
+        }/seasons/${seasonid}/round-robin-board`,
+        { board },
+      );
+      return res.data;
     },
     async AddTeamsToSeason(seasonid, teamIds) {
       let res;
@@ -2101,6 +2182,40 @@ export default {
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/season/${seasonId}/team/${teamId}`;
     },
+    async SearchPlayers(query = "") {
+      const url = query
+        ? `${
+            process.env?.VUE_APP_G5V_API_URL || "/api"
+          }/playerstats/search?search=${encodeURIComponent(query)}`
+        : `${process.env?.VUE_APP_G5V_API_URL || "/api"}/playerstats/search`;
+      const res = await this.axiosCall.get(url);
+      return res.data.players || [];
+    },
+    async GetPlayerImages() {
+      const res = await this.axiosCall.get(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/players`,
+      );
+      return res.data;
+    },
+    GetPlayerAvatarUrl(filename) {
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/static/img/players/${filename}`;
+    },
+    async UploadPlayerImage(formData) {
+      const res = await this.axiosCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/upload/player`,
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+      return res.data;
+    },
+    async DeletePlayerImage(steamId) {
+      const res = await this.axiosCall.delete(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/image/player/${steamId}`,
+      );
+      return res.data;
+    },
     GetTeamMatchImageUrl(matchId, teamNumber, mapNumber) {
       const base = process.env?.VUE_APP_G5V_API_URL || "/api";
       return mapNumber
@@ -2118,6 +2233,38 @@ export default {
       return `${
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/season/${seasonId}/versus/${team1Id}/${team2Id}`;
+    },
+    // OBS SLOTS — liens fixes réassignables à un match depuis le panel
+    async GetObsSlots() {
+      const res = await this.axiosCall.get(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/obs-slots`,
+      );
+      return res.data.slots || [];
+    },
+    async CreateObsSlot(label) {
+      const res = await this.axiosCall.post(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/obs-slots`,
+        { label },
+      );
+      return res.data.slot;
+    },
+    async UpdateObsSlot(slotId, payload) {
+      const res = await this.axiosCall.put(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/obs-slots/${slotId}`,
+        payload,
+      );
+      return res.data.slot;
+    },
+    async DeleteObsSlot(slotId) {
+      const res = await this.axiosCall.delete(
+        `${process.env?.VUE_APP_G5V_API_URL || "/api"}/obs-slots/${slotId}`,
+      );
+      return res.data;
+    },
+    GetObsSlotImageUrl(slug, path) {
+      return `${
+        process.env?.VUE_APP_G5V_API_URL || "/api"
+      }/image/slot/${slug}${path}`;
     },
     EstimateMatchEndTime(team1Score, team2Score, remainingMaps = 0) {
       const ROUND_DURATION_SEC = 115;

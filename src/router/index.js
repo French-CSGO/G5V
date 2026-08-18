@@ -261,6 +261,41 @@ const routes = [
       import(/* webpackChunkName: "Cast" */ "../views/CastView.vue"),
   },
   {
+    path: "/cast/players",
+    name: "PlayerImages",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/PlayerImages.vue"),
+  },
+  {
+    path: "/cast/obs-slots",
+    name: "ObsSlots",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/ObsSlots.vue"),
+  },
+  {
+    path: "/cast/swiss-generator",
+    name: "SwissGenerator",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/SwissGenerator.vue"),
+  },
+  {
+    path: "/cast/round-robin-generator",
+    name: "RoundRobinGenerator",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/RoundRobinGenerator.vue"),
+  },
+  {
+    path: "/cast/season-team-sync",
+    name: "SeasonTeamSync",
+    meta: { hideChrome: false },
+    component: () =>
+      import(/* webpackChunkName: "Cast" */ "../views/SeasonTeamSync.vue"),
+  },
+  {
     path: "/overlay/:steamid/live",
     name: "OverlayLive",
     meta: { hideChrome: true },
@@ -273,6 +308,22 @@ const routes = [
     meta: { hideChrome: true },
     component: () =>
       import(/* webpackChunkName: "Overlay" */ "../views/OverlaySeason.vue"),
+  },
+  {
+    path: "/overlay/swiss/:seasonId",
+    name: "SwissOverlay",
+    meta: { hideChrome: true },
+    component: () =>
+      import(/* webpackChunkName: "Overlay" */ "../views/SwissOverlay.vue"),
+  },
+  {
+    path: "/overlay/round-robin/:seasonId",
+    name: "RoundRobinOverlay",
+    meta: { hideChrome: true },
+    component: () =>
+      import(
+        /* webpackChunkName: "Overlay" */ "../views/RoundRobinOverlay.vue"
+      ),
   },
   {
     path: "/admin/settings",

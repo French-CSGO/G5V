@@ -129,6 +129,45 @@
         {{ $t("Match.GOTVConnect") }}
       </v-btn>
     </div>
+    <div v-if="showConnectedPlayers">
+      <v-divider class="my-2" />
+      <div class="text-subtitle-2" align="center">
+        {{ $t("Match.ConnectedPlayers") }} ({{ connectedPlayers.length }})
+      </div>
+      <div v-if="connectedPlayers.length" class="connected-players__table">
+        <div class="connected-players__col">
+          <div
+            class="connected-players__team-name"
+            style="border-color: #e8523a"
+          >
+            {{ matchInfo.team1_name }}
+          </div>
+          <div v-for="p in team1Players" :key="p.steamid">{{ p.name }}</div>
+          <div v-if="!team1Players.length" class="connected-players__empty">
+            —
+          </div>
+        </div>
+        <div class="connected-players__col">
+          <div
+            class="connected-players__team-name"
+            style="border-color: #4fc3f7"
+          >
+            {{ matchInfo.team2_name }}
+          </div>
+          <div v-for="p in team2Players" :key="p.steamid">{{ p.name }}</div>
+          <div v-if="!team2Players.length" class="connected-players__empty">
+            —
+          </div>
+        </div>
+      </div>
+      <div v-if="otherPlayers.length" class="text-caption" align="center">
+        {{ $t("Match.OtherConnectedPlayers") }}:
+        {{ otherPlayers.map((p) => p.name).join(", ") }}
+      </div>
+      <div v-if="!connectedPlayers.length" class="text-caption" align="center">
+        {{ $t("Match.NoConnectedPlayers") }}
+      </div>
+    </div>
   </v-container>
 </template>
 
@@ -191,12 +230,53 @@ export default {
       },
       apiUrl: process.env?.VUE_APP_G5V_API_URL || "/api",
       imageLoaded: true,
+      connectedPlayers: [],
+      connectedPlayersTimer: null,
     };
+  },
+  computed: {
+    showConnectedPlayers() {
+      return (
+        this.IsAnyAdmin(this.user) &&
+        (this.matchInfo.end_time == null || this.matchInfo.end_time === "") &&
+        (this.matchInfo.cancelled == 0 || this.matchInfo.cancelled == null) &&
+        (this.matchInfo.forfeit == 0 || this.matchInfo.forfeit == null)
+      );
+    },
+    team1Players() {
+      return this.connectedPlayers.filter(
+        (p) => p.team === "team1" || p.team === "coach_team1",
+      );
+    },
+    team2Players() {
+      return this.connectedPlayers.filter(
+        (p) => p.team === "team2" || p.team === "coach_team2",
+      );
+    },
+    otherPlayers() {
+      return this.connectedPlayers.filter(
+        (p) =>
+          p.team !== "team1" &&
+          p.team !== "coach_team1" &&
+          p.team !== "team2" &&
+          p.team !== "coach_team2",
+      );
+    },
   },
   created() {
     this.checkIfMatchLive();
+    this.connectedPlayersTimer = setInterval(() => {
+      this.refreshConnectedPlayers();
+    }, 10000);
+  },
+  beforeDestroy() {
+    if (this.connectedPlayersTimer) clearInterval(this.connectedPlayersTimer);
   },
   methods: {
+    async refreshConnectedPlayers() {
+      if (!this.showConnectedPlayers) return;
+      this.connectedPlayers = await this.GetConnectedPlayers(this.match_id);
+    },
     async checkIfMatchLive() {
       let matchRes = await this.GetMatchData(this.match_id);
       if (matchRes.end_time == null) {
@@ -224,6 +304,7 @@ export default {
       try {
         let matchRes = await this.GetMatchData(this.match_id);
         await this.retrieveMatchInfoHelper(matchRes);
+        await this.refreshConnectedPlayers();
       } catch {
         // ignored
       }
@@ -273,3 +354,30 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.connected-players__table {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 12px;
+}
+
+.connected-players__col {
+  text-align: center;
+}
+
+.connected-players__team-name {
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+  border-bottom: 2px solid;
+}
+
+.connected-players__empty {
+  opacity: 0.5;
+}
+</style>

@@ -48,6 +48,39 @@
                     />
                   </div>
                   <template v-else-if="matchesByRound[round.id]">
+                    <!-- Default format editor -->
+                    <v-card outlined class="mb-3">
+                      <v-card-text class="pb-2">
+                        <div class="text-caption grey--text mb-2">
+                          {{ $t("Toornament.RoundFormatLabel") }}
+                        </div>
+                        <v-row dense align="center">
+                          <v-col cols="8" sm="3">
+                            <v-select
+                              v-model="roundFormats[round.id]"
+                              :items="formatOptions"
+                              item-text="label"
+                              item-value="value"
+                              dense
+                              outlined
+                              hide-details
+                            />
+                          </v-col>
+                          <v-col cols="4" sm="auto">
+                            <v-btn
+                              small
+                              color="primary"
+                              :loading="savingFormat[round.id]"
+                              @click="saveFormat(round)"
+                            >
+                              <v-icon left small>mdi-content-save</v-icon>
+                              {{ $t("Toornament.FormatSave") }}
+                            </v-btn>
+                          </v-col>
+                        </v-row>
+                      </v-card-text>
+                    </v-card>
+
                     <!-- Bulk date/time editor -->
                     <v-card outlined class="mb-3">
                       <v-card-text class="pb-2">
@@ -177,6 +210,9 @@ export default {
       savingRound: {},
       matchDatetime: {},
       savingMatch: {},
+      roundFormatDefaults: {},
+      roundFormats: {},
+      savingFormat: {},
       snackbar: { show: false, text: "", color: "success" },
     };
   },
@@ -190,6 +226,15 @@ export default {
         rounds: this.rounds.filter((r) => r.stage_id === stage.id),
       }));
     },
+    formatOptions() {
+      return [
+        { value: null, label: this.$t("Toornament.FormatAuto") },
+        { value: 1, label: "BO1" },
+        { value: 2, label: "BO2" },
+        { value: 3, label: "BO3" },
+        { value: 5, label: "BO5" },
+      ];
+    },
   },
   async created() {
     this.loading = true;
@@ -199,14 +244,20 @@ export default {
       this.seasonName = season.name;
       this.seasonUserId = season.user_id;
     }
-    [this.stages, this.rounds] = await Promise.all([
+    [this.stages, this.rounds, this.roundFormatDefaults] = await Promise.all([
       this.GetToornamentStages(this.seasonId),
       this.GetToornamentRounds(this.seasonId),
+      this.GetToornamentRoundFormats(this.seasonId),
     ]);
+    this.roundFormatDefaults = this.roundFormatDefaults || {};
     this.loading = false;
   },
   methods: {
     async onRoundToggle(round) {
+      if (!(round.id in this.roundFormats)) {
+        const def = this.roundFormatDefaults[round.id];
+        this.$set(this.roundFormats, round.id, def !== undefined ? def : null);
+      }
       if (this.matchesByRound[round.id]) return;
       this.$set(this.loadingRound, round.id, true);
       const all = await this.GetToornamentMatches(this.seasonId, {
@@ -260,6 +311,24 @@ export default {
         };
       }
       this.$set(this.savingRound, round.id, false);
+    },
+    async saveFormat(round) {
+      this.$set(this.savingFormat, round.id, true);
+      const value = this.roundFormats[round.id];
+      const result =
+        value === null || value === undefined
+          ? await this.DeleteToornamentRoundFormat(this.seasonId, round.id)
+          : await this.SetToornamentRoundFormat(this.seasonId, round.id, value);
+      if (result?.message) {
+        this.snackbar = { show: true, text: result.message, color: "success" };
+      } else {
+        this.snackbar = {
+          show: true,
+          text: this.$t("Toornament.ScheduleError"),
+          color: "error",
+        };
+      }
+      this.$set(this.savingFormat, round.id, false);
     },
     async saveMatch(match) {
       const raw = this.matchDatetime[match.id];

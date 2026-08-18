@@ -2177,6 +2177,15 @@ export default {
         process.env?.VUE_APP_G5V_API_URL || "/api"
       }/image/match/${matchId}/player/${steamId}`;
     },
+    // HTML/CSS "match stats" visual (pilote refonte canvas → page web), à coller
+    // directement dans un Browser Source OBS — la page se rafraîchit toute
+    // seule, contrairement aux visuels PNG qu'il faut recharger manuellement.
+    GetMatchStatsViewUrl(matchId, mapNumber) {
+      const base = process.env?.VUE_APP_G5V_API_URL || "/api";
+      return mapNumber
+        ? `${base}/image/match/${matchId}/map/${mapNumber}/view`
+        : `${base}/image/match/${matchId}/view`;
+    },
     GetTeamSeasonImageUrl(seasonId, teamId) {
       return `${
         process.env?.VUE_APP_G5V_API_URL || "/api"

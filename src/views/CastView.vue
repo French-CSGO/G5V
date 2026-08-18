@@ -148,6 +148,16 @@
                         <v-btn
                           x-small
                           dark
+                          color="deep-purple accent-2"
+                          :href="GetMatchStatsViewUrl(match.id, map.map_number + 1)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-language-html5</v-icon>Map
+                          {{ map.map_number + 1 }} HTML
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
                           color="amber darken-2"
                           :href="
                             '/api/image/match/' +
@@ -200,6 +210,16 @@
                           target="_blank"
                         >
                           <v-icon x-small left>mdi-chart-bar</v-icon>Stats Match
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="deep-purple accent-2"
+                          :href="GetMatchStatsViewUrl(match.id)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-language-html5</v-icon>Stats
+                          Match HTML
                         </v-btn>
                         <v-btn
                           x-small
@@ -332,6 +352,16 @@
                         <v-btn
                           x-small
                           dark
+                          color="deep-purple accent-2"
+                          :href="GetMatchStatsViewUrl(match.id, map.map_number + 1)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-language-html5</v-icon>Map
+                          {{ map.map_number + 1 }} HTML
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
                           color="amber darken-2"
                           :href="
                             '/api/image/match/' +
@@ -384,6 +414,16 @@
                           target="_blank"
                         >
                           <v-icon x-small left>mdi-chart-bar</v-icon>Stats Match
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="deep-purple accent-2"
+                          :href="GetMatchStatsViewUrl(match.id)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-language-html5</v-icon>Stats
+                          Match HTML
                         </v-btn>
                         <v-btn
                           x-small

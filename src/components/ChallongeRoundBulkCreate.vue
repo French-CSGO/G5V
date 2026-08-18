@@ -176,9 +176,12 @@ export default {
       const servers = this.prefillData.available_servers || [];
       this.progress = { total: 0, done: 0, errors: [] };
 
-      // Défaut format depuis les CVARs de saison
+      // Défaut format : format par défaut du round > CVARs de saison > BO1
       const sc = this.prefillData.season_cvars || {};
-      if (sc.maps_to_win) this.globalFormat = parseInt(sc.maps_to_win) || 1;
+      if (this.prefillData.max_maps)
+        this.globalFormat = parseInt(this.prefillData.max_maps) || 1;
+      else if (sc.maps_to_win)
+        this.globalFormat = parseInt(sc.maps_to_win) || 1;
       else this.globalFormat = 1;
 
       // Construire les lignes, préremplir serveurs en round-robin

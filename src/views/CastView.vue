@@ -116,10 +116,9 @@
                         x-small
                         dark
                         color="deep-purple"
-                        :href="connectUrl(match, 'tv0')"
-                        target="_blank"
+                        @click="copyConnectText(match)"
                       >
-                        <v-icon x-small left>mdi-television-play</v-icon>TV 0s
+                        <v-icon x-small left>mdi-content-copy</v-icon>TV 0s
                       </v-btn>
                     </div>
                   </td>
@@ -161,6 +160,36 @@
                         >
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal"
+                          :href="
+                            GetTeamMatchImageUrl(
+                              match.id,
+                              1,
+                              map.map_number + 1,
+                            )
+                          "
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Éq. 1
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal darken-2"
+                          :href="
+                            GetTeamMatchImageUrl(
+                              match.id,
+                              2,
+                              map.map_number + 1,
+                            )
+                          "
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Éq. 2
+                        </v-btn>
                       </div>
                       <div class="d-flex" style="gap: 3px">
                         <v-btn
@@ -180,6 +209,26 @@
                           target="_blank"
                         >
                           <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal"
+                          :href="GetTeamMatchImageUrl(match.id, 1)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Stats
+                          Éq. 1
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal darken-2"
+                          :href="GetTeamMatchImageUrl(match.id, 2)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Stats
+                          Éq. 2
                         </v-btn>
                         <v-btn
                           x-small
@@ -295,6 +344,36 @@
                         >
                           <v-icon x-small left>mdi-star</v-icon>MVP
                         </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal"
+                          :href="
+                            GetTeamMatchImageUrl(
+                              match.id,
+                              1,
+                              map.map_number + 1,
+                            )
+                          "
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Éq. 1
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal darken-2"
+                          :href="
+                            GetTeamMatchImageUrl(
+                              match.id,
+                              2,
+                              map.map_number + 1,
+                            )
+                          "
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Éq. 2
+                        </v-btn>
                       </div>
                       <div class="d-flex" style="gap: 3px">
                         <v-btn
@@ -314,6 +393,26 @@
                           target="_blank"
                         >
                           <v-icon x-small left>mdi-star-circle</v-icon>MVP Match
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal"
+                          :href="GetTeamMatchImageUrl(match.id, 1)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Stats
+                          Éq. 1
+                        </v-btn>
+                        <v-btn
+                          x-small
+                          dark
+                          color="teal darken-2"
+                          :href="GetTeamMatchImageUrl(match.id, 2)"
+                          target="_blank"
+                        >
+                          <v-icon x-small left>mdi-account-group</v-icon>Stats
+                          Éq. 2
                         </v-btn>
                       </div>
                     </div>
@@ -379,6 +478,14 @@
         </v-col>
       </v-row>
     </template>
+
+    <v-snackbar
+      v-model="copySnackbar"
+      :color="copySnackbarColor"
+      timeout="3000"
+    >
+      {{ copyMessage }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -395,6 +502,9 @@ export default {
       activeMatches: [],
       finishedMatches: [],
       sseClient: null,
+      copySnackbar: false,
+      copyMessage: "",
+      copySnackbarColor: "success",
     };
   },
   computed: {
@@ -446,10 +556,49 @@ export default {
         return `${base}+connect%20${ip}:${match.port}`;
       }
       if (!match.gotv_port) return "#";
-      if (type === "tv90") {
-        return `${base}+connect%20${ip}:${match.gotv_port}`;
+      return `${base}+connect%20${ip}:${match.gotv_port}`;
+    },
+
+    gotvConnectText(match) {
+      const ip = match.ip_cast || match.ip_string;
+      if (!ip || !match.gotv_port) return "";
+      return `connect ${ip}:${match.gotv_port + 100}; password croissant`;
+    },
+
+    legacyCopyToClipboard(text) {
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "");
+      textarea.style.position = "fixed";
+      textarea.style.top = "0";
+      textarea.style.left = "0";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      textarea.setSelectionRange(0, text.length);
+      const succeeded = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      if (!succeeded) throw new Error("execCommand copy failed");
+    },
+
+    async copyConnectText(match) {
+      const text = this.gotvConnectText(match);
+      if (!text) return;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          await navigator.clipboard.writeText(text);
+        } else {
+          this.legacyCopyToClipboard(text);
+        }
+        this.copyMessage = "Commande copiée : " + text;
+        this.copySnackbarColor = "success";
+      } catch (error) {
+        void error;
+        this.copyMessage = "Échec de la copie";
+        this.copySnackbarColor = "error";
       }
-      return `${base}+connect%20${ip}:${match.gotv_port + 100}`;
+      this.copySnackbar = true;
     },
 
     mapShortName(map) {

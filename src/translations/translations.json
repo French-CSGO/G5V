@@ -16,7 +16,12 @@
       "DarkMode": "Toggle Dark Mode",
       "PlayerLeader": "Player Leaderboard",
       "ImageSettings": "Image Settings",
-      "Home": "Home"
+      "Home": "Home",
+      "PlayerImages": "Player Avatars",
+      "ObsSlots": "OBS Slots",
+      "SwissGenerator": "Swiss Generator",
+      "RoundRobinGenerator": "Round Robin Generator",
+      "SeasonTeamSync": "Season Team Sync"
     },
     "Login": {
       "title": "Login/Register",
@@ -60,7 +65,14 @@
       "RCONCommand": "RCON Command",
       "RCONHint": "Like working in the console!",
       "MatchRestart": "Restart Current Match",
-      "MatchRestartInfo": "Restarting the current match will remove all map stats. Continue?"
+      "MatchRestartInfo": "Restarting the current match will remove all map stats. Continue?",
+      "ForceVeto": "Force Veto",
+      "ForceVetoConfirm": "Force the veto?",
+      "ForceVetoChoice": "Select which team(s) are absent — their veto will be simulated automatically, then the match will start.",
+      "ForceVetoTeam1": "Team 1 Absent",
+      "ForceVetoTeam2": "Team 2 Absent",
+      "ForceVetoBoth": "Both Absent",
+      "ForceStart": "Force Start"
     },
     "Match": {
       "MatchHasBeenCancelled": "This match has been cancelled.",
@@ -73,7 +85,10 @@
       "EndTime": "End:",
       "EstimatedEndTime": "Estimated end in {minutes} min ({time})",
       "Connect": "Connect!",
-      "GOTVConnect": "Connect to GOTV!"
+      "GOTVConnect": "Connect to GOTV!",
+      "ConnectedPlayers": "Connected players",
+      "NoConnectedPlayers": "No players connected.",
+      "OtherConnectedPlayers": "Other connected players"
     },
     "CreateMatch": {
       "FormServer": "Select a Server",
@@ -169,7 +184,10 @@
       "MVP": "MVPs",
       "RefreshData": "Stats will refresh in {sec} seconds.",
       "RefreshForce": "Force Refresh",
-      "PlayerStatImage": "Player Stat Image"
+      "PlayerStatImage": "Player Stat Image",
+      "MapImagePreview": "Map Stats Image",
+      "MvpImagePreview": "MVP Image",
+      "MvpMatchImagePreview": "Match MVP Image"
     },
     "Seasons": {
       "Title": "Seasons/Tournaments",
@@ -396,7 +414,12 @@
       "BracketSlugHint": "The slug from the Challonge URL (e.g. my-tournament)",
       "BracketLabel": "Bracket Label",
       "BracketLabelPlaceholder": "e.g. Amateur",
-      "NoBracket": "No bracket configured for this season."
+      "NoBracket": "No bracket configured for this season.",
+      "Group": "Group",
+      "RoundFormatLabel": "Default format for this round",
+      "FormatAuto": "Auto (BO1)",
+      "FormatSave": "Save",
+      "ScheduleError": "Error saving format"
     },
     "Toornament": {
       "MatchesTitle": "Toornament Matches",
@@ -426,6 +449,9 @@
       "ScheduleError": "Error saving schedule",
       "ServerStarting": "Starting server...",
       "SuggestedFormat": "Suggested: Bo{n}",
+      "RoundFormatLabel": "Default format for this round",
+      "FormatAuto": "Auto (Toornament)",
+      "FormatSave": "Save",
       "MatchInfo": "This match is linked to Toornament match",
       "StepVerify": "Verify",
       "StepDetails": "Details",
@@ -565,6 +591,10 @@
       "playerBadge": "Player",
       "teamBadge": "Season Leaderboard"
     },
+    "ImagePositionCanvas": {
+      "noBackground": "No background configured",
+      "bgNotFound": "Background not found ({path})"
+    },
     "PreMatchVeto": {
       "Loading": "Loading veto session...",
       "NotFound": "This veto session could not be found.",
@@ -606,6 +636,69 @@
       "ReadyPending": "Not ready yet",
       "TeamTurnBan": "{team}: pick a map to ban.",
       "TeamTurnPick": "{team}: pick a map to play."
+    },
+    "PlayerImages": {
+      "title": "Player Avatars",
+      "accessDenied": "Access reserved to cast/observer or admin users.",
+      "searchLabel": "Search a player (name, Steam ID)",
+      "chooseFile": "Choose an image",
+      "upload": "Upload",
+      "uploadSuccess": "Image uploaded successfully.",
+      "uploadError": "Error while uploading the image.",
+      "selectPlayerFirst": "Select a player before uploading.",
+      "chooseFileFirst": "Choose a file before uploading.",
+      "existingImages": "Existing images",
+      "noImages": "No player image has been uploaded yet.",
+      "delete": "Delete",
+      "deleteConfirmTitle": "Delete this image?",
+      "deleteConfirmBody": "This will permanently delete this player's avatar.",
+      "deleteSuccess": "Image deleted successfully.",
+      "deleteError": "Error while deleting the image.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "steamId": "Steam ID",
+      "name": "Name",
+      "actions": "Actions",
+      "noResults": "No player found.",
+      "unknownPlayer": "Unknown player"
+    },
+    "ObsSlots": {
+      "title": "OBS Slots",
+      "subtitle": "Keep a fixed link in OBS Studio for each image and reassign the match from here — no need to touch OBS again.",
+      "accessDenied": "Access reserved to cast/observer or admin users.",
+      "newSlotLabel": "New slot name (e.g. Stream A)",
+      "create": "Create",
+      "createSuccess": "Slot created successfully.",
+      "createError": "Error while creating the slot.",
+      "updateError": "Error while updating the slot.",
+      "deleteError": "Error while deleting the slot.",
+      "noSlots": "No slot has been created yet.",
+      "slotLabel": "Slot name",
+      "assignMatch": "Assign a match",
+      "noMatchAssigned": "No match assigned",
+      "assignToSeeLinks": "Assign a match to this slot to get its fixed links.",
+      "deleteSlot": "Delete this slot",
+      "deleteConfirmTitle": "Delete this slot?",
+      "deleteConfirmBody": "The fixed links for this slot will stop working. This cannot be undone.",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "statusUnassigned": "Unassigned",
+      "statusLive": "Live",
+      "statusFinished": "Finished",
+      "statusCancelled": "Cancelled",
+      "linkCopied": "Link copied to clipboard.",
+      "copyError": "Could not copy the link.",
+      "groupScore": "Score",
+      "groupMvp": "MVP",
+      "groupTeam1": "Team 1",
+      "groupTeam2": "Team 2",
+      "linkScoreFull": "Score — full series",
+      "linkScoreCurrentMap": "Score — current map",
+      "linkScoreMap": "Score — Map {n}",
+      "linkMvpFull": "MVP — full series",
+      "linkMvpMap": "MVP — Map {n}",
+      "linkTeamFull": "Full series",
+      "linkTeamMap": "Map {n}"
     }
   },
   "fr": {
@@ -625,7 +718,12 @@
       "DarkMode": "Action le mode sombre",
       "PlayerLeader": "Classement des joueurs",
       "ImageSettings": "Paramètres des images",
-      "Home": "Accueil"
+      "Home": "Accueil",
+      "PlayerImages": "Avatars des joueurs",
+      "ObsSlots": "Slots OBS",
+      "SwissGenerator": "Générateur Swiss",
+      "RoundRobinGenerator": "Générateur Round Robin",
+      "SeasonTeamSync": "Synchro équipes saison"
     },
     "Login": {
       "title": "S'identifier / S'incrire",
@@ -669,7 +767,14 @@
       "RCONCommand": "Commande RCON",
       "RCONHint": "Travailler comme dans la console!",
       "MatchRestart": "Redémarrer le match en cours",
-      "MatchRestartInfo": "Le redémarrage du match en cours va supprimer toutes les statistiques de la map. Continuer?"
+      "MatchRestartInfo": "Le redémarrage du match en cours va supprimer toutes les statistiques de la map. Continuer?",
+      "ForceVeto": "Forçage du véto",
+      "ForceVetoConfirm": "Forcer le véto ?",
+      "ForceVetoTeam1": "Équipe 1 absente",
+      "ForceVetoTeam2": "Équipe 2 absente",
+      "ForceVetoBoth": "Les deux absentes",
+      "ForceVetoChoice": "Sélectionnez la ou les équipes absentes — leur véto sera simulé automatiquement, puis le match démarrera.",
+      "ForceStart": "Forcer le lancement"
     },
     "Match": {
       "MatchHasBeenCancelled": "Ce match a été annulé.",
@@ -682,7 +787,10 @@
       "EndTime": "Fin : ",
       "EstimatedEndTime": "Fin estimée dans {minutes} minutes ({time})",
       "Connect": "Connexion !",
-      "GOTVConnect": "Connexion à la GOTV!"
+      "GOTVConnect": "Connexion à la GOTV!",
+      "ConnectedPlayers": "Joueurs connectés",
+      "NoConnectedPlayers": "Aucun joueur connecté.",
+      "OtherConnectedPlayers": "Autres joueurs connectés"
     },
     "CreateMatch": {
       "FormServer": "Selectionner un serveur",
@@ -778,7 +886,10 @@
       "MVP": "MVPs",
       "RefreshData": "Les statistiques vont être mises à jour dans {sec} secondes.",
       "RefreshForce": "Forcer la mise à jour",
-      "PlayerStatImage": "Image Statistique Joueur"
+      "PlayerStatImage": "Image Statistique Joueur",
+      "MapImagePreview": "Image des stats de la map",
+      "MvpImagePreview": "Image MVP",
+      "MvpMatchImagePreview": "Image MVP du match"
     },
     "Seasons": {
       "Title": "Saisons/Tournois",
@@ -1005,7 +1116,12 @@
       "BracketSlugHint": "Le slug dans l'URL Challonge (ex: mon-tournoi)",
       "BracketLabel": "Nom du bracket",
       "BracketLabelPlaceholder": "ex: Amateur",
-      "NoBracket": "Aucun bracket configuré pour cette saison."
+      "NoBracket": "Aucun bracket configuré pour cette saison.",
+      "Group": "Groupe",
+      "RoundFormatLabel": "Format par défaut de ce round",
+      "FormatAuto": "Auto (BO1)",
+      "FormatSave": "Enregistrer",
+      "ScheduleError": "Erreur lors de la sauvegarde du format"
     },
     "Toornament": {
       "MatchesTitle": "Matchs Toornament",
@@ -1035,6 +1151,9 @@
       "ScheduleError": "Erreur lors de la sauvegarde du planning",
       "ServerStarting": "Démarrage du serveur...",
       "SuggestedFormat": "Format suggéré : Bo{n}",
+      "RoundFormatLabel": "Format par défaut de ce round",
+      "FormatAuto": "Auto (Toornament)",
+      "FormatSave": "Enregistrer",
       "MatchInfo": "Ce match est lié au match Toornament",
       "StepVerify": "Vérifier",
       "StepDetails": "Détails",
@@ -1174,6 +1293,10 @@
       "playerBadge": "Joueur",
       "teamBadge": "Classement saison"
     },
+    "ImagePositionCanvas": {
+      "noBackground": "Aucun fond configuré",
+      "bgNotFound": "Fond introuvable ({path})"
+    },
     "PreMatchVeto": {
       "Loading": "Chargement du véto...",
       "NotFound": "Cette session de véto est introuvable.",
@@ -1215,6 +1338,69 @@
       "ReadyPending": "Pas encore prêt",
       "TeamTurnBan": "{team} : choisissez une map à bannir.",
       "TeamTurnPick": "{team} : choisissez une map à jouer."
+    },
+    "PlayerImages": {
+      "title": "Avatars des joueurs",
+      "accessDenied": "Accès réservé aux utilisateurs cast/observateur ou administrateurs.",
+      "searchLabel": "Rechercher un joueur (nom, Steam ID)",
+      "chooseFile": "Choisir une image",
+      "upload": "Envoyer",
+      "uploadSuccess": "Image envoyée avec succès.",
+      "uploadError": "Erreur lors de l'envoi de l'image.",
+      "selectPlayerFirst": "Sélectionnez un joueur avant d'envoyer une image.",
+      "chooseFileFirst": "Choisissez un fichier avant d'envoyer.",
+      "existingImages": "Images existantes",
+      "noImages": "Aucune image de joueur n'a encore été envoyée.",
+      "delete": "Supprimer",
+      "deleteConfirmTitle": "Supprimer cette image ?",
+      "deleteConfirmBody": "L'avatar de ce joueur sera définitivement supprimé.",
+      "deleteSuccess": "Image supprimée avec succès.",
+      "deleteError": "Erreur lors de la suppression de l'image.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "steamId": "Steam ID",
+      "name": "Nom",
+      "actions": "Actions",
+      "noResults": "Aucun joueur trouvé.",
+      "unknownPlayer": "Joueur inconnu"
+    },
+    "ObsSlots": {
+      "title": "Slots OBS",
+      "subtitle": "Gardez un lien fixe dans OBS Studio pour chaque image et réassignez le match ici — plus besoin de retoucher OBS.",
+      "accessDenied": "Accès réservé aux utilisateurs cast/observateur ou administrateurs.",
+      "newSlotLabel": "Nom du nouveau slot (ex. Stream A)",
+      "create": "Créer",
+      "createSuccess": "Slot créé avec succès.",
+      "createError": "Erreur lors de la création du slot.",
+      "updateError": "Erreur lors de la mise à jour du slot.",
+      "deleteError": "Erreur lors de la suppression du slot.",
+      "noSlots": "Aucun slot n'a encore été créé.",
+      "slotLabel": "Nom du slot",
+      "assignMatch": "Assigner un match",
+      "noMatchAssigned": "Aucun match assigné",
+      "assignToSeeLinks": "Assignez un match à ce slot pour obtenir ses liens fixes.",
+      "deleteSlot": "Supprimer ce slot",
+      "deleteConfirmTitle": "Supprimer ce slot ?",
+      "deleteConfirmBody": "Les liens fixes de ce slot cesseront de fonctionner. Cette action est irréversible.",
+      "cancel": "Annuler",
+      "confirm": "Confirmer",
+      "statusUnassigned": "Non assigné",
+      "statusLive": "En direct",
+      "statusFinished": "Terminé",
+      "statusCancelled": "Annulé",
+      "linkCopied": "Lien copié dans le presse-papier.",
+      "copyError": "Impossible de copier le lien.",
+      "groupScore": "Score",
+      "groupMvp": "MVP",
+      "groupTeam1": "Équipe 1",
+      "groupTeam2": "Équipe 2",
+      "linkScoreFull": "Score — série complète",
+      "linkScoreCurrentMap": "Score — map en cours",
+      "linkScoreMap": "Score — Map {n}",
+      "linkMvpFull": "MVP — série complète",
+      "linkMvpMap": "MVP — Map {n}",
+      "linkTeamFull": "Série complète",
+      "linkTeamMap": "Map {n}"
     }
   },
   "jp": {
@@ -1234,7 +1420,12 @@
       "DarkMode": "ダークモードを切り替えます",
       "PlayerLeader": "プレイヤーリーダーボード",
       "ImageSettings": "画像設定",
-      "Home": "ホーム"
+      "Home": "ホーム",
+      "PlayerImages": "選手アバター",
+      "ObsSlots": "OBSスロット",
+      "SwissGenerator": "スイスジェネレーター",
+      "RoundRobinGenerator": "総当たり戦ジェネレーター",
+      "SeasonTeamSync": "シーズンチーム同期"
     },
     "Login": {
       "title": "ログイン/登録",
@@ -1278,7 +1469,14 @@
       "RCONCommand": "RCONコマンド",
       "RCONHint": "コンソールで仕事をしているような！？",
       "MatchRestart": "カレントマッチのリスタート",
-      "MatchRestartInfo": "現在のマッチをリスタートすると、すべてのマップ統計が削除されます。続ける？"
+      "MatchRestartInfo": "現在のマッチをリスタートすると、すべてのマップ統計が削除されます。続ける？",
+      "ForceVeto": "ヴィート強制",
+      "ForceVetoConfirm": "ヴィートを強制しますか？",
+      "ForceVetoChoice": "不在のチームを選択してください。そのチームのヴィートは自動的にシミュレートされ、その後マッチが開始されます。",
+      "ForceVetoTeam1": "チーム1が不在",
+      "ForceVetoTeam2": "チーム2が不在",
+      "ForceVetoBoth": "両チームが不在",
+      "ForceStart": "強制開始"
     },
     "Match": {
       "MatchHasBeenCancelled": "このマッチはキャンセルされました。",
@@ -1291,7 +1489,10 @@
       "EndTime": "終り:",
       "EstimatedEndTime": "終了予定まで {minutes} 分 ({time})",
       "Connect": "つなげろ！",
-      "GOTVConnect": "GOTVに接続"
+      "GOTVConnect": "GOTVに接続",
+      "ConnectedPlayers": "接続中のプレイヤー",
+      "NoConnectedPlayers": "接続中のプレイヤーはいません。",
+      "OtherConnectedPlayers": "その他の接続中プレイヤー"
     },
     "CreateMatch": {
       "FormServer": "サーバー",
@@ -1383,7 +1584,10 @@
       "MVP": "M V P",
       "RefreshData": "統計情報は{sec}秒後に更新されます。",
       "RefreshForce": "強制リフレッシュ",
-      "PlayerStatImage": "プレイヤー統計画像"
+      "PlayerStatImage": "プレイヤー統計画像",
+      "MapImagePreview": "マップ統計画像",
+      "MvpImagePreview": "MVP画像",
+      "MvpMatchImagePreview": "試合MVP画像"
     },
     "Seasons": {
       "Title": "シーズンズ/トーナメント",
@@ -1608,7 +1812,12 @@
       "BracketSlugHint": "Challonge URLのslug（例: my-tournament）",
       "BracketLabel": "ブラケット名",
       "BracketLabelPlaceholder": "例: アマチュア",
-      "NoBracket": "このシーズンにはブラケットが設定されていません。"
+      "NoBracket": "このシーズンにはブラケットが設定されていません。",
+      "Group": "グループ",
+      "RoundFormatLabel": "このラウンドのデフォルトフォーマット",
+      "FormatAuto": "自動 (BO1)",
+      "FormatSave": "保存",
+      "ScheduleError": "フォーマットの保存エラー"
     },
     "Toornament": {
       "MatchesTitle": "Toornamentマッチ",
@@ -1638,6 +1847,9 @@
       "ScheduleError": "スケジュール保存エラー",
       "ServerStarting": "サーバーを起動中...",
       "SuggestedFormat": "推奨: Bo{n}",
+      "RoundFormatLabel": "このラウンドのデフォルトフォーマット",
+      "FormatAuto": "自動 (Toornament)",
+      "FormatSave": "保存",
       "MatchInfo": "このマッチはToornamentマッチにリンクされています",
       "StepVerify": "確認",
       "StepDetails": "詳細",
@@ -1777,6 +1989,10 @@
       "playerBadge": "プレイヤー",
       "teamBadge": "シーズンランキング"
     },
+    "ImagePositionCanvas": {
+      "noBackground": "背景が設定されていません",
+      "bgNotFound": "背景が見つかりません（{path}）"
+    },
     "PreMatchVeto": {
       "Loading": "ベトセッションを読み込み中...",
       "NotFound": "このベトセッションが見つかりません。",
@@ -1818,6 +2034,69 @@
       "ReadyPending": "まだ準備できていません",
       "TeamTurnBan": "{team}：禁止するマップを選んでください。",
       "TeamTurnPick": "{team}：プレイするマップを選んでください。"
+    },
+    "PlayerImages": {
+      "title": "選手アバター",
+      "accessDenied": "キャスト・観戦者または管理者のみアクセスできます。",
+      "searchLabel": "選手を検索（名前、Steam ID）",
+      "chooseFile": "画像を選択",
+      "upload": "アップロード",
+      "uploadSuccess": "画像が正常にアップロードされました。",
+      "uploadError": "画像のアップロード中にエラーが発生しました。",
+      "selectPlayerFirst": "アップロードする前に選手を選択してください。",
+      "chooseFileFirst": "アップロードする前にファイルを選択してください。",
+      "existingImages": "既存の画像",
+      "noImages": "まだ選手の画像はアップロードされていません。",
+      "delete": "削除",
+      "deleteConfirmTitle": "この画像を削除しますか？",
+      "deleteConfirmBody": "この選手のアバターは完全に削除されます。",
+      "deleteSuccess": "画像が正常に削除されました。",
+      "deleteError": "画像の削除中にエラーが発生しました。",
+      "cancel": "キャンセル",
+      "confirm": "確認",
+      "steamId": "Steam ID",
+      "name": "名前",
+      "actions": "操作",
+      "noResults": "選手が見つかりません。",
+      "unknownPlayer": "不明な選手"
+    },
+    "ObsSlots": {
+      "title": "OBSスロット",
+      "subtitle": "OBS Studio側では固定リンクを保持したまま、ここから割り当てる試合を変更できます。OBSを触り直す必要はありません。",
+      "accessDenied": "キャスト・観戦者または管理者のみアクセスできます。",
+      "newSlotLabel": "新しいスロット名（例: Stream A）",
+      "create": "作成",
+      "createSuccess": "スロットが正常に作成されました。",
+      "createError": "スロットの作成中にエラーが発生しました。",
+      "updateError": "スロットの更新中にエラーが発生しました。",
+      "deleteError": "スロットの削除中にエラーが発生しました。",
+      "noSlots": "まだスロットが作成されていません。",
+      "slotLabel": "スロット名",
+      "assignMatch": "試合を割り当てる",
+      "noMatchAssigned": "試合が割り当てられていません",
+      "assignToSeeLinks": "固定リンクを取得するには、このスロットに試合を割り当ててください。",
+      "deleteSlot": "このスロットを削除",
+      "deleteConfirmTitle": "このスロットを削除しますか？",
+      "deleteConfirmBody": "このスロットの固定リンクは使用できなくなります。この操作は取り消せません。",
+      "cancel": "キャンセル",
+      "confirm": "確認",
+      "statusUnassigned": "未割り当て",
+      "statusLive": "配信中",
+      "statusFinished": "終了",
+      "statusCancelled": "キャンセル済み",
+      "linkCopied": "リンクをクリップボードにコピーしました。",
+      "copyError": "リンクをコピーできませんでした。",
+      "groupScore": "スコア",
+      "groupMvp": "MVP",
+      "groupTeam1": "チーム1",
+      "groupTeam2": "チーム2",
+      "linkScoreFull": "スコア — シリーズ全体",
+      "linkScoreCurrentMap": "スコア — 現在のマップ",
+      "linkScoreMap": "スコア — マップ{n}",
+      "linkMvpFull": "MVP — シリーズ全体",
+      "linkMvpMap": "MVP — マップ{n}",
+      "linkTeamFull": "シリーズ全体",
+      "linkTeamMap": "マップ{n}"
     }
   }
 }
